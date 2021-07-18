@@ -10,7 +10,7 @@ public class UserEntity { // ----------------------------------------------- н�
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO) // автогенерация значений ключа
     @Column(name = "user_id")
-    private int userId;
+    private Long userId;
 
     @Column(name = "first_name")
     private String firstName;
@@ -33,11 +33,11 @@ public class UserEntity { // ----------------------------------------------- н�
     // ----------------------------------------------- гетеры и сетеры
 
 
-    public int getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 

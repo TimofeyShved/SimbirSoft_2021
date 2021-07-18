@@ -21,11 +21,12 @@ public class UserService {
     }
 
     public UserEntity getOne(Long id) throws UserNotFoundException {
-        UserEntity user = userCRUD.findById(id).get();
-        if (user==null){
+        UserEntity userEntity = userCRUD.findById(id).get();
+        System.out.println(userEntity.getFirstName());
+        if (userEntity==null){
             throw new UserNotFoundException("code: USER_NOT_FOUND");
         }
-        return user;
+        return userEntity;
     }
 
     public Long deleteOne(Long id) throws UserNotFoundException {
@@ -36,16 +37,17 @@ public class UserService {
         return id;
     }
 
-    public UserEntity updateOne(Long id, UserEntity userNew) throws Exception {
-        UserEntity user = userCRUD.findById(id).get();
+    public UserEntity updateOne(Long id, UserEntity userEntityNew) throws Exception {
+        UserEntity userEntity = userCRUD.findById(id).get();/*
         if (userCRUD.findById(id).get()==null){
             throw new UserNotFoundException("code: USER_NOT_FOUND");
         }
-        if ((userCRUD.findUserEntityByFirstName(userNew.getFirstName())!=null)&&(userCRUD.findUserEntityBylastName(userNew.getLastName())!=null)){
+        if ((userCRUD.findUserEntityByFirstName(userEntityNew.getFirstName())!=null)&&(userCRUD.findUserEntityBylastName(userEntityNew.getLastName())!=null)){
             throw new Exception("code: USER_EXISTS");
         }
-        user.setFirstName(userNew.getFirstName());
-        user.setLastName(userNew.getLastName());
-        return userCRUD.save(user);
+        */
+        userEntity.setFirstName(userEntityNew.getFirstName());
+        userEntity.setLastName(userEntityNew.getLastName());
+        return userCRUD.save(userEntity);
     }
 }
