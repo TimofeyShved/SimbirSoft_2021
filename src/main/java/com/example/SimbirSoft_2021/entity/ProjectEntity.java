@@ -1,6 +1,7 @@
 package com.example.SimbirSoft_2021.entity;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name="project_entity")
@@ -8,9 +9,9 @@ public class ProjectEntity { // ----------------------------------------------- 
 
     // ----------------------------------------------- переменные
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO) // автогенерация значений ключа
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // автогенерация значений ключа
     @Column(name = "project_id")
-    private int projectId;
+    private Long projectId;
 
     @Column(name = "project_name")
     private String projectName;
@@ -18,17 +19,20 @@ public class ProjectEntity { // ----------------------------------------------- 
     @Column(name = "project_status")
     private String projectStatus;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "projectId")
+    private List<BoardEntity> board;
+
     public ProjectEntity(){ // конструктор
     }
 
     // ----------------------------------------------- гетеры и сетеры
 
 
-    public int getProjectId() {
+    public Long getProjectId() {
         return projectId;
     }
 
-    public void setProjectId(int projectId) {
+    public void setProjectId(Long projectId) {
         this.projectId = projectId;
     }
 

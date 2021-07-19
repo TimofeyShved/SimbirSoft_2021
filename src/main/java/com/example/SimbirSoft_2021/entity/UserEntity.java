@@ -8,7 +8,7 @@ public class UserEntity { // ----------------------------------------------- н�
 
     // ----------------------------------------------- переменные
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO) // автогенерация значений ключа
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // автогенерация значений ключа
     @Column(name = "user_id")
     private Long userId;
 

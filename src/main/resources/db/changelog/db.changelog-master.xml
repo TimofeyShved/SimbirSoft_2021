@@ -9,5 +9,5 @@
 
     <include file="db/changelog/db.changelog-user.yaml" />
     <include file="db/changelog/db.changelog-project.yaml" />
-
+    <include file="db/changelog/db.changelog-board.yaml" />
 </databaseChangeLog>
