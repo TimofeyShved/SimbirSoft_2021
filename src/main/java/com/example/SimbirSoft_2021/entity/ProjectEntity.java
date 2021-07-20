@@ -19,6 +19,9 @@ public class ProjectEntity { // ----------------------------------------------- 
     @Column(name = "project_status")
     private String projectStatus;
 
+    @Column(name = "release_id")
+    private Long releaseId;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "projectId")
     private List<BoardEntity> board;
 
@@ -50,5 +53,21 @@ public class ProjectEntity { // ----------------------------------------------- 
 
     public void setProjectStatus(String projectStatus) {
         this.projectStatus = projectStatus;
+    }
+
+    public Long getReleaseId() {
+        return releaseId;
+    }
+
+    public void setReleaseId(Long releaseId) {
+        this.releaseId = releaseId;
+    }
+
+    public List<BoardEntity> getBoard() {
+        return board;
+    }
+
+    public void setBoard(List<BoardEntity> board) {
+        this.board = board;
     }
 }

@@ -20,6 +20,9 @@ databaseChangeLog:
               - column:
                   name: project_status
                   type: varchar(50)
+              - column:
+                  name: release_id
+                  type: INT
   - changeSet:
       id: 4
       author: your_liquibase_username
@@ -34,6 +37,9 @@ databaseChangeLog:
               - column:
                   name: project_status
                   value: "BACKLOG"
+              - column:
+                  name: release_id
+                  value: 4
         - insert:
             tableName: project_entity
             columns:
@@ -43,6 +49,9 @@ databaseChangeLog:
               - column:
                   name: project_status
                   value: "IN_PROGRESS"
+              - column:
+                  name: release_id
+                  value: 5
         - insert:
             tableName: project_entity
             columns:
@@ -52,7 +61,10 @@ databaseChangeLog:
               - column:
                   name: project_status
                   value: "DONE"
+              - column:
+                  name: release_id
+                  value: 6
       rollback:
         - delete:
             tableName: project_entity
-            where: username in ('admin', 'guest')
+            where: username in ('PROJECT_ONE', 'guest')
