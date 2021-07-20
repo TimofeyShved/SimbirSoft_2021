@@ -33,26 +33,26 @@ databaseChangeLog:
             columns:
               - column:
                   name: last_name
-                  value: "admin"
+                  value: "Nicolas"
               - column:
                   name: first_name
-                  value: "admin"
+                  value: "Kim"
               - column:
                   name: patronymic
-                  value: "admin@server.com"
+                  value: "Coppola"
         - insert:
             tableName: user_entity
             columns:
               - column:
                   name: last_name
-                  value: "guest"
+                  value: "Keanu"
               - column:
                   name: first_name
-                  value: "guest"
+                  value: "Reeves"
               - column:
                   name: patronymic
-                  value: "guest@server.com"
+                  value: "Charles"
       rollback:
         - delete:
             tableName: user_entity
-            where: username in ('admin', 'guest')
+            where: username in ('Nicolas', 'Keanu')

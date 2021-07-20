@@ -21,7 +21,6 @@ public class ProjectController {
 
     @PostMapping("/project") // создать
     public ResponseEntity registration(@RequestBody ProjectEntity projectEntity) throws Exception {
-        System.out.println("------------");
         try {
             projectService.registration(projectEntity);
             return ResponseEntity.ok(projectEntity);
@@ -32,7 +31,6 @@ public class ProjectController {
 
     @GetMapping("/projects") // взять
     public ResponseEntity getUsers(){
-        System.out.println("------------");
         try {
             return ResponseEntity.ok(projectCRUD.findAll());
         }catch (Exception e){
@@ -41,9 +39,9 @@ public class ProjectController {
     }
 
     @GetMapping("/project/{projectId}") // взять
-    public ResponseEntity getOne(@PathVariable Long userId) throws Exception {
+    public ResponseEntity getOne(@PathVariable Long projectId) throws Exception {
         try {
-            return ResponseEntity.ok(projectService.getOne(userId));
+            return ResponseEntity.ok(projectService.getOne(projectId));
         }catch (UserNotFoundException e){
             return  ResponseEntity.badRequest().body(e.getMessage());
         }catch (Exception e){
@@ -52,9 +50,9 @@ public class ProjectController {
     }
 
     @DeleteMapping("/project/{projectId}") // удалить
-    public ResponseEntity deleteOne(@PathVariable Long userId) throws Exception {
+    public ResponseEntity deleteOne(@PathVariable Long projectId) throws Exception {
         try {
-            return ResponseEntity.ok(projectService.deleteOne(userId));
+            return ResponseEntity.ok(projectService.deleteOne(projectId));
         }catch (UserNotFoundException e){
             return  ResponseEntity.badRequest().body(e.getMessage());
         }catch (Exception e){
@@ -63,13 +61,13 @@ public class ProjectController {
     }
 
     @PutMapping("/project/{projectId}") // обновить
-    public ResponseEntity updateOne(@PathVariable Long userId, @RequestBody ProjectEntity projectEntity) throws Exception {
+    public ResponseEntity updateOne(@PathVariable Long projectId, @RequestBody ProjectEntity projectEntity) throws Exception {
         try {
-            return ResponseEntity.ok(projectService.updateOne(userId, projectEntity));
+            return ResponseEntity.ok(projectService.updateOne(projectId, projectEntity));
         }catch (UserNotFoundException e){
             return  ResponseEntity.badRequest().body(e.getMessage());
         }catch (Exception e){
-            return  ResponseEntity.badRequest().body("code: ERROR");
+            return  ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }

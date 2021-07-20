@@ -14,7 +14,6 @@ public class ProjectService {
     private ProjectCRUD projectCRUD; // создаём интерфейс для взаимодействия с бд
 
     public ProjectEntity registration(ProjectEntity projectEntity) throws Exception {
-        System.out.println(projectEntity);
         if (projectCRUD.findProjectEntityByProjectName(projectEntity.getProjectName())!=null){
             throw new Exception("code: PROJECT_EXISTS");
         }

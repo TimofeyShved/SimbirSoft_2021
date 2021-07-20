@@ -13,7 +13,6 @@ public class UserService {
     private UserCRUD userCRUD; // создаём интерфейс для взаимодействия с бд
 
     public UserEntity registration(UserEntity userEntity) throws Exception {
-        System.out.println(userEntity);
         if ((userCRUD.findUserEntityByFirstName(userEntity.getFirstName())!=null)&&(userCRUD.findUserEntityBylastName(userEntity.getLastName())!=null)){
             throw new Exception("code: USER_EXISTS");
         }
@@ -38,14 +37,13 @@ public class UserService {
     }
 
     public UserEntity updateOne(Long id, UserEntity userEntityNew) throws Exception {
-        UserEntity userEntity = userCRUD.findById(id).get();/*
+        UserEntity userEntity = userCRUD.findById(id).get();
         if (userCRUD.findById(id).get()==null){
             throw new UserNotFoundException("code: USER_NOT_FOUND");
         }
         if ((userCRUD.findUserEntityByFirstName(userEntityNew.getFirstName())!=null)&&(userCRUD.findUserEntityBylastName(userEntityNew.getLastName())!=null)){
             throw new Exception("code: USER_EXISTS");
         }
-        */
         userEntity.setFirstName(userEntityNew.getFirstName());
         userEntity.setLastName(userEntityNew.getLastName());
         return userCRUD.save(userEntity);
