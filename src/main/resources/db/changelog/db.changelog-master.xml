@@ -12,5 +12,6 @@
     <include file="db/changelog/db.changelog-board.yaml" />
     <include file="db/changelog/db.changelog-task.yaml" />
     <include file="db/changelog/db.changelog-role.yaml" />
+    <include file="db/changelog/db.changelog-release.yaml" />
 
 </databaseChangeLog>
