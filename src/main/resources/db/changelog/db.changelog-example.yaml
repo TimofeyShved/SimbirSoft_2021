@@ -1,0 +1,34 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-table-user
+      author: liquibase-demo-service
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            tableExists:
+              tableName: user_entity
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: user_id
+                  name: id
+                  type: INT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: last_name
+                  type: ${textColumnType}
+              - column:
+                  constraints:
+                    nullable: false
+                  name: first_name
+                  type: ${textColumnType}
+              - column:
+                  name: patronymic
+                  type: ${textColumnType}
+            tableName: user_entity

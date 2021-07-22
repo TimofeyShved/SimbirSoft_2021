@@ -1,0 +1,58 @@
+databaseChangeLog:
+  - logicalFilePath: db/changelog/db.changelog-user.yaml
+  - changeSet:
+      id: 1
+      author: your_liquibase_username
+      changes:
+        - createTable:
+            tableName: user_entity
+            columns:
+              - column:
+                  name: user_id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: last_name
+                  type: varchar(50)
+              - column:
+                  name: first_name
+                  type: varchar(50)
+              - column:
+                  name: patronymic
+                  type: varchar(50)
+  - changeSet:
+      id: 2
+      author: your_liquibase_username
+      comment: "Create admin user"
+      changes:
+        - insert:
+            tableName: user_entity
+            columns:
+              - column:
+                  name: last_name
+                  value: "Nicolas"
+              - column:
+                  name: first_name
+                  value: "Kim"
+              - column:
+                  name: patronymic
+                  value: "Coppola"
+        - insert:
+            tableName: user_entity
+            columns:
+              - column:
+                  name: last_name
+                  value: "Keanu"
+              - column:
+                  name: first_name
+                  value: "Reeves"
+              - column:
+                  name: patronymic
+                  value: "Charles"
+      rollback:
+        - delete:
+            tableName: user_entity
+            where: username in ('Nicolas', 'Keanu')
