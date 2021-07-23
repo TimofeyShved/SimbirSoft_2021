@@ -1,9 +1,8 @@
 package com.example.SimbirSoft_2021.service;
 
 import com.example.SimbirSoft_2021.entity.ProjectEntity;
-import com.example.SimbirSoft_2021.entity.UserEntity;
 import com.example.SimbirSoft_2021.exception.UserNotFoundException;
-import com.example.SimbirSoft_2021.repository.ProjectCRUD;
+import com.example.SimbirSoft_2021.repository.ProjectCrud;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +10,7 @@ import org.springframework.stereotype.Service;
 public class ProjectService {
 
     @Autowired
-    private ProjectCRUD projectCRUD; // создаём интерфейс для взаимодействия с бд
+    private ProjectCrud projectCRUD; // создаём интерфейс для взаимодействия с бд
 
     public ProjectEntity registration(ProjectEntity projectEntity) throws Exception {
         if (projectCRUD.findProjectEntityByProjectName(projectEntity.getProjectName())!=null){

@@ -2,7 +2,7 @@ package com.example.SimbirSoft_2021.controller;
 
 import com.example.SimbirSoft_2021.entity.UserEntity;
 import com.example.SimbirSoft_2021.exception.UserNotFoundException;
-import com.example.SimbirSoft_2021.repository.UserCRUD;
+import com.example.SimbirSoft_2021.repository.UserCrud;
 import com.example.SimbirSoft_2021.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,7 @@ public class UserController {
     private UserService userService;
 
     @Autowired
-    private UserCRUD userCRUD; // создаём интерфейс для взаимодействия с бд
+    private UserCrud userCRUD; // создаём интерфейс для взаимодействия с бд
 
     @PostMapping("/user") // создать
     public ResponseEntity registration(@RequestBody UserEntity userEntity) throws Exception {

@@ -2,7 +2,7 @@ package com.example.SimbirSoft_2021.service;
 
 import com.example.SimbirSoft_2021.entity.TaskEntity;
 import com.example.SimbirSoft_2021.exception.UserNotFoundException;
-import com.example.SimbirSoft_2021.repository.TaskCRUD;
+import com.example.SimbirSoft_2021.repository.TaskCrud;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 public class TaskService {
 
     @Autowired
-    private TaskCRUD taskCRUD; // создаём интерфейс для взаимодействия с бд
+    private TaskCrud taskCRUD; // создаём интерфейс для взаимодействия с бд
 
     public TaskEntity registration(TaskEntity taskEntity) throws Exception {
         if ((taskCRUD.findTaskEntityByTaskName(taskEntity.getTaskName())!=null)){

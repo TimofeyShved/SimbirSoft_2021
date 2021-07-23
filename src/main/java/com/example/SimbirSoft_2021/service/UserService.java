@@ -2,7 +2,7 @@ package com.example.SimbirSoft_2021.service;
 
 import com.example.SimbirSoft_2021.entity.UserEntity;
 import com.example.SimbirSoft_2021.exception.UserNotFoundException;
-import com.example.SimbirSoft_2021.repository.UserCRUD;
+import com.example.SimbirSoft_2021.repository.UserCrud;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     @Autowired
-    private UserCRUD userCRUD; // создаём интерфейс для взаимодействия с бд
+    private UserCrud userCRUD; // создаём интерфейс для взаимодействия с бд
 
     public UserEntity registration(UserEntity userEntity) throws Exception {
         if ((userCRUD.findUserEntityByFirstName(userEntity.getFirstName())!=null)&&(userCRUD.findUserEntityBylastName(userEntity.getLastName())!=null)){

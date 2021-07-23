@@ -1,8 +1,7 @@
 package com.example.SimbirSoft_2021.controller;
 
 import com.example.SimbirSoft_2021.entity.ReleaseEntity;
-import com.example.SimbirSoft_2021.exception.UserNotFoundException;
-import com.example.SimbirSoft_2021.repository.ReleaseCRUD;
+import com.example.SimbirSoft_2021.repository.ReleaseCrud;
 import com.example.SimbirSoft_2021.service.ReleaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +15,7 @@ public class ReleaseController {
     private ReleaseService releaseService;
 
     @Autowired
-    private ReleaseCRUD releaseCRUD; // создаём интерфейс для взаимодействия с бд
+    private ReleaseCrud releaseCRUD; // создаём интерфейс для взаимодействия с бд
 
     @PostMapping("/release") // создать
     public ResponseEntity registration(@RequestBody ReleaseEntity releaseEntity) throws Exception {

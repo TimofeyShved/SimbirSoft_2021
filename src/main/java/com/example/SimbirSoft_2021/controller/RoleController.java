@@ -1,8 +1,7 @@
 package com.example.SimbirSoft_2021.controller;
 
 import com.example.SimbirSoft_2021.entity.RoleEntity;
-import com.example.SimbirSoft_2021.exception.UserNotFoundException;
-import com.example.SimbirSoft_2021.repository.RoleCRUD;
+import com.example.SimbirSoft_2021.repository.RoleCrud;
 import com.example.SimbirSoft_2021.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +16,7 @@ public class RoleController {
     private RoleService roleService;
 
     @Autowired
-    private RoleCRUD roleCRUD; // создаём интерфейс для взаимодействия с бд
+    private RoleCrud roleCRUD; // создаём интерфейс для взаимодействия с бд
 
     @PostMapping("/role") // создать
     public ResponseEntity registration(@RequestBody RoleEntity roleEntity) throws Exception {

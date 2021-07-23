@@ -2,7 +2,7 @@ package com.example.SimbirSoft_2021.controller;
 
 import com.example.SimbirSoft_2021.entity.TaskEntity;
 import com.example.SimbirSoft_2021.exception.UserNotFoundException;
-import com.example.SimbirSoft_2021.repository.TaskCRUD;
+import com.example.SimbirSoft_2021.repository.TaskCrud;
 import com.example.SimbirSoft_2021.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,7 @@ public class TaskController {
     private TaskService taskService;
 
     @Autowired
-    private TaskCRUD taskCRUD; // создаём интерфейс для взаимодействия с бд
+    private TaskCrud taskCRUD; // создаём интерфейс для взаимодействия с бд
 
     @PostMapping("/task") // создать
     public ResponseEntity registration(@RequestBody TaskEntity taskEntity) throws Exception {

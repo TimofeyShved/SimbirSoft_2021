@@ -2,19 +2,15 @@ package com.example.SimbirSoft_2021.service;
 
 import com.example.SimbirSoft_2021.entity.ReleaseEntity;
 import com.example.SimbirSoft_2021.exception.UserNotFoundException;
-import com.example.SimbirSoft_2021.repository.ReleaseCRUD;
+import com.example.SimbirSoft_2021.repository.ReleaseCrud;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 @Service
 public class ReleaseService {
 
     @Autowired
-    private ReleaseCRUD releaseCRUD; // создаём интерфейс для взаимодействия с бд
+    private ReleaseCrud releaseCRUD; // создаём интерфейс для взаимодействия с бд
 
     public ReleaseEntity registration(ReleaseEntity releaseEntity) throws Exception {
         System.out.println(releaseEntity.getDataStart());
