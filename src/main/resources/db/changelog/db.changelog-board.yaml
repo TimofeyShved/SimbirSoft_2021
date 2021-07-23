@@ -1,0 +1,49 @@
+databaseChangeLog:
+  - logicalFilePath: db/changelog/db.changelog-board.yaml
+  - changeSet:
+      id: 5
+      author: your_liquibase_username
+      changes:
+        - createTable:
+            tableName: board_entity
+            columns:
+              - column:
+                  name: board_id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: project_id
+                  type: INT
+              - column:
+                  name: task_id
+                  type: INT
+  - changeSet:
+      id: 6
+      author: your_liquibase_username
+      comment: "Create admin board"
+      changes:
+        - insert:
+            tableName: board_entity
+            columns:
+              - column:
+                  name: project_id
+                  value: "1"
+              - column:
+                  name: task_id
+                  value: "1"
+        - insert:
+            tableName: board_entity
+            columns:
+              - column:
+                  name: project_id
+                  value: "2"
+              - column:
+                  name: task_id
+                  value: "2"
+      rollback:
+        - delete:
+            tableName: board_entity
+            where: username in ('2', '2')
