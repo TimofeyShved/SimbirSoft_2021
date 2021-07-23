@@ -1,5 +1,25 @@
 databaseChangeLog:
-  - include:
-      file: db/changelog/db.changelog-user.yaml
-  - include:
-      file: db/changelog/db.changelog-project.yaml
+  - logicalFilePath: db/changelog/db.changelog-master.yaml
+  - changeSet:
+      id: 1
+      author: your_liquibase_username
+      changes:
+        - createTable:
+            tableName: user
+            columns:
+              - column:
+                  name: userId
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: lastName
+                  type: varchar(50)
+              - column:
+                  name: firstName
+                  type: varchar(50)
+              - column:
+                  name: patronymic
+                  type: varchar(50)
