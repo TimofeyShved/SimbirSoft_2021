@@ -6,6 +6,8 @@ import com.example.SimbirSoft_2021.repository.UserCrud;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserService {
 
@@ -17,6 +19,11 @@ public class UserService {
             throw new Exception("code: USER_EXISTS");
         }
         return userCRUD.save(userEntity);
+    }
+
+    public List<UserEntity> getAll() {
+        List<UserEntity> list = userCRUD.findAll();
+        return list;
     }
 
     public UserEntity getOne(Long id) throws UserNotFoundException {

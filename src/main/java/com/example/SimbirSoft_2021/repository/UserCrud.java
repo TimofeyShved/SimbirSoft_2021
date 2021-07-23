@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 //public interface UserCrud extends CrudRepository<UserEntity, Long> { // наследуемый интерфейс для изменения данных в бд
 
 @Repository
-public interface UserCrud extends JpaRepository<UserEntity, Integer> {
+public interface UserCrud extends JpaRepository<UserEntity, Long> {
     UserEntity findUserEntityByFirstName(String firstName);
     UserEntity findUserEntityBylastName(String lastName);
 }
