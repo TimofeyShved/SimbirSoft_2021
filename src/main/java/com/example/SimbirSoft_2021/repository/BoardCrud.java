@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 //public interface BoardCrud extends CrudRepository<BoardEntity, Long> { // наследуемый интерфейс для изменения данных в бд
 @Repository
 public interface BoardCrud extends JpaRepository<BoardEntity, Long> {
-    BoardEntity findByProjectId(Long projectId);
-    BoardEntity findByTaskId(Long taskId);
     BoardEntity findByProjectIdAndTaskId(Long projectId, Long taskId);
+    BoardEntity findByBoardId(Long boardId);
 }

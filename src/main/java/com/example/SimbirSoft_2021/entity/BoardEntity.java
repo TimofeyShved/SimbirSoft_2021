@@ -1,7 +1,12 @@
 package com.example.SimbirSoft_2021.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 
+//@Getter
+//@Setter
 @Entity
 @Table(name="board_entity")
 public class BoardEntity { // ----------------------------------------------- наш с вами пользователь

@@ -3,12 +3,16 @@ package com.example.SimbirSoft_2021.Dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 
 @Schema(description = "Доска с проектами и задачами")
 public class BoardDto { // ----------------------------------------------- наш с вами пользователь
 
     // ----------------------------------------------- переменные
     @Schema(description = "Id доски")
+    //@Null(groups = {New.class})
+    //@NotNull(groups = {UpdateName.class})
     private Long boardId;
 
     @Schema(description = "Id выбранного проекта")
