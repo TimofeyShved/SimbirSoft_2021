@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface RoleCrud extends JpaRepository<RoleEntity, Long> {
-    RoleEntity findRoleEntityByRoleName(String roleName);
-    RoleEntity findRoleEntityByBoardId(Long boardId);
-    RoleEntity findRoleEntityByUserId(Long userId);
+    RoleEntity findByRoleId(Long roleId);
+    RoleEntity findByRoleNameAndBoardIdAndUserId(String roleName, Long boardId, Long userId);
 }

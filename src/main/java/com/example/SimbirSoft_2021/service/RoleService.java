@@ -1,48 +1,89 @@
 package com.example.SimbirSoft_2021.service;
 
+import com.example.SimbirSoft_2021.entity.ReleaseEntity;
 import com.example.SimbirSoft_2021.entity.RoleEntity;
-import com.example.SimbirSoft_2021.exception.UserNotFoundException;
+import com.example.SimbirSoft_2021.exception.*;
+import com.example.SimbirSoft_2021.repository.ProjectCrud;
 import com.example.SimbirSoft_2021.repository.RoleCrud;
+import com.example.SimbirSoft_2021.service.interfaceService.ProjectServiceInterface;
+import com.example.SimbirSoft_2021.service.interfaceService.RoleServiceInterface;
+import com.example.SimbirSoft_2021.service.interfaceService.StandartServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Service
-public class RoleService {
+import javax.transaction.Transactional;
+import java.util.List;
 
-    @Autowired
+// 1 способ
+//@RequiredArgsConstructor
+@Service
+public class RoleService implements StandartServiceInterface, RoleServiceInterface {
+
+    // 2 способ
+    //@Autowired
+    //private RoleCrud roleCRUD;
+
     private RoleCrud roleCRUD; // создаём интерфейс для взаимодействия с бд
 
-    public RoleEntity registration(RoleEntity roleEntity) throws Exception {
-        if ((roleCRUD.findRoleEntityByRoleName(roleEntity.getRoleName())!=null)&&(roleCRUD.findRoleEntityByUserId(roleEntity.getUserId())!=null)){
-            throw new Exception("code: ROLE_EXISTS");
+    // 3 способ
+    public RoleService(RoleCrud roleCRUD) {
+        this.roleCRUD = roleCRUD;
+    }
+
+    @Transactional
+    @Override
+    public RoleEntity registration(Object o) throws RoleExistsException {
+        RoleEntity roleEntity = (RoleEntity)o;
+        if (roleCRUD.findByRoleNameAndBoardIdAndUserId(roleEntity.getRoleName(), roleEntity.getBoardId(), roleEntity.getUserId())!=null){
+            throw new RoleExistsException();
         }
         return roleCRUD.save(roleEntity);
     }
 
-    public RoleEntity getOne(Long id) throws UserNotFoundException {
-        RoleEntity roleEntity = roleCRUD.findById(id).get();
+    @Transactional
+    @Override
+    public List<RoleEntity> getAll() throws RoleNotFoundException {
+        List<RoleEntity> list = roleCRUD.findAll();
+        if (list==null){
+            throw new RoleNotFoundException();
+        }
+        return list;
+    }
+
+    @Transactional
+    @Override
+    public RoleEntity getOne(Long id) throws RoleNotFoundException {
+        RoleEntity roleEntity = roleCRUD.findByRoleId(id);
         if (roleEntity==null){
-            throw new UserNotFoundException("code: ROLE_NOT_FOUND");
+            throw new RoleNotFoundException();
         }
         return roleEntity;
     }
 
-    public Long deleteOne(Long id) throws UserNotFoundException {
-        if (roleCRUD.findById(id).get()==null){
-            throw new UserNotFoundException("code: ROLE_NOT_FOUND");
+    @Transactional
+    @Override
+    public Long deleteOne(Long id) throws RoleNotFoundException {
+        if (roleCRUD.findByRoleId(id)==null){
+            throw new RoleNotFoundException();
         }
         roleCRUD.deleteById(id);
         return id;
     }
 
-    public RoleEntity updateOne(Long id, RoleEntity roleEntityNew) throws Exception {
-        RoleEntity roleEntity = roleCRUD.findById(id).get();
-        if (roleCRUD.findById(id).get()==null){
-            throw new UserNotFoundException("code: ROLE_NOT_FOUND");
+    @Transactional
+    @Override
+    public RoleEntity updateOne(Long id, Object o) throws RoleNotFoundException, RoleExistsException {
+        RoleEntity roleEntityNew = (RoleEntity)o;
+
+        if (roleCRUD.findByRoleId(id)==null){
+            throw new RoleNotFoundException();
         }
-        if ((roleCRUD.findRoleEntityByRoleName(roleEntityNew.getRoleName())!=null)&&(roleCRUD.findRoleEntityByUserId(roleEntityNew.getUserId())!=null)){
-            throw new Exception("code: ROLE_EXISTS");
+        RoleEntity roleEntity = roleCRUD.findByRoleId(id);
+
+        if (roleCRUD.findByRoleNameAndBoardIdAndUserId(roleEntityNew.getRoleName(), roleEntityNew.getBoardId(), roleEntityNew.getUserId())!=null){
+            throw new RoleExistsException();
         }
+
         roleEntity.setRoleName(roleEntityNew.getRoleName());
         roleEntity.setBoardId(roleEntityNew.getBoardId());
         roleEntity.setUserId(roleEntityNew.getUserId());

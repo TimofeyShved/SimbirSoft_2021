@@ -1,11 +1,16 @@
 package com.example.SimbirSoft_2021.controller;
 
 import com.example.SimbirSoft_2021.entity.RoleEntity;
+import com.example.SimbirSoft_2021.exception.ReleaseExistsException;
+import com.example.SimbirSoft_2021.exception.ReleaseNotFoundException;
+import com.example.SimbirSoft_2021.exception.RoleExistsException;
+import com.example.SimbirSoft_2021.exception.RoleNotFoundException;
 import com.example.SimbirSoft_2021.repository.RoleCrud;
 import com.example.SimbirSoft_2021.service.RoleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,57 +23,70 @@ public class RoleController {
     @Autowired
     private RoleService roleService;
 
-    @Autowired
-    private RoleCrud roleCRUD; // создаём интерфейс для взаимодействия с бд
-
     @Operation(summary = "Добавить роль")
-    @PostMapping("/role") // создать
+    @RequestMapping(value = "/role", method = RequestMethod.POST) // создать
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity registration(@RequestBody RoleEntity roleEntity) throws Exception {
         try {
-            roleService.registration(roleEntity);
-            return ResponseEntity.ok(roleEntity);
-        } catch (Exception e){
+            return ResponseEntity.ok(roleService.registration(roleEntity));
+        } catch (RoleExistsException e){
             return  ResponseEntity.badRequest().body(e.getMessage());
+        }catch (Exception e){
+            return  ResponseEntity.badRequest().body("Error");
         }
     }
 
     @Operation(summary = "Получить список всех ролей")
-    @GetMapping("/rols") // взять
+    @RequestMapping(value = "/rols", method = RequestMethod.GET) // взять
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getUsers(){
         try {
-            return ResponseEntity.ok(roleCRUD.findAll());
-        }catch (Exception e){
+            return ResponseEntity.ok(roleService.getAll());
+        }catch (RoleNotFoundException e){
             return  ResponseEntity.badRequest().body(e.getMessage());
+        }catch (Exception e){
+            return  ResponseEntity.badRequest().body("Error");
         }
     }
 
     @Operation(summary = "Получить выбранную роль")
-    @GetMapping("/role/{roleId}") // взять
+    @RequestMapping(value = "/role/{roleId}", method = RequestMethod.GET) // взять
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getOne(@PathVariable Long roleId) throws Exception {
         try {
             return ResponseEntity.ok(roleService.getOne(roleId));
-        }catch (Exception e){
+        }catch (RoleNotFoundException e){
             return  ResponseEntity.badRequest().body(e.getMessage());
+        }catch (Exception e){
+            return  ResponseEntity.badRequest().body("Error");
         }
     }
 
     @Operation(summary = "Удалить выбранную роль")
-    @DeleteMapping("/role/{roleId}") // удалить
+    @RequestMapping(value = "/role/{roleId}", method = RequestMethod.DELETE) // удалить
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity deleteOne(@PathVariable Long roleId) throws Exception {
         try {
             return ResponseEntity.ok(roleService.deleteOne(roleId));
-        }catch (Exception e){
+        }catch (RoleNotFoundException e){
             return  ResponseEntity.badRequest().body(e.getMessage());
+        }catch (Exception e){
+            return  ResponseEntity.badRequest().body("Error");
         }
     }
 
     @Operation(summary = "Обновить данные выбранной роли")
-    @PutMapping("/role/{roleId}") // обновить
+    @RequestMapping(value = "/role/{roleId}", method = RequestMethod.PUT) // обновить
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity updateOne(@PathVariable Long roleId, @RequestBody RoleEntity roleEntity) throws Exception {
         try {
             return ResponseEntity.ok(roleService.updateOne(roleId, roleEntity));
-        }catch (Exception e){
+        }catch (RoleNotFoundException e){
             return  ResponseEntity.badRequest().body(e.getMessage());
+        }catch (RoleExistsException e){
+            return  ResponseEntity.badRequest().body(e.getMessage());
+        }catch (Exception e){
+            return  ResponseEntity.badRequest().body("Error");
         }
     }
 }
