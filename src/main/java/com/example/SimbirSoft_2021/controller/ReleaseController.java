@@ -1,12 +1,18 @@
 package com.example.SimbirSoft_2021.controller;
 
 import com.example.SimbirSoft_2021.entity.ReleaseEntity;
+import com.example.SimbirSoft_2021.exception.ProjectExistsException;
+import com.example.SimbirSoft_2021.exception.ProjectNotFoundException;
+import com.example.SimbirSoft_2021.exception.ReleaseExistsException;
+import com.example.SimbirSoft_2021.exception.ReleaseNotFoundException;
 import com.example.SimbirSoft_2021.repository.ReleaseCrud;
 import com.example.SimbirSoft_2021.service.ReleaseService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Управление временем реализации")
@@ -17,57 +23,71 @@ public class ReleaseController {
     @Autowired
     private ReleaseService releaseService;
 
-    @Autowired
-    private ReleaseCrud releaseCRUD; // создаём интерфейс для взаимодействия с бд
-
     @Operation(summary = "Добавить время реализации")
-    @PostMapping("/release") // создать
-    public ResponseEntity registration(@RequestBody ReleaseEntity releaseEntity) throws Exception {
+    @RequestMapping(value = "/release", method = RequestMethod.POST) // создать
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity registration(@Validated @RequestBody ReleaseEntity releaseEntity) throws Exception {
         try {
             releaseService.registration(releaseEntity);
             return ResponseEntity.ok(releaseEntity);
-        }catch (Exception e){
+        }catch (ReleaseExistsException e){
             return  ResponseEntity.badRequest().body(e.getMessage());
+        }catch (Exception e){
+            return  ResponseEntity.badRequest().body("Error");
         }
     }
 
     @Operation(summary = "Получить список времён реализации")
-    @GetMapping("/releases") // взять
+    @RequestMapping(value = "/releases", method = RequestMethod.GET) // взять
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getUsers(){
         try {
-            return ResponseEntity.ok(releaseCRUD.findAll());
-        }catch (Exception e){
+            return ResponseEntity.ok(releaseService.getAll());
+        }catch (ReleaseNotFoundException e){
             return  ResponseEntity.badRequest().body(e.getMessage());
+        }catch (Exception e){
+            return  ResponseEntity.badRequest().body("Error");
         }
     }
 
     @Operation(summary = "Получить выбранное время реализации")
-    @GetMapping("/release/{releaseId}") // взять
-    public ResponseEntity getOne(@PathVariable Long releaseId) throws Exception {
+    @RequestMapping(value = "/release/{releaseId}", method = RequestMethod.GET) // взять
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity getOne(@Validated @PathVariable Long releaseId) throws Exception {
         try {
             return ResponseEntity.ok(releaseService.getOne(releaseId));
-        }catch (Exception e){
+        }catch (ReleaseNotFoundException e){
             return  ResponseEntity.badRequest().body(e.getMessage());
+        }catch (Exception e){
+            return  ResponseEntity.badRequest().body("Error");
         }
     }
 
     @Operation(summary = "Удалить выбранное время реализации")
-    @DeleteMapping("/release/{releaseId}") // удалить
-    public ResponseEntity deleteOne(@PathVariable Long releaseId) throws Exception {
+    @RequestMapping(value = "/release/{releaseId}", method = RequestMethod.DELETE) // удалить
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity deleteOne(@Validated @PathVariable Long releaseId) throws Exception {
         try {
             return ResponseEntity.ok(releaseService.deleteOne(releaseId));
-        }catch (Exception e){
+        }catch (ReleaseNotFoundException e){
             return  ResponseEntity.badRequest().body(e.getMessage());
+        }catch (Exception e){
+            return  ResponseEntity.badRequest().body("Error");
         }
     }
 
     @Operation(summary = "Обновить данные выбранного времени реализации")
-    @PutMapping("/release/{releaseId}") // обновить
-    public ResponseEntity updateOne(@PathVariable Long releaseId, @RequestBody ReleaseEntity releaseEntity) throws Exception {
+    @RequestMapping(value = "/release/{releaseId}", method = RequestMethod.PUT) // обновить
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity updateOne(@Validated @PathVariable Long releaseId, @Validated @RequestBody ReleaseEntity releaseEntity) throws Exception {
         try {
             return ResponseEntity.ok(releaseService.updateOne(releaseId, releaseEntity));
-        }catch (Exception e){
+        }catch (ReleaseNotFoundException e){
             return  ResponseEntity.badRequest().body(e.getMessage());
+        }catch (ReleaseExistsException e){
+            return  ResponseEntity.badRequest().body(e.getMessage());
+        }catch (Exception e){
+            return  ResponseEntity.badRequest().body("Error");
         }
     }
 }

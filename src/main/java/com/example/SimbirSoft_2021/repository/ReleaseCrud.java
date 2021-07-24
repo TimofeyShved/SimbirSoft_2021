@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ReleaseCrud extends JpaRepository<ReleaseEntity, Long> {
-    ReleaseEntity findReleaseEntityByDataStart(String dataStart);
-    ReleaseEntity findReleaseEntityByDataEnd(String dataEnd);
+    ReleaseEntity findByReleaseId(Long releaseId);
+    ReleaseEntity findByDataStartAndDataEnd(String dataStart, String dataEnd);
 }

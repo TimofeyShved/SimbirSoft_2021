@@ -1,50 +1,86 @@
 package com.example.SimbirSoft_2021.service;
 
+import com.example.SimbirSoft_2021.entity.ProjectEntity;
 import com.example.SimbirSoft_2021.entity.ReleaseEntity;
-import com.example.SimbirSoft_2021.exception.UserNotFoundException;
+import com.example.SimbirSoft_2021.exception.*;
+import com.example.SimbirSoft_2021.repository.ProjectCrud;
 import com.example.SimbirSoft_2021.repository.ReleaseCrud;
+import com.example.SimbirSoft_2021.service.interfaceService.ProjectServiceInterface;
+import com.example.SimbirSoft_2021.service.interfaceService.StandartServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Service
-public class ReleaseService {
+import javax.transaction.Transactional;
+import java.util.List;
 
-    @Autowired
+// 1 способ
+//@RequiredArgsConstructor
+@Service
+public class ReleaseService implements StandartServiceInterface, ProjectServiceInterface {
+
+    // 2 способ
+    //@Autowired
+    //private ReleaseCrud releaseCRUD;
+
     private ReleaseCrud releaseCRUD; // создаём интерфейс для взаимодействия с бд
 
-    public ReleaseEntity registration(ReleaseEntity releaseEntity) throws Exception {
-        System.out.println(releaseEntity.getDataStart());
-        if ((releaseCRUD.findReleaseEntityByDataStart(releaseEntity.getDataStart())!=null)
-                &&((releaseCRUD.findReleaseEntityByDataEnd(releaseEntity.getDataEnd())!=null))){
-            throw new Exception("code: RELEASE_EXISTS");
+    // 3 способ
+    public ReleaseService(ReleaseCrud releaseCRUD) {
+        this.releaseCRUD = releaseCRUD;
+    }
+
+    @Transactional
+    @Override
+    public ReleaseEntity registration(Object o) throws ReleaseExistsException {
+        ReleaseEntity releaseEntity = (ReleaseEntity)o;
+        if (releaseCRUD.findByDataStartAndDataEnd(releaseEntity.getDataStart(), releaseEntity.getDataEnd())!=null){
+            throw new ReleaseExistsException();
         }
         return releaseCRUD.save(releaseEntity);
     }
 
-    public ReleaseEntity getOne(Long id) throws UserNotFoundException {
-        ReleaseEntity releaseEntity = releaseCRUD.findById(id).get();
-        if (releaseEntity==null){
-            throw new UserNotFoundException("code: RELEASE_NOT_FOUND");
+    @Transactional
+    @Override
+    public List<ReleaseEntity> getAll() throws ReleaseNotFoundException {
+        List<ReleaseEntity> list = releaseCRUD.findAll();
+        if (list==null){
+            throw new ReleaseNotFoundException();
         }
-        return releaseEntity;
+        return list;
     }
 
-    public Long deleteOne(Long id) throws UserNotFoundException {
-        if (releaseCRUD.findById(id).get()==null){
-            throw new UserNotFoundException("code: RELEASE_NOT_FOUND");
+    @Transactional
+    @Override
+    public ReleaseEntity getOne(Long id) throws ReleaseNotFoundException {
+        ReleaseEntity projectEntity = releaseCRUD.findByReleaseId(id);
+        if (projectEntity==null){
+            throw new ReleaseNotFoundException();
+        }
+        return projectEntity;
+    }
+
+    @Transactional
+    @Override
+    public Long deleteOne(Long id) throws ReleaseNotFoundException {
+        if (releaseCRUD.findByReleaseId(id)==null){
+            throw new ReleaseNotFoundException();
         }
         releaseCRUD.deleteById(id);
         return id;
     }
 
-    public ReleaseEntity updateOne(Long id, ReleaseEntity releaseEntityNew) throws Exception {
-        ReleaseEntity releaseEntity = releaseCRUD.findById(id).get();
-        if (releaseCRUD.findById(id).get()==null){
-            throw new UserNotFoundException("code: TASK_NOT_FOUND");
+    @Transactional
+    @Override
+    public ReleaseEntity updateOne(Long id, Object o) throws ReleaseNotFoundException, ReleaseExistsException {
+        ReleaseEntity releaseEntityNew = (ReleaseEntity)o;
+
+        if (releaseCRUD.findByReleaseId(id)==null){
+            throw new ReleaseNotFoundException();
         }
-        if ((releaseCRUD.findReleaseEntityByDataStart(releaseEntityNew.getDataStart())!=null)
-                &&((releaseCRUD.findReleaseEntityByDataEnd(releaseEntityNew.getDataEnd())!=null))){
-            throw new Exception("code: RELEASE_EXISTS");
+        ReleaseEntity releaseEntity = releaseCRUD.findByReleaseId(id);
+
+        if (releaseCRUD.findByDataStartAndDataEnd(releaseEntityNew.getDataStart(), releaseEntityNew.getDataEnd())!=null){
+            throw new ReleaseExistsException();
         }
         releaseEntity.setDataStart(releaseEntityNew.getDataStart());
         releaseEntity.setDataEnd(releaseEntityNew.getDataEnd());
