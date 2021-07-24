@@ -1,47 +1,87 @@
 package com.example.SimbirSoft_2021.service;
 
+import com.example.SimbirSoft_2021.entity.BoardEntity;
 import com.example.SimbirSoft_2021.entity.ProjectEntity;
-import com.example.SimbirSoft_2021.exception.UserNotFoundException;
+import com.example.SimbirSoft_2021.exception.*;
+import com.example.SimbirSoft_2021.repository.BoardCrud;
 import com.example.SimbirSoft_2021.repository.ProjectCrud;
+import com.example.SimbirSoft_2021.service.interfaceService.BoardServiceInterface;
+import com.example.SimbirSoft_2021.service.interfaceService.ProjectServiceInterface;
+import com.example.SimbirSoft_2021.service.interfaceService.StandartServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Service
-public class ProjectService {
+import javax.transaction.Transactional;
+import java.util.List;
 
-    @Autowired
+// 1 способ
+//@RequiredArgsConstructor
+@Service
+public class ProjectService implements StandartServiceInterface, ProjectServiceInterface {
+
+    // 2 способ
+    //@Autowired
+    //private ProjectCrud projectCRUD;
+
     private ProjectCrud projectCRUD; // создаём интерфейс для взаимодействия с бд
 
-    public ProjectEntity registration(ProjectEntity projectEntity) throws Exception {
+    // 3 способ
+    public ProjectService(ProjectCrud projectCRUD) {
+        this.projectCRUD = projectCRUD;
+    }
+
+    @Transactional
+    @Override
+    public ProjectEntity registration(Object o) throws ProjectExistsException {
+        ProjectEntity projectEntity = (ProjectEntity)o;
         if (projectCRUD.findProjectEntityByProjectName(projectEntity.getProjectName())!=null){
-            throw new Exception("code: PROJECT_EXISTS");
+            throw new ProjectExistsException();
         }
         return projectCRUD.save(projectEntity);
     }
 
-    public ProjectEntity getOne(Long id) throws UserNotFoundException {
-        ProjectEntity projectEntity = projectCRUD.findById(id).get();
+    @Transactional
+    @Override
+    public List<ProjectEntity> getAll() throws ProjectNotFoundException {
+        List<ProjectEntity> list = projectCRUD.findAll();
+        if (list==null){
+            throw new ProjectNotFoundException();
+        }
+        return list;
+    }
+
+    @Transactional
+    @Override
+    public ProjectEntity getOne(Long id) throws ProjectNotFoundException {
+        ProjectEntity projectEntity = projectCRUD.findByProjectId(id);
         if (projectEntity==null){
-            throw new UserNotFoundException("code: PROJECT_NOT_FOUND");
+            throw new ProjectNotFoundException();
         }
         return projectEntity;
     }
 
-    public Long deleteOne(Long id) throws UserNotFoundException {
-        if (projectCRUD.findById(id).get()==null){
-            throw new UserNotFoundException("code: PROJECT_NOT_FOUND");
+    @Transactional
+    @Override
+    public Long deleteOne(Long id) throws ProjectNotFoundException {
+        if (projectCRUD.findByProjectId(id)==null){
+            throw new ProjectNotFoundException();
         }
         projectCRUD.deleteById(id);
         return id;
     }
 
-    public ProjectEntity updateOne(Long id, ProjectEntity projectEntityNew) throws Exception {
-        ProjectEntity projectEntity = projectCRUD.findById(id).get();
-        if (projectCRUD.findById(id).get()==null){
-            throw new UserNotFoundException("code: PROJECT_NOT_FOUND");
+    @Transactional
+    @Override
+    public ProjectEntity updateOne(Long id, Object o) throws ProjectNotFoundException, ProjectExistsException {
+        ProjectEntity projectEntityNew = (ProjectEntity)o;
+
+        if (projectCRUD.findByProjectId(id)==null){
+            throw new ProjectNotFoundException();
         }
-        if (projectCRUD.findProjectEntityByProjectName(projectEntityNew.getProjectName())!=null){
-            throw new Exception("code: PROJECT_EXISTS");
+        ProjectEntity projectEntity = projectCRUD.findByProjectId(id);
+
+        if (projectCRUD.findProjectEntityByProjectName(projectEntity.getProjectName())!=null){
+            throw new ProjectExistsException();
         }
         projectEntity.setProjectName(projectEntityNew.getProjectName());
         projectEntity.setProjectStatus(projectEntityNew.getProjectStatus());
