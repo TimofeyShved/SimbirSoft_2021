@@ -1,74 +1,101 @@
 package com.example.SimbirSoft_2021.controller;
 
 import com.example.SimbirSoft_2021.entity.TaskEntity;
-import com.example.SimbirSoft_2021.exception.UserNotFoundException;
+import com.example.SimbirSoft_2021.exception.*;
+import com.example.SimbirSoft_2021.repository.ProjectCrud;
 import com.example.SimbirSoft_2021.repository.TaskCrud;
 import com.example.SimbirSoft_2021.service.TaskService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+// 1 способ
+//@RequiredArgsConstructor
 @Tag(name = "Управление задачами")
 @RequestMapping("/control")
 @RestController
 public class TaskController {
 
-    @Autowired
-    private TaskService taskService;
+    // 2 способ
+    //@Autowired
+    //private TaskService taskService;
 
-    @Autowired
-    private TaskCrud taskCRUD; // создаём интерфейс для взаимодействия с бд
+    private TaskService taskService; // создаём интерфейс для взаимодействия с бд
+
+    // 3 способ
+    public TaskController(TaskService taskService) {
+        this.taskService = taskService;
+    }
 
     @Operation(summary = "Добавить задачу")
-    @PostMapping("/task") // создать
-    public ResponseEntity registration(@RequestBody TaskEntity taskEntity) throws Exception {
+    @RequestMapping(value = "/task", method = RequestMethod.POST) // создать
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity registration(@Validated @RequestBody TaskEntity taskEntity) throws Exception {
         try {
             taskService.registration(taskEntity);
             return ResponseEntity.ok(taskEntity);
-        }catch (Exception e){
+        }catch (ReleaseExistsException e){
             return  ResponseEntity.badRequest().body(e.getMessage());
+        }catch (Exception e){
+            return  ResponseEntity.badRequest().body("Error");
         }
     }
 
     @Operation(summary = "Получить список задач")
-    @GetMapping("/tasks") // взять
+    @RequestMapping(value = "/tasks", method = RequestMethod.GET) // взять
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getUsers(){
         try {
-            return ResponseEntity.ok(taskCRUD.findAll());
-        }catch (Exception e){
+            return ResponseEntity.ok(taskService.getAll());
+        }catch (TaskNotFoundException e){
             return  ResponseEntity.badRequest().body(e.getMessage());
+        }catch (Exception e){
+            return  ResponseEntity.badRequest().body("Error");
         }
     }
 
     @Operation(summary = "Получить выбранную задачу")
-    @GetMapping("/task/{taskId}") // взять
+    @RequestMapping(value = "/task/{taskId}", method = RequestMethod.GET) // взять
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getOne(@PathVariable Long taskId) throws Exception {
         try {
             return ResponseEntity.ok(taskService.getOne(taskId));
-        }catch (Exception e){
+        }catch (TaskNotFoundException e){
             return  ResponseEntity.badRequest().body(e.getMessage());
+        }catch (Exception e){
+            return  ResponseEntity.badRequest().body("Error");
         }
     }
 
     @Operation(summary = "Удалить выбранную задачу")
-    @DeleteMapping("/task/{taskId}") // удалить
+    @RequestMapping(value = "/task/{taskId}", method = RequestMethod.DELETE) // удалить
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity deleteOne(@PathVariable Long taskId) throws Exception {
         try {
             return ResponseEntity.ok(taskService.deleteOne(taskId));
-        }catch (Exception e){
+        }catch (TaskNotFoundException e){
             return  ResponseEntity.badRequest().body(e.getMessage());
+        }catch (Exception e){
+            return  ResponseEntity.badRequest().body("Error");
         }
     }
 
     @Operation(summary = "Обновить данные выбранной задачи")
-    @PutMapping("/task/{taskId}") // обновить
+    @RequestMapping(value = "/task/{taskId}", method = RequestMethod.PUT) // обновить
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity updateOne(@PathVariable Long taskId, @RequestBody TaskEntity taskEntity) throws Exception {
         try {
             return ResponseEntity.ok(taskService.updateOne(taskId, taskEntity));
-        }catch (Exception e){
+        }catch (TaskNotFoundException e){
             return  ResponseEntity.badRequest().body(e.getMessage());
+        }catch (ReleaseExistsException e){
+            return  ResponseEntity.badRequest().body(e.getMessage());
+        }catch (Exception e){
+            return  ResponseEntity.badRequest().body("Error");
         }
     }
 }
