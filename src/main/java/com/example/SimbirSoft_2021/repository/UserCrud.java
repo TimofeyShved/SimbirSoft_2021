@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserCrud extends JpaRepository<UserEntity, Long> {
-    UserEntity findUserEntityByFirstName(String firstName);
-    UserEntity findUserEntityBylastName(String lastName);
+    UserEntity findByUserId(Long userId);
+    UserEntity findByFirstNameAndLastName(String firstName, String lastName);
 }
