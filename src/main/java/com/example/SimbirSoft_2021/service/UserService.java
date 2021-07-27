@@ -1,8 +1,10 @@
 package com.example.SimbirSoft_2021.service;
 
+import com.example.SimbirSoft_2021.Dto.UserDto;
 import com.example.SimbirSoft_2021.entity.ProjectEntity;
 import com.example.SimbirSoft_2021.entity.UserEntity;
 import com.example.SimbirSoft_2021.exception.*;
+import com.example.SimbirSoft_2021.mappers.UserMapper;
 import com.example.SimbirSoft_2021.repository.ProjectCrud;
 import com.example.SimbirSoft_2021.repository.UserCrud;
 import com.example.SimbirSoft_2021.service.interfaceService.ProjectServiceInterface;
@@ -12,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 // 1 способ
@@ -32,33 +35,37 @@ public class UserService implements StandartServiceInterface, UserServiceInterfa
 
     @Transactional
     @Override
-    public UserEntity registration(Object o) throws UserExistsException {
-        UserEntity userEntity = (UserEntity)o;
+    public UserDto registration(Object o) throws UserExistsException {
+        UserEntity userEntity = UserMapper.INSTANCE.toEntity((UserDto) o);
         if ((userCrud.findByFirstNameAndLastName(userEntity.getFirstName(), userEntity.getLastName())!=null)){
             throw new UserExistsException();
         }
-        return userCrud.save(userEntity);
+        userCrud.save(userEntity);
+        return UserMapper.INSTANCE.toDto(userEntity);
     }
 
     @Transactional
     @Override
-    public List<UserEntity> getAll() throws UserNotFoundException {
-        List<UserEntity> list = userCrud.findAll();
-        if (list==null){
+    public List<UserDto> getAll() throws UserNotFoundException {
+        List<UserEntity> userEntityList = userCrud.findAll();
+        if (userEntityList==null){
             throw new UserNotFoundException();
         }
-        return list;
+        List<UserDto> userDtoList = new ArrayList<>();
+        for (UserEntity e:userEntityList){
+            userDtoList.add(UserMapper.INSTANCE.toDto(e));
+        }
+        return userDtoList;
     }
 
     @Transactional
     @Override
-    public UserEntity getOne(Long id) throws UserNotFoundException {
+    public UserDto getOne(Long id) throws UserNotFoundException {
         UserEntity userEntity = userCrud.findByUserId(id);
-        System.out.println(userEntity.getFirstName());
         if (userEntity==null){
             throw new UserNotFoundException();
         }
-        return userEntity;
+        return UserMapper.INSTANCE.toDto(userEntity);
     }
 
     @Transactional
@@ -73,12 +80,11 @@ public class UserService implements StandartServiceInterface, UserServiceInterfa
 
     @Transactional
     @Override
-    public UserEntity updateOne(Long id, Object o) throws UserNotFoundException, UserExistsException {
-        UserEntity userEntityNew = (UserEntity)o;
-
+    public UserDto updateOne(Long id, Object o) throws UserNotFoundException, UserExistsException {
         if (userCrud.findByUserId(id)==null){
             throw new UserNotFoundException();
         }
+        UserEntity userEntityNew = UserMapper.INSTANCE.toEntity((UserDto) o);
         UserEntity userEntity = userCrud.findByUserId(id);
 
         if ((userCrud.findByFirstNameAndLastName(userEntityNew.getFirstName(), userEntityNew.getLastName())!=null)){
@@ -86,6 +92,8 @@ public class UserService implements StandartServiceInterface, UserServiceInterfa
         }
         userEntity.setFirstName(userEntityNew.getFirstName());
         userEntity.setLastName(userEntityNew.getLastName());
-        return userCrud.save(userEntity);
+        userEntity.setPatronymic(userEntityNew.getPatronymic());
+        userCrud.save(userEntity);
+        return UserMapper.INSTANCE.toDto(userEntity);
     }
 }

@@ -23,27 +23,27 @@ public class ProjectService implements StandartServiceInterface, ProjectServiceI
     //@Autowired
     //private ProjectCrud projectCRUD;
 
-    private ProjectCrud projectCRUD; // создаём интерфейс для взаимодействия с бд
+    private ProjectCrud projectCrud; // создаём интерфейс для взаимодействия с бд
 
     // 3 способ
-    public ProjectService(ProjectCrud projectCRUD) {
-        this.projectCRUD = projectCRUD;
+    public ProjectService(ProjectCrud projectCrud) {
+        this.projectCrud = projectCrud;
     }
 
     @Transactional
     @Override
     public ProjectEntity registration(Object o) throws ProjectExistsException {
         ProjectEntity projectEntity = (ProjectEntity)o;
-        if (projectCRUD.findProjectEntityByProjectName(projectEntity.getProjectName())!=null){
+        if (projectCrud.findProjectEntityByProjectName(projectEntity.getProjectName())!=null){
             throw new ProjectExistsException();
         }
-        return projectCRUD.save(projectEntity);
+        return projectCrud.save(projectEntity);
     }
 
     @Transactional
     @Override
     public List<ProjectEntity> getAll() throws ProjectNotFoundException {
-        List<ProjectEntity> list = projectCRUD.findAll();
+        List<ProjectEntity> list = projectCrud.findAll();
         if (list==null){
             throw new ProjectNotFoundException();
         }
@@ -53,7 +53,7 @@ public class ProjectService implements StandartServiceInterface, ProjectServiceI
     @Transactional
     @Override
     public ProjectEntity getOne(Long id) throws ProjectNotFoundException {
-        ProjectEntity projectEntity = projectCRUD.findByProjectId(id);
+        ProjectEntity projectEntity = projectCrud.findByProjectId(id);
         if (projectEntity==null){
             throw new ProjectNotFoundException();
         }
@@ -63,10 +63,10 @@ public class ProjectService implements StandartServiceInterface, ProjectServiceI
     @Transactional
     @Override
     public Long deleteOne(Long id) throws ProjectNotFoundException {
-        if (projectCRUD.findByProjectId(id)==null){
+        if (projectCrud.findByProjectId(id)==null){
             throw new ProjectNotFoundException();
         }
-        projectCRUD.deleteById(id);
+        projectCrud.deleteById(id);
         return id;
     }
 
@@ -75,16 +75,16 @@ public class ProjectService implements StandartServiceInterface, ProjectServiceI
     public ProjectEntity updateOne(Long id, Object o) throws ProjectNotFoundException, ProjectExistsException {
         ProjectEntity projectEntityNew = (ProjectEntity)o;
 
-        if (projectCRUD.findByProjectId(id)==null){
+        if (projectCrud.findByProjectId(id)==null){
             throw new ProjectNotFoundException();
         }
-        ProjectEntity projectEntity = projectCRUD.findByProjectId(id);
+        ProjectEntity projectEntity = projectCrud.findByProjectId(id);
 
-        if (projectCRUD.findProjectEntityByProjectName(projectEntity.getProjectName())!=null){
+        if (projectCrud.findProjectEntityByProjectName(projectEntity.getProjectName())!=null){
             throw new ProjectExistsException();
         }
         projectEntity.setProjectName(projectEntityNew.getProjectName());
         projectEntity.setProjectStatus(projectEntityNew.getProjectStatus());
-        return projectCRUD.save(projectEntity);
+        return projectCrud.save(projectEntity);
     }
 }

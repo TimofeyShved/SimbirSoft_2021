@@ -1,14 +1,10 @@
 package com.example.SimbirSoft_2021.service;
 
-import com.example.SimbirSoft_2021.entity.ReleaseEntity;
 import com.example.SimbirSoft_2021.entity.RoleEntity;
 import com.example.SimbirSoft_2021.exception.*;
-import com.example.SimbirSoft_2021.repository.ProjectCrud;
 import com.example.SimbirSoft_2021.repository.RoleCrud;
-import com.example.SimbirSoft_2021.service.interfaceService.ProjectServiceInterface;
 import com.example.SimbirSoft_2021.service.interfaceService.RoleServiceInterface;
 import com.example.SimbirSoft_2021.service.interfaceService.StandartServiceInterface;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -23,27 +19,27 @@ public class RoleService implements StandartServiceInterface, RoleServiceInterfa
     //@Autowired
     //private RoleCrud roleCRUD;
 
-    private RoleCrud roleCRUD; // создаём интерфейс для взаимодействия с бд
+    private RoleCrud roleCrud; // создаём интерфейс для взаимодействия с бд
 
     // 3 способ
-    public RoleService(RoleCrud roleCRUD) {
-        this.roleCRUD = roleCRUD;
+    public RoleService(RoleCrud roleCrud) {
+        this.roleCrud = roleCrud;
     }
 
     @Transactional
     @Override
     public RoleEntity registration(Object o) throws RoleExistsException {
         RoleEntity roleEntity = (RoleEntity)o;
-        if (roleCRUD.findByRoleNameAndBoardIdAndUserId(roleEntity.getRoleName(), roleEntity.getBoardId(), roleEntity.getUserId())!=null){
+        if (roleCrud.findByRoleNameAndBoardIdAndUserId(roleEntity.getRoleName(), roleEntity.getBoardId(), roleEntity.getUserId())!=null){
             throw new RoleExistsException();
         }
-        return roleCRUD.save(roleEntity);
+        return roleCrud.save(roleEntity);
     }
 
     @Transactional
     @Override
     public List<RoleEntity> getAll() throws RoleNotFoundException {
-        List<RoleEntity> list = roleCRUD.findAll();
+        List<RoleEntity> list = roleCrud.findAll();
         if (list==null){
             throw new RoleNotFoundException();
         }
@@ -53,7 +49,7 @@ public class RoleService implements StandartServiceInterface, RoleServiceInterfa
     @Transactional
     @Override
     public RoleEntity getOne(Long id) throws RoleNotFoundException {
-        RoleEntity roleEntity = roleCRUD.findByRoleId(id);
+        RoleEntity roleEntity = roleCrud.findByRoleId(id);
         if (roleEntity==null){
             throw new RoleNotFoundException();
         }
@@ -63,10 +59,10 @@ public class RoleService implements StandartServiceInterface, RoleServiceInterfa
     @Transactional
     @Override
     public Long deleteOne(Long id) throws RoleNotFoundException {
-        if (roleCRUD.findByRoleId(id)==null){
+        if (roleCrud.findByRoleId(id)==null){
             throw new RoleNotFoundException();
         }
-        roleCRUD.deleteById(id);
+        roleCrud.deleteById(id);
         return id;
     }
 
@@ -75,18 +71,18 @@ public class RoleService implements StandartServiceInterface, RoleServiceInterfa
     public RoleEntity updateOne(Long id, Object o) throws RoleNotFoundException, RoleExistsException {
         RoleEntity roleEntityNew = (RoleEntity)o;
 
-        if (roleCRUD.findByRoleId(id)==null){
+        if (roleCrud.findByRoleId(id)==null){
             throw new RoleNotFoundException();
         }
-        RoleEntity roleEntity = roleCRUD.findByRoleId(id);
+        RoleEntity roleEntity = roleCrud.findByRoleId(id);
 
-        if (roleCRUD.findByRoleNameAndBoardIdAndUserId(roleEntityNew.getRoleName(), roleEntityNew.getBoardId(), roleEntityNew.getUserId())!=null){
+        if (roleCrud.findByRoleNameAndBoardIdAndUserId(roleEntityNew.getRoleName(), roleEntityNew.getBoardId(), roleEntityNew.getUserId())!=null){
             throw new RoleExistsException();
         }
 
         roleEntity.setRoleName(roleEntityNew.getRoleName());
         roleEntity.setBoardId(roleEntityNew.getBoardId());
         roleEntity.setUserId(roleEntityNew.getUserId());
-        return roleCRUD.save(roleEntity);
+        return roleCrud.save(roleEntity);
     }
 }

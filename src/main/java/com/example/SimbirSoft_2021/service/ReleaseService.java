@@ -22,27 +22,27 @@ public class ReleaseService implements StandartServiceInterface, ProjectServiceI
     //@Autowired
     //private ReleaseCrud releaseCRUD;
 
-    private ReleaseCrud releaseCRUD; // создаём интерфейс для взаимодействия с бд
+    private ReleaseCrud releaseCrud; // создаём интерфейс для взаимодействия с бд
 
     // 3 способ
-    public ReleaseService(ReleaseCrud releaseCRUD) {
-        this.releaseCRUD = releaseCRUD;
+    public ReleaseService(ReleaseCrud releaseCrud) {
+        this.releaseCrud = releaseCrud;
     }
 
     @Transactional
     @Override
     public ReleaseEntity registration(Object o) throws ReleaseExistsException {
         ReleaseEntity releaseEntity = (ReleaseEntity)o;
-        if (releaseCRUD.findByDataStartAndDataEnd(releaseEntity.getDataStart(), releaseEntity.getDataEnd())!=null){
+        if (releaseCrud.findByDataStartAndDataEnd(releaseEntity.getDataStart(), releaseEntity.getDataEnd())!=null){
             throw new ReleaseExistsException();
         }
-        return releaseCRUD.save(releaseEntity);
+        return releaseCrud.save(releaseEntity);
     }
 
     @Transactional
     @Override
     public List<ReleaseEntity> getAll() throws ReleaseNotFoundException {
-        List<ReleaseEntity> list = releaseCRUD.findAll();
+        List<ReleaseEntity> list = releaseCrud.findAll();
         if (list==null){
             throw new ReleaseNotFoundException();
         }
@@ -52,7 +52,7 @@ public class ReleaseService implements StandartServiceInterface, ProjectServiceI
     @Transactional
     @Override
     public ReleaseEntity getOne(Long id) throws ReleaseNotFoundException {
-        ReleaseEntity projectEntity = releaseCRUD.findByReleaseId(id);
+        ReleaseEntity projectEntity = releaseCrud.findByReleaseId(id);
         if (projectEntity==null){
             throw new ReleaseNotFoundException();
         }
@@ -62,10 +62,10 @@ public class ReleaseService implements StandartServiceInterface, ProjectServiceI
     @Transactional
     @Override
     public Long deleteOne(Long id) throws ReleaseNotFoundException {
-        if (releaseCRUD.findByReleaseId(id)==null){
+        if (releaseCrud.findByReleaseId(id)==null){
             throw new ReleaseNotFoundException();
         }
-        releaseCRUD.deleteById(id);
+        releaseCrud.deleteById(id);
         return id;
     }
 
@@ -74,16 +74,16 @@ public class ReleaseService implements StandartServiceInterface, ProjectServiceI
     public ReleaseEntity updateOne(Long id, Object o) throws ReleaseNotFoundException, ReleaseExistsException {
         ReleaseEntity releaseEntityNew = (ReleaseEntity)o;
 
-        if (releaseCRUD.findByReleaseId(id)==null){
+        if (releaseCrud.findByReleaseId(id)==null){
             throw new ReleaseNotFoundException();
         }
-        ReleaseEntity releaseEntity = releaseCRUD.findByReleaseId(id);
+        ReleaseEntity releaseEntity = releaseCrud.findByReleaseId(id);
 
-        if (releaseCRUD.findByDataStartAndDataEnd(releaseEntityNew.getDataStart(), releaseEntityNew.getDataEnd())!=null){
+        if (releaseCrud.findByDataStartAndDataEnd(releaseEntityNew.getDataStart(), releaseEntityNew.getDataEnd())!=null){
             throw new ReleaseExistsException();
         }
         releaseEntity.setDataStart(releaseEntityNew.getDataStart());
         releaseEntity.setDataEnd(releaseEntityNew.getDataEnd());
-        return releaseCRUD.save(releaseEntity);
+        return releaseCrud.save(releaseEntity);
     }
 }

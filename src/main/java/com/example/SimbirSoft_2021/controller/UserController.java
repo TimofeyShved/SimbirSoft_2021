@@ -1,5 +1,6 @@
 package com.example.SimbirSoft_2021.controller;
 
+import com.example.SimbirSoft_2021.Dto.UserDto;
 import com.example.SimbirSoft_2021.entity.UserEntity;
 import com.example.SimbirSoft_2021.exception.ReleaseExistsException;
 import com.example.SimbirSoft_2021.exception.UserExistsException;
@@ -11,7 +12,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 // так как порт 8080 был занят, я его поменял на http://localhost:8070/user/ ------- не знаю, как у вас там всё устроено ¯\_(ツ)_/¯
@@ -36,10 +40,9 @@ public class UserController {
     @Operation(summary = "Добавить человека")
     @RequestMapping(value = "/user", method = RequestMethod.POST) // создать
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity registration(@RequestBody UserEntity userEntity) throws Exception {
+    public ResponseEntity registration(@Validated @RequestBody UserDto userDto) throws Exception {
         try {
-            userService.registration(userEntity);
-            return ResponseEntity.ok(userEntity);
+            return ResponseEntity.ok(userService.registration(userDto));
         }catch (UserExistsException e){
             return  ResponseEntity.badRequest().body(e.getMessage());
         }catch (Exception e){
@@ -63,7 +66,7 @@ public class UserController {
     @Operation(summary = "Получить выбранного человека")
     @RequestMapping(value = "/user/{userId}", method = RequestMethod.GET) // взять
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity getOne(@PathVariable Long userId) throws Exception {
+    public ResponseEntity getOne(@Validated @PathVariable Long userId) throws Exception {
         try {
             return ResponseEntity.ok(userService.getOne(userId));
         }catch (UserNotFoundException e){
@@ -76,7 +79,7 @@ public class UserController {
     @Operation(summary = "Удалить выбранного человека")
     @RequestMapping(value = "/user/{userId}", method = RequestMethod.DELETE) // удалить
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity deleteOne(@PathVariable Long userId) throws Exception {
+    public ResponseEntity deleteOne(@Validated @PathVariable Long userId) throws Exception {
         try {
             return ResponseEntity.ok(userService.deleteOne(userId));
         }catch (UserNotFoundException e){
@@ -89,9 +92,9 @@ public class UserController {
     @Operation(summary = "Обновить данные выбранного человека")
     @RequestMapping(value = "/user/{userId}", method = RequestMethod.PUT) // обновить
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity updateOne(@PathVariable Long userId, @RequestBody UserEntity userEntity) throws Exception {
+    public ResponseEntity updateOne(@Validated @PathVariable Long userId, @Validated @RequestBody UserDto userDto) throws Exception {
         try {
-            return ResponseEntity.ok(userService.updateOne(userId, userEntity));
+            return ResponseEntity.ok(userService.updateOne(userId, userDto));
         }catch (UserNotFoundException e){
             return  ResponseEntity.badRequest().body(e.getMessage());
         }catch (UserExistsException e){
