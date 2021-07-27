@@ -23,7 +23,7 @@ public class ProjectEntity { // ----------------------------------------------- 
     private Long releaseId;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "projectId")
-    private List<BoardEntity> board;
+    private List<BoardEntity> boardEntities;
 
     public ProjectEntity(){ // конструктор
     }
@@ -64,10 +64,10 @@ public class ProjectEntity { // ----------------------------------------------- 
     }
 
     public List<BoardEntity> getBoard() {
-        return board;
+        return boardEntities;
     }
 
-    public void setBoard(List<BoardEntity> board) {
-        this.board = board;
+    public void setBoard(List<BoardEntity> boardEntities) {
+        this.boardEntities = boardEntities;
     }
 }

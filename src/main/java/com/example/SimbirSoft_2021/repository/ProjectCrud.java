@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProjectCrud extends JpaRepository<ProjectEntity, Long> {
-    ProjectEntity findProjectEntityByProjectName(String projectName);
+    ProjectEntity findByProjectName(String projectName);
     ProjectEntity findByProjectId(Long projectId);
+    ProjectEntity findByReleaseId(Long releaseId);
 }

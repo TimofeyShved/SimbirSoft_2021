@@ -25,6 +25,12 @@ public class ProjectDto { // ----------------------------------------------- н�
     public ProjectDto(){ // конструктор
     }
 
+    public ProjectDto(String projectName, String projectStatus, Long releaseId) {
+        this.projectName = projectName;
+        this.projectStatus = projectStatus;
+        this.releaseId = releaseId;
+    }
+
     // ----------------------------------------------- гетеры и сетеры
 
 
