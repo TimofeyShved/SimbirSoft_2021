@@ -9,5 +9,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BoardCrud extends JpaRepository<BoardEntity, Long> {
     BoardEntity findByProjectIdAndTaskId(Long projectId, Long taskId);
+    BoardEntity findByTaskId(Long taskId);
     BoardEntity findByBoardId(Long boardId);
 }

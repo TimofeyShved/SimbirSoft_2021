@@ -24,7 +24,12 @@ public class BoardDto { // ----------------------------------------------- на�
     public BoardDto() { // конструктор
     }
 
-// ----------------------------------------------- гетеры и сетеры
+    public BoardDto(Long projectId, Long taskId) {
+        this.projectId = projectId;
+        this.taskId = taskId;
+    }
+
+    // ----------------------------------------------- гетеры и сетеры
 
     public Long getBoardId() {
         return boardId;
