@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.persistence.*;
 
-@Schema(description = "Реализация")
+@Schema(description = "Реализация (Дата/время)")
 public class ReleaseDto { // ----------------------------------------------- наш с вами пользователь
 
     // ----------------------------------------------- переменные
@@ -13,11 +13,11 @@ public class ReleaseDto { // ----------------------------------------------- н�
     private Long releaseId;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
-    @Schema(description = "Начало реализации")
+    @Schema(description = "Начало реализации (Дата/время)")
     private String dataStart;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
-    @Schema(description = "Конец реализации")
+    @Schema(description = "Конец реализации (Дата/время)")
     private String dataEnd;
 
     public ReleaseDto() { // конструктор

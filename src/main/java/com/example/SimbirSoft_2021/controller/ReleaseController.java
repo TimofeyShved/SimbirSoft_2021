@@ -1,10 +1,8 @@
 package com.example.SimbirSoft_2021.controller;
 
+import com.example.SimbirSoft_2021.Dto.ReleaseDto;
 import com.example.SimbirSoft_2021.entity.ReleaseEntity;
-import com.example.SimbirSoft_2021.exception.ProjectExistsException;
-import com.example.SimbirSoft_2021.exception.ProjectNotFoundException;
-import com.example.SimbirSoft_2021.exception.ReleaseExistsException;
-import com.example.SimbirSoft_2021.exception.ReleaseNotFoundException;
+import com.example.SimbirSoft_2021.exception.*;
 import com.example.SimbirSoft_2021.repository.ReleaseCrud;
 import com.example.SimbirSoft_2021.service.ReleaseService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,22 +13,33 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+// 1 способ
+//@RequiredArgsConstructor
 @Tag(name = "Управление временем реализации")
 @RequestMapping("/control")
 @RestController
 public class ReleaseController {
 
-    @Autowired
+    // 2 способ
+    //@Autowired
+    //private ReleaseService releaseService;
+
     private ReleaseService releaseService;
+
+    // 3 способ
+    public ReleaseController(ReleaseService releaseService) {
+        this.releaseService = releaseService;
+    }
 
     @Operation(summary = "Добавить время реализации")
     @RequestMapping(value = "/release", method = RequestMethod.POST) // создать
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity registration(@Validated @RequestBody ReleaseEntity releaseEntity) throws Exception {
+    public ResponseEntity registration(@Validated @RequestBody ReleaseDto releaseDto) throws Exception {
         try {
-            releaseService.registration(releaseEntity);
-            return ResponseEntity.ok(releaseEntity);
+            return ResponseEntity.ok(releaseService.registration(releaseDto));
         }catch (ReleaseExistsException e){
+            return  ResponseEntity.badRequest().body(e.getMessage());
+        }catch (ReleaseDateFormatException e){
             return  ResponseEntity.badRequest().body(e.getMessage());
         }catch (Exception e){
             return  ResponseEntity.badRequest().body("Error");
@@ -79,12 +88,14 @@ public class ReleaseController {
     @Operation(summary = "Обновить данные выбранного времени реализации")
     @RequestMapping(value = "/release/{releaseId}", method = RequestMethod.PUT) // обновить
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity updateOne(@Validated @PathVariable Long releaseId, @Validated @RequestBody ReleaseEntity releaseEntity) throws Exception {
+    public ResponseEntity updateOne(@Validated @PathVariable Long releaseId, @Validated @RequestBody ReleaseDto releaseDto) throws Exception {
         try {
-            return ResponseEntity.ok(releaseService.updateOne(releaseId, releaseEntity));
+            return ResponseEntity.ok(releaseService.updateOne(releaseId, releaseDto));
         }catch (ReleaseNotFoundException e){
             return  ResponseEntity.badRequest().body(e.getMessage());
         }catch (ReleaseExistsException e){
+            return  ResponseEntity.badRequest().body(e.getMessage());
+        }catch (ReleaseDateFormatException e){
             return  ResponseEntity.badRequest().body(e.getMessage());
         }catch (Exception e){
             return  ResponseEntity.badRequest().body("Error");

@@ -1,8 +1,13 @@
 package com.example.SimbirSoft_2021.service;
 
+import com.example.SimbirSoft_2021.Dto.ReleaseDto;
+import com.example.SimbirSoft_2021.Dto.UserDto;
 import com.example.SimbirSoft_2021.entity.ProjectEntity;
 import com.example.SimbirSoft_2021.entity.ReleaseEntity;
+import com.example.SimbirSoft_2021.entity.UserEntity;
 import com.example.SimbirSoft_2021.exception.*;
+import com.example.SimbirSoft_2021.mappers.ReleaseMapper;
+import com.example.SimbirSoft_2021.mappers.UserMapper;
 import com.example.SimbirSoft_2021.repository.ProjectCrud;
 import com.example.SimbirSoft_2021.repository.ReleaseCrud;
 import com.example.SimbirSoft_2021.service.interfaceService.ProjectServiceInterface;
@@ -11,6 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 // 1 способ
@@ -31,32 +40,50 @@ public class ReleaseService implements StandartServiceInterface, ProjectServiceI
 
     @Transactional
     @Override
-    public ReleaseEntity registration(Object o) throws ReleaseExistsException {
-        ReleaseEntity releaseEntity = (ReleaseEntity)o;
+    public ReleaseDto registration(Object o) throws ReleaseExistsException, ReleaseDateFormatException {
+        ReleaseDto releaseDto = (ReleaseDto) o;
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // формат времени
+        //Calendar cal = Calendar.getInstance(); // вытащить дату из системы
+        try {
+            releaseDto.setDataStart(dateFormat.format(dateFormat.parse(releaseDto.getDataStart())));
+            releaseDto.setDataEnd(dateFormat.format(dateFormat.parse(releaseDto.getDataEnd())));
+        }
+        catch (Exception e){
+            throw new ReleaseDateFormatException();
+        }
+
+        ReleaseEntity releaseEntity = ReleaseMapper.INSTANCE.toEntity(releaseDto);
+        /* // ReleaseExistsException
         if (releaseCrud.findByDataStartAndDataEnd(releaseEntity.getDataStart(), releaseEntity.getDataEnd())!=null){
             throw new ReleaseExistsException();
         }
-        return releaseCrud.save(releaseEntity);
+         */
+        releaseCrud.save(releaseEntity);
+        return ReleaseMapper.INSTANCE.toDto(releaseEntity);
     }
 
     @Transactional
     @Override
-    public List<ReleaseEntity> getAll() throws ReleaseNotFoundException {
-        List<ReleaseEntity> list = releaseCrud.findAll();
-        if (list==null){
+    public List<ReleaseDto> getAll() throws ReleaseNotFoundException {
+        List<ReleaseEntity> releaseEntityList = releaseCrud.findAll();
+        if (releaseEntityList==null){
             throw new ReleaseNotFoundException();
         }
-        return list;
+        List<ReleaseDto> releaseDtoList = new ArrayList<>();
+        for (ReleaseEntity e:releaseEntityList){
+            releaseDtoList.add(ReleaseMapper.INSTANCE.toDto(e));
+        }
+        return releaseDtoList;
     }
 
     @Transactional
     @Override
-    public ReleaseEntity getOne(Long id) throws ReleaseNotFoundException {
-        ReleaseEntity projectEntity = releaseCrud.findByReleaseId(id);
-        if (projectEntity==null){
+    public ReleaseDto getOne(Long id) throws ReleaseNotFoundException {
+        ReleaseEntity releaseEntity = releaseCrud.findByReleaseId(id);
+        if (releaseEntity==null){
             throw new ReleaseNotFoundException();
         }
-        return projectEntity;
+        return ReleaseMapper.INSTANCE.toDto(releaseEntity);
     }
 
     @Transactional
@@ -71,12 +98,28 @@ public class ReleaseService implements StandartServiceInterface, ProjectServiceI
 
     @Transactional
     @Override
-    public ReleaseEntity updateOne(Long id, Object o) throws ReleaseNotFoundException, ReleaseExistsException {
-        ReleaseEntity releaseEntityNew = (ReleaseEntity)o;
-
+    public ReleaseDto updateOne(Long id, Object o) throws ReleaseNotFoundException, ReleaseExistsException, ReleaseDateFormatException {
         if (releaseCrud.findByReleaseId(id)==null){
             throw new ReleaseNotFoundException();
         }
+        ReleaseDto releaseDto = (ReleaseDto) o;
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // формат времени
+        //Calendar cal = Calendar.getInstance(); // вытащить дату из системы
+        try {
+            releaseDto.setDataStart(dateFormat.format(dateFormat.parse(releaseDto.getDataStart())));
+            releaseDto.setDataEnd(dateFormat.format(dateFormat.parse(releaseDto.getDataEnd())));
+        }
+        catch (Exception e){
+            throw new ReleaseDateFormatException();
+        }
+
+        ReleaseEntity releaseEntityNew = ReleaseMapper.INSTANCE.toEntity(releaseDto);
+        /* // ReleaseExistsException
+        if (releaseCrud.findByDataStartAndDataEnd(releaseEntity.getDataStart(), releaseEntity.getDataEnd())!=null){
+            throw new ReleaseExistsException();
+        }
+         */
+
         ReleaseEntity releaseEntity = releaseCrud.findByReleaseId(id);
 
         if (releaseCrud.findByDataStartAndDataEnd(releaseEntityNew.getDataStart(), releaseEntityNew.getDataEnd())!=null){
@@ -84,6 +127,7 @@ public class ReleaseService implements StandartServiceInterface, ProjectServiceI
         }
         releaseEntity.setDataStart(releaseEntityNew.getDataStart());
         releaseEntity.setDataEnd(releaseEntityNew.getDataEnd());
-        return releaseCrud.save(releaseEntity);
+        releaseCrud.save(releaseEntity);
+        return ReleaseMapper.INSTANCE.toDto(releaseEntity);
     }
 }
