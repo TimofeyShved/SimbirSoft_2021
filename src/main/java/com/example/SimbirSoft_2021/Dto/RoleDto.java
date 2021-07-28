@@ -3,7 +3,7 @@ package com.example.SimbirSoft_2021.Dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 
-@Schema(description = "Роли")
+@Schema(description = "Роли человека")
 public class RoleDto { // ----------------------------------------------- наш с вами пользователь
 
     // ----------------------------------------------- переменные
@@ -20,6 +20,12 @@ public class RoleDto { // ----------------------------------------------- наш
     private Long userId;
 
     public RoleDto() { // конструктор
+    }
+
+    public RoleDto(String roleName, Long boardId, Long userId) {
+        this.roleName = roleName;
+        this.boardId = boardId;
+        this.userId = userId;
     }
 
     // ----------------------------------------------- гетеры и сетеры

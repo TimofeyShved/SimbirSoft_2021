@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -27,6 +28,12 @@ public class RoleEntity { // ----------------------------------------------- н�
     private Long userId;
 
     public RoleEntity() { // конструктор
+    }
+
+    public RoleEntity(String roleName, Long boardId, Long userId) {
+        this.roleName = roleName;
+        this.boardId = boardId;
+        this.userId = userId;
     }
 
     // ----------------------------------------------- гетеры и сетеры
