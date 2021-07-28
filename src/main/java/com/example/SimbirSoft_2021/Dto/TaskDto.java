@@ -21,9 +21,6 @@ public class TaskDto { // ----------------------------------------------- наш
     @Schema(description = "Id реализации нашей задачи")
     private Long releaseId;
 
-    //@OneToMany(cascade = CascadeType.ALL, mappedBy = "projectId")
-    // private List<RoleEntity> role;
-
     public TaskDto() { // конструктор
     }
 

@@ -23,8 +23,8 @@ public class TaskEntity { // ----------------------------------------------- н�
     @Column(name = "release_id")
     private Long releaseId;
 
-    //@OneToMany(cascade = CascadeType.ALL, mappedBy = "projectId")
-    // private List<RoleEntity> role;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "taskId")
+    private List<BoardEntity> boardEntities;
 
     public TaskEntity() { // конструктор
     }
@@ -67,5 +67,13 @@ public class TaskEntity { // ----------------------------------------------- н�
 
     public void setReleaseId(Long releaseId) {
         this.releaseId = releaseId;
+    }
+
+    public List<BoardEntity> getBoardEntities() {
+        return boardEntities;
+    }
+
+    public void setBoardEntities(List<BoardEntity> boardEntities) {
+        this.boardEntities = boardEntities;
     }
 }

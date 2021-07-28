@@ -1,5 +1,6 @@
 package com.example.SimbirSoft_2021.controller;
 
+import com.example.SimbirSoft_2021.Dto.TaskDto;
 import com.example.SimbirSoft_2021.entity.TaskEntity;
 import com.example.SimbirSoft_2021.exception.*;
 import com.example.SimbirSoft_2021.repository.ProjectCrud;
@@ -34,11 +35,14 @@ public class TaskController {
     @Operation(summary = "Добавить задачу")
     @RequestMapping(value = "/task", method = RequestMethod.POST) // создать
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity registration(@Validated @RequestBody TaskEntity taskEntity) throws Exception {
+    public ResponseEntity registration(@Validated @RequestBody TaskDto taskDto) throws Exception {
         try {
-            taskService.registration(taskEntity);
-            return ResponseEntity.ok(taskEntity);
+            return ResponseEntity.ok(taskService.registration(taskDto));
         }catch (ReleaseExistsException e){
+            return  ResponseEntity.badRequest().body(e.getMessage());
+        }catch (ReleaseNotFoundException e){
+            return  ResponseEntity.badRequest().body(e.getMessage());
+        }catch (TaskAndDateTimeExistsException e){
             return  ResponseEntity.badRequest().body(e.getMessage());
         }catch (Exception e){
             return  ResponseEntity.badRequest().body("Error");
@@ -61,7 +65,7 @@ public class TaskController {
     @Operation(summary = "Получить выбранную задачу")
     @RequestMapping(value = "/task/{taskId}", method = RequestMethod.GET) // взять
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity getOne(@PathVariable Long taskId) throws Exception {
+    public ResponseEntity getOne(@Validated @PathVariable Long taskId) throws Exception {
         try {
             return ResponseEntity.ok(taskService.getOne(taskId));
         }catch (TaskNotFoundException e){
@@ -74,7 +78,7 @@ public class TaskController {
     @Operation(summary = "Удалить выбранную задачу")
     @RequestMapping(value = "/task/{taskId}", method = RequestMethod.DELETE) // удалить
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity deleteOne(@PathVariable Long taskId) throws Exception {
+    public ResponseEntity deleteOne(@Validated @PathVariable Long taskId) throws Exception {
         try {
             return ResponseEntity.ok(taskService.deleteOne(taskId));
         }catch (TaskNotFoundException e){
@@ -87,12 +91,16 @@ public class TaskController {
     @Operation(summary = "Обновить данные выбранной задачи")
     @RequestMapping(value = "/task/{taskId}", method = RequestMethod.PUT) // обновить
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity updateOne(@PathVariable Long taskId, @RequestBody TaskEntity taskEntity) throws Exception {
+    public ResponseEntity updateOne(@Validated @PathVariable Long taskId, @Validated @RequestBody TaskDto taskDto) throws Exception {
         try {
-            return ResponseEntity.ok(taskService.updateOne(taskId, taskEntity));
+            return ResponseEntity.ok(taskService.updateOne(taskId, taskDto));
         }catch (TaskNotFoundException e){
             return  ResponseEntity.badRequest().body(e.getMessage());
         }catch (ReleaseExistsException e){
+            return  ResponseEntity.badRequest().body(e.getMessage());
+        }catch (ReleaseNotFoundException e){
+            return  ResponseEntity.badRequest().body(e.getMessage());
+        }catch (TaskAndDateTimeExistsException e){
             return  ResponseEntity.badRequest().body(e.getMessage());
         }catch (Exception e){
             return  ResponseEntity.badRequest().body("Error");
