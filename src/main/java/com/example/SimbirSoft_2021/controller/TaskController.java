@@ -83,6 +83,8 @@ public class TaskController {
             return ResponseEntity.ok(taskService.deleteOne(taskId));
         }catch (TaskNotFoundException e){
             return  ResponseEntity.badRequest().body(e.getMessage());
+        }catch (BoardNotFoundException e){
+            return  ResponseEntity.badRequest().body(e.getMessage());
         }catch (Exception e){
             return  ResponseEntity.badRequest().body("Error");
         }

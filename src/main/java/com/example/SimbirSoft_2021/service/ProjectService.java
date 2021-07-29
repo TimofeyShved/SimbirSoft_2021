@@ -32,11 +32,13 @@ public class ProjectService implements StandartServiceInterface, ProjectServiceI
 
     private ProjectCrud projectCrud; // создаём интерфейс для взаимодействия с бд
     private ReleaseCrud releaseCrud;
+    private BoardService boardService;
 
     // 3 способ
-    public ProjectService(ProjectCrud projectCrud, ReleaseCrud releaseCrud) {
+    public ProjectService(ProjectCrud projectCrud, ReleaseCrud releaseCrud, BoardService boardService) {
         this.projectCrud = projectCrud;
         this.releaseCrud = releaseCrud;
+        this.boardService = boardService;
     }
 
     @Transactional
@@ -82,11 +84,13 @@ public class ProjectService implements StandartServiceInterface, ProjectServiceI
 
     @Transactional
     @Override
-    public Long deleteOne(Long id) throws ProjectNotFoundException {
+    public Long deleteOne(Long id) throws ProjectNotFoundException, BoardNotFoundException, TaskNotFoundException {
         if (projectCrud.findByProjectId(id)==null){
             throw new ProjectNotFoundException();
         }
+        boardService.deleteByParammId(projectCrud.findByProjectId(id).getProjectId(), null);
         projectCrud.deleteById(id);
+        releaseCrud.deleteById(projectCrud.findByProjectId(id).getReleaseId());
         return id;
     }
 

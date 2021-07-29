@@ -28,11 +28,13 @@ public class TaskService implements StandartServiceInterface, TaskServiceInterfa
 
     private TaskCrud taskCrud; // создаём интерфейс для взаимодействия с бд
     private ReleaseCrud releaseCrud;
+    private BoardService boardService;
 
     // 3 способ
-    public TaskService(TaskCrud taskCrud, ReleaseCrud releaseCrud) {
+    public TaskService(TaskCrud taskCrud, ReleaseCrud releaseCrud, BoardService boardService) {
         this.taskCrud = taskCrud;
         this.releaseCrud = releaseCrud;
+        this.boardService = boardService;
     }
 
     @Transactional
@@ -79,10 +81,11 @@ public class TaskService implements StandartServiceInterface, TaskServiceInterfa
 
     @Transactional
     @Override
-    public Long deleteOne(Long id) throws TaskNotFoundException {
+    public Long deleteOne(Long id) throws TaskNotFoundException, BoardNotFoundException {
         if (taskCrud.findByTaskId(id)==null){
             throw new TaskNotFoundException();
         }
+        boardService.deleteByParammId(null, taskCrud.findByTaskId(id).getTaskId());
         taskCrud.deleteById(id);
         return id;
     }
@@ -111,4 +114,6 @@ public class TaskService implements StandartServiceInterface, TaskServiceInterfa
         taskCrud.save(taskEntity);
         return TaskMapper.INSTANCE.toDto(taskEntity);
     }
+
+
 }

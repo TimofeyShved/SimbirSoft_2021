@@ -32,13 +32,13 @@ public class BoardService implements StandartServiceInterface, BoardServiceInter
 
     private BoardCrud boardCrud; // создаём интерфейс для взаимодействия с бд
     private ProjectCrud projectCrud;
-    private TaskCrud taskCrud;
+    private TaskService taskService;
 
     // 3 способ
-    public BoardService(BoardCrud boardCrud, ProjectCrud projectCrud, TaskCrud taskCrud) {
+    public BoardService(BoardCrud boardCrud, ProjectCrud projectCrud, TaskService taskService) {
         this.boardCrud = boardCrud;
         this.projectCrud = projectCrud;
-        this.taskCrud = taskCrud;
+        this.taskService = taskService;
     }
 
     @Transactional
@@ -49,7 +49,7 @@ public class BoardService implements StandartServiceInterface, BoardServiceInter
         if (projectCrud.findByProjectId(boardDto.getProjectId())==null){
             throw new ProjectNotFoundException();
         }
-        if (taskCrud.findByTaskId(boardDto.getTaskId())==null){
+        if (taskService.getOne(boardDto.getTaskId())==null){
             throw new TaskNotFoundException();
         }
         if ((boardCrud.findByTaskId(boardEntity.getTaskId())!=null)){
@@ -95,6 +95,23 @@ public class BoardService implements StandartServiceInterface, BoardServiceInter
 
     @Transactional
     @Override
+    public void deleteByParammId(Long projectId, Long taskId) throws BoardNotFoundException, TaskNotFoundException {
+        List<BoardEntity> boardEntityList = boardCrud.findAll();
+        if (boardEntityList==null){
+            throw new BoardNotFoundException();
+        }
+        for (BoardEntity e:boardEntityList){
+            if(projectId==e.getProjectId()){
+                taskService.deleteOne(e.getTaskId());
+            }
+            if(taskId==e.getTaskId()){
+                boardCrud.deleteById(e.getBoardId());
+            }
+        }
+    }
+
+    @Transactional
+    @Override
     public BoardDto updateOne(Long id, Object o) throws BoardNotFoundException, BoardExistsException, ProjectNotFoundException, TaskNotFoundException {
         if (boardCrud.findByBoardId(id)==null){
             throw new BoardNotFoundException();
@@ -105,7 +122,7 @@ public class BoardService implements StandartServiceInterface, BoardServiceInter
         if (projectCrud.findByProjectId(boardEntityNew.getProjectId())==null){
             throw new ProjectNotFoundException();
         }
-        if (taskCrud.findByTaskId(boardEntityNew.getTaskId())==null){
+        if (taskService.getOne(boardEntityNew.getTaskId())==null){
             throw new TaskNotFoundException();
         }
         if (boardCrud.findByTaskId(boardEntityNew.getTaskId())!=null){
