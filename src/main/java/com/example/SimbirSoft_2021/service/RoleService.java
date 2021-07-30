@@ -1,15 +1,9 @@
 package com.example.SimbirSoft_2021.service;
 
-import com.example.SimbirSoft_2021.Dto.BoardDto;
 import com.example.SimbirSoft_2021.Dto.RoleDto;
-import com.example.SimbirSoft_2021.Dto.UserDto;
-import com.example.SimbirSoft_2021.entity.BoardEntity;
 import com.example.SimbirSoft_2021.entity.RoleEntity;
-import com.example.SimbirSoft_2021.entity.UserEntity;
 import com.example.SimbirSoft_2021.exception.*;
-import com.example.SimbirSoft_2021.mappers.BoardMapper;
 import com.example.SimbirSoft_2021.mappers.RoleMapper;
-import com.example.SimbirSoft_2021.mappers.UserMapper;
 import com.example.SimbirSoft_2021.repository.*;
 import com.example.SimbirSoft_2021.service.interfaceService.RoleServiceInterface;
 import com.example.SimbirSoft_2021.service.interfaceService.StandartServiceInterface;
@@ -30,28 +24,28 @@ public class RoleService implements StandartServiceInterface, RoleServiceInterfa
 
     private RoleCrud roleCrud; // создаём интерфейс для взаимодействия с бд
     private UserCrud userCrud;
-    private BoardCrud boardCrud;
+    private TaskCrud taskCrud;
 
     // 3 способ
 
-    public RoleService(RoleCrud roleCrud, UserCrud userCrud, BoardCrud boardCrud) {
+    public RoleService(RoleCrud roleCrud, UserCrud userCrud, TaskCrud taskCrud) {
         this.roleCrud = roleCrud;
         this.userCrud = userCrud;
-        this.boardCrud = boardCrud;
+        this.taskCrud = taskCrud;
     }
 
     @Transactional
     @Override
-    public RoleDto registration(Object o) throws RoleExistsException, BoardNotFoundException, UserNotFoundException {
+    public RoleDto registration(Object o) throws RoleExistsException, TaskNotFoundException, UserNotFoundException {
         RoleDto roleDto = (RoleDto) o;
-        if ((boardCrud.findByBoardId(roleDto.getBoardId())==null)){
-            throw new BoardNotFoundException();
+        if ((taskCrud.findByTaskId(roleDto.getTaskId())==null)){
+            throw new TaskNotFoundException();
         }
         if (userCrud.findByUserId(roleDto.getUserId())==null){
             throw new UserNotFoundException();
         }
         RoleEntity roleEntity = RoleMapper.INSTANCE.toEntity(roleDto);
-        if (roleCrud.findByRoleNameAndBoardIdAndUserId(roleEntity.getRoleName(), roleEntity.getBoardId(), roleEntity.getUserId())!=null){
+        if (roleCrud.findByRoleNameAndTaskIdAndUserId(roleEntity.getRoleName(), roleEntity.getTaskId(), roleEntity.getUserId())!=null){
             throw new RoleExistsException();
         }
         roleCrud.save(roleEntity);
@@ -95,25 +89,25 @@ public class RoleService implements StandartServiceInterface, RoleServiceInterfa
 
     @Transactional
     @Override
-    public RoleDto updateOne(Long id, Object o) throws RoleNotFoundException, RoleExistsException, BoardNotFoundException, UserNotFoundException {
+    public RoleDto updateOne(Long id, Object o) throws RoleNotFoundException, RoleExistsException, TaskNotFoundException, UserNotFoundException {
         if (roleCrud.findByRoleId(id)==null){
             throw new RoleNotFoundException();
         }
         RoleEntity roleEntityNew = RoleMapper.INSTANCE.toEntity((RoleDto) o);
         RoleEntity roleEntity = roleCrud.findByRoleId(id);
 
-        if ((boardCrud.findByBoardId(roleEntityNew.getBoardId())==null)){
-            throw new BoardNotFoundException();
+        if ((taskCrud.findByTaskId(roleEntityNew.getTaskId())==null)){
+            throw new TaskNotFoundException();
         }
         if (userCrud.findByUserId(roleEntityNew.getUserId())==null){
             throw new UserNotFoundException();
         }
-        if (roleCrud.findByRoleNameAndBoardIdAndUserId(roleEntityNew.getRoleName(), roleEntityNew.getBoardId(), roleEntityNew.getUserId())!=null){
+        if (roleCrud.findByRoleNameAndTaskIdAndUserId(roleEntityNew.getRoleName(), roleEntityNew.getTaskId(), roleEntityNew.getUserId())!=null){
             throw new RoleExistsException();
         }
 
         roleEntity.setRoleName(roleEntityNew.getRoleName());
-        roleEntity.setBoardId(roleEntityNew.getBoardId());
+        roleEntity.setTaskId(roleEntityNew.getTaskId());
         roleEntity.setUserId(roleEntityNew.getUserId());
         roleCrud.save(roleEntity);
         return RoleMapper.INSTANCE.toDto(roleEntity);

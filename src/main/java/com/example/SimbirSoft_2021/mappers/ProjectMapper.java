@@ -1,8 +1,6 @@
 package com.example.SimbirSoft_2021.mappers;
 
-import com.example.SimbirSoft_2021.Dto.BoardDto;
 import com.example.SimbirSoft_2021.Dto.ProjectDto;
-import com.example.SimbirSoft_2021.entity.BoardEntity;
 import com.example.SimbirSoft_2021.entity.ProjectEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;

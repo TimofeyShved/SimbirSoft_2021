@@ -73,8 +73,6 @@ public class ProjectController {
             return ResponseEntity.ok(projectService.deleteOne(projectId));
         }catch (ProjectNotFoundException e){
             return  ResponseEntity.badRequest().body(e.getMessage());
-        }catch (BoardNotFoundException e){
-            return  ResponseEntity.badRequest().body(e.getMessage());
         }catch (TaskNotFoundException e){
             return  ResponseEntity.badRequest().body(e.getMessage());
         }catch (Exception e){

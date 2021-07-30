@@ -18,6 +18,9 @@ public class TaskDto { // ----------------------------------------------- наш
     @Schema(description = "Статус задачи")
     private String taskStatus;
 
+    @Schema(description = "Id проекта нашей задачи")
+    private Long projectId;
+
     @Schema(description = "Id реализации нашей задачи")
     private Long releaseId;
 
@@ -54,6 +57,14 @@ public class TaskDto { // ----------------------------------------------- наш
 
     public void setTaskStatus(String taskStatus) {
         this.taskStatus = taskStatus;
+    }
+
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
     }
 
     public Long getReleaseId() {

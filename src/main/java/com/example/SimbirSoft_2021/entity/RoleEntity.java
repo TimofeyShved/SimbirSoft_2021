@@ -21,8 +21,8 @@ public class RoleEntity { // ----------------------------------------------- н�
     @Column(name = "role_name")
     private String roleName;
 
-    @Column(name = "board_id")
-    private Long boardId;
+    @Column(name = "task_id")
+    private Long taskId;
 
     @Column(name = "user_id")
     private Long userId;
@@ -30,9 +30,9 @@ public class RoleEntity { // ----------------------------------------------- н�
     public RoleEntity() { // конструктор
     }
 
-    public RoleEntity(String roleName, Long boardId, Long userId) {
+    public RoleEntity(String roleName, Long taskId, Long userId) {
         this.roleName = roleName;
-        this.boardId = boardId;
+        this.taskId = taskId;
         this.userId = userId;
     }
 
@@ -54,12 +54,12 @@ public class RoleEntity { // ----------------------------------------------- н�
         this.roleName = roleName;
     }
 
-    public Long getBoardId() {
-        return boardId;
+    public Long getTaskId() {
+        return taskId;
     }
 
-    public void setBoardId(Long boardId) {
-        this.boardId = boardId;
+    public void setTaskId(Long taskId) {
+        this.taskId = taskId;
     }
 
     public Long getUserId() {

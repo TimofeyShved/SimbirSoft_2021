@@ -14,7 +14,7 @@ public class RoleDto { // ----------------------------------------------- наш
     private String roleName;
 
     @Schema(description = "Id закреплённой доски, к которой указываем роли")
-    private Long boardId;
+    private Long taskId;
 
     @Schema(description = "Id человека, которого мы берём")
     private Long userId;
@@ -22,9 +22,9 @@ public class RoleDto { // ----------------------------------------------- наш
     public RoleDto() { // конструктор
     }
 
-    public RoleDto(String roleName, Long boardId, Long userId) {
+    public RoleDto(String roleName, Long taskId, Long userId) {
         this.roleName = roleName;
-        this.boardId = boardId;
+        this.taskId = taskId;
         this.userId = userId;
     }
 
@@ -46,12 +46,12 @@ public class RoleDto { // ----------------------------------------------- наш
         this.roleName = roleName;
     }
 
-    public Long getBoardId() {
-        return boardId;
+    public Long getTaskId() {
+        return taskId;
     }
 
-    public void setBoardId(Long boardId) {
-        this.boardId = boardId;
+    public void setTaskId(Long taskId) {
+        this.taskId = taskId;
     }
 
     public Long getUserId() {

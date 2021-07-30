@@ -1,20 +1,13 @@
 package com.example.SimbirSoft_2021.service;
 
 import com.example.SimbirSoft_2021.Dto.ProjectDto;
-import com.example.SimbirSoft_2021.Dto.UserDto;
-import com.example.SimbirSoft_2021.entity.BoardEntity;
 import com.example.SimbirSoft_2021.entity.ProjectEntity;
-import com.example.SimbirSoft_2021.entity.UserEntity;
 import com.example.SimbirSoft_2021.exception.*;
 import com.example.SimbirSoft_2021.mappers.ProjectMapper;
-import com.example.SimbirSoft_2021.mappers.UserMapper;
-import com.example.SimbirSoft_2021.repository.BoardCrud;
 import com.example.SimbirSoft_2021.repository.ProjectCrud;
 import com.example.SimbirSoft_2021.repository.ReleaseCrud;
-import com.example.SimbirSoft_2021.service.interfaceService.BoardServiceInterface;
 import com.example.SimbirSoft_2021.service.interfaceService.ProjectServiceInterface;
 import com.example.SimbirSoft_2021.service.interfaceService.StandartServiceInterface;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -32,13 +25,11 @@ public class ProjectService implements StandartServiceInterface, ProjectServiceI
 
     private ProjectCrud projectCrud; // создаём интерфейс для взаимодействия с бд
     private ReleaseCrud releaseCrud;
-    private BoardService boardService;
 
     // 3 способ
-    public ProjectService(ProjectCrud projectCrud, ReleaseCrud releaseCrud, BoardService boardService) {
+    public ProjectService(ProjectCrud projectCrud, ReleaseCrud releaseCrud) {
         this.projectCrud = projectCrud;
         this.releaseCrud = releaseCrud;
-        this.boardService = boardService;
     }
 
     @Transactional
@@ -84,11 +75,10 @@ public class ProjectService implements StandartServiceInterface, ProjectServiceI
 
     @Transactional
     @Override
-    public Long deleteOne(Long id) throws ProjectNotFoundException, BoardNotFoundException, TaskNotFoundException {
+    public Long deleteOne(Long id) throws ProjectNotFoundException, TaskNotFoundException {
         if (projectCrud.findByProjectId(id)==null){
             throw new ProjectNotFoundException();
         }
-        boardService.deleteByParammId(projectCrud.findByProjectId(id).getProjectId(), null);
         projectCrud.deleteById(id);
         releaseCrud.deleteById(projectCrud.findByProjectId(id).getReleaseId());
         return id;

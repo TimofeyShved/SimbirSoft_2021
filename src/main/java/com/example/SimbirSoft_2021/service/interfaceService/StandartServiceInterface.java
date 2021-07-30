@@ -1,9 +1,5 @@
 package com.example.SimbirSoft_2021.service.interfaceService;
 
-import com.example.SimbirSoft_2021.entity.BoardEntity;
-import com.example.SimbirSoft_2021.exception.BoardNotFoundException;
-import liquibase.pro.packaged.T;
-
 import java.util.List;
 
 public interface StandartServiceInterface {

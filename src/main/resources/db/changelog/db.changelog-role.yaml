@@ -18,7 +18,7 @@ databaseChangeLog:
                   name: role_name
                   type: varchar(50)
               - column:
-                  name: board_id
+                  name: task_id
                   type: INT
               - column:
                   name: user_id
@@ -35,7 +35,7 @@ databaseChangeLog:
                   name: role_name
                   value: "author"
               - column:
-                  name: board_id
+                  name: task_id
                   value: 1
               - column:
                   name: user_id
@@ -47,7 +47,7 @@ databaseChangeLog:
                   name: role_name
                   value: "customer"
               - column:
-                  name: board_id
+                  name: task_id
                   value: 1
               - column:
                   name: user_id
@@ -59,12 +59,12 @@ databaseChangeLog:
                   name: role_name
                   value: "implementer"
               - column:
-                  name: board_id
+                  name: task_id
                   value: 1
               - column:
                   name: user_id
                   value: 3
       rollback:
         - delete:
-            tableName: task_entity
+            tableName: role_entity
             where: username in ('Implementation', 'Testing')

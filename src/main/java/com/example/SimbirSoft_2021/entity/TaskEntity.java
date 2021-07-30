@@ -20,11 +20,14 @@ public class TaskEntity { // ----------------------------------------------- н�
     @Column(name = "task_status")
     private String taskStatus;
 
+    @Column(name = "project_id")
+    private Long projectId;
+
     @Column(name = "release_id")
     private Long releaseId;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "taskId")
-    private List<BoardEntity> boardEntities;
+    private List<RoleEntity> roleEntities;
 
     public TaskEntity() { // конструктор
     }
@@ -61,6 +64,14 @@ public class TaskEntity { // ----------------------------------------------- н�
         this.taskStatus = taskStatus;
     }
 
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
+    }
+
     public Long getReleaseId() {
         return releaseId;
     }
@@ -69,11 +80,11 @@ public class TaskEntity { // ----------------------------------------------- н�
         this.releaseId = releaseId;
     }
 
-    public List<BoardEntity> getBoardEntities() {
-        return boardEntities;
+    public List<RoleEntity> getRoleEntities() {
+        return roleEntities;
     }
 
-    public void setBoardEntities(List<BoardEntity> boardEntities) {
-        this.boardEntities = boardEntities;
+    public void setRoleEntities(List<RoleEntity> roleEntities) {
+        this.roleEntities = roleEntities;
     }
 }

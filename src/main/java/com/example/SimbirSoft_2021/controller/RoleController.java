@@ -39,8 +39,6 @@ public class RoleController {
             return ResponseEntity.ok(roleService.registration(roleDto));
         } catch (RoleExistsException e){
             return  ResponseEntity.badRequest().body(e.getMessage());
-        }catch (BoardNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
         }catch (UserNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }catch (Exception e){
@@ -97,8 +95,6 @@ public class RoleController {
             return  ResponseEntity.badRequest().body(e.getMessage());
         }catch (RoleExistsException e){
             return  ResponseEntity.badRequest().body(e.getMessage());
-        }catch (BoardNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
         }catch (UserNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }catch (Exception e){
