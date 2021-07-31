@@ -1,31 +1,5 @@
 databaseChangeLog:
-  - logicalFilePath: db/changelog/db.changelog-task.yaml
-  - changeSet:
-      id: 7
-      author: your_liquibase_username
-      changes:
-        - createTable:
-            tableName: task_entity
-            columns:
-              - column:
-                  name: task_id
-                  type: INT
-                  autoIncrement: true
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-              - column:
-                  name: task_name
-                  type: varchar(50)
-              - column:
-                  name: task_status
-                  type: varchar(50)
-              - column:
-                  name: project_id
-                  type: INT
-              - column:
-                  name: release_id
-                  type: INT
+  - logicalFilePath: db/changelog/InsertDataBase/db.changelog-InsertTask.yaml
   - changeSet:
       id: 8
       author: your_liquibase_username
@@ -45,7 +19,7 @@ databaseChangeLog:
                   value: 1
               - column:
                   name: release_id
-                  value: 1
+                  value: 3
         - insert:
             tableName: task_entity
             columns:
@@ -60,7 +34,7 @@ databaseChangeLog:
                   value: 1
               - column:
                   name: release_id
-                  value: 2
+                  value: 4
         - insert:
             tableName: task_entity
             columns:
@@ -75,7 +49,7 @@ databaseChangeLog:
                   value: 1
               - column:
                   name: release_id
-                  value: 3
+                  value: 5
         - insert:
             tableName: task_entity
             columns:
@@ -90,7 +64,67 @@ databaseChangeLog:
                   value: 1
               - column:
                   name: release_id
-                  value: 4
+                  value: 6
+        - insert:
+            tableName: task_entity
+            columns:
+              - column:
+                  name: task_name
+                  value: "Analysis"
+              - column:
+                  name: task_status
+                  value: "DONE"
+              - column:
+                  name: project_id
+                  value: 2
+              - column:
+                  name: release_id
+                  value: 7
+        - insert:
+            tableName: task_entity
+            columns:
+              - column:
+                  name: task_name
+                  value: "Design"
+              - column:
+                  name: task_status
+                  value: "IN_PROGRESS"
+              - column:
+                  name: project_id
+                  value: 2
+              - column:
+                  name: release_id
+                  value: 8
+        - insert:
+            tableName: task_entity
+            columns:
+              - column:
+                  name: task_name
+                  value: "Implementation"
+              - column:
+                  name: task_status
+                  value: "IN_PROGRESS"
+              - column:
+                  name: project_id
+                  value: 2
+              - column:
+                  name: release_id
+                  value: 9
+        - insert:
+            tableName: task_entity
+            columns:
+              - column:
+                  name: task_name
+                  value: "Testing"
+              - column:
+                  name: task_status
+                  value: "BACKLOG"
+              - column:
+                  name: project_id
+                  value: 2
+              - column:
+                  name: release_id
+                  value: 10
       rollback:
         - delete:
             tableName: task_entity

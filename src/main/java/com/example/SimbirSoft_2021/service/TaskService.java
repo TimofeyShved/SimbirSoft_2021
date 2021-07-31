@@ -79,12 +79,39 @@ public class TaskService implements StandartServiceInterface, TaskServiceInterfa
 
     @Transactional
     @Override
+    public TaskDto findByReleaseId(Long releaseId) {
+        TaskEntity taskEntity = taskCrud.findByReleaseId(releaseId);
+        if (taskEntity==null){
+            return null;
+        }
+        return TaskMapper.INSTANCE.toDto(taskEntity);
+    }
+
+    @Transactional
+    @Override
     public Long deleteOne(Long id) throws TaskNotFoundException {
         if (taskCrud.findByTaskId(id)==null){
             throw new TaskNotFoundException();
         }
         taskCrud.deleteById(id);
         return id;
+    }
+
+    @Transactional
+    @Override
+    public List<TaskDto> deleteByProjectId(Long projectId) throws TaskNotFoundException {
+        List<TaskEntity> taskEntityList = taskCrud.findAll();
+        if (taskEntityList==null){
+            throw new TaskNotFoundException();
+        }
+        List<TaskDto> taskDtoList = new ArrayList<>();
+        for (TaskEntity e:taskEntityList){
+            if (e.getProjectId() == projectId){
+                taskDtoList.add(TaskMapper.INSTANCE.toDto(e));
+                deleteOne(projectId);
+            }
+        }
+        return taskDtoList;
     }
 
     @Transactional
@@ -107,10 +134,10 @@ public class TaskService implements StandartServiceInterface, TaskServiceInterfa
 
         taskEntity.setTaskName(taskEntityNew.getTaskName());
         taskEntity.setTaskStatus(taskEntityNew.getTaskStatus());
+        taskEntity.setProjectId(taskEntityNew.getProjectId());
         taskEntity.setReleaseId(taskEntityNew.getReleaseId());
+
         taskCrud.save(taskEntity);
         return TaskMapper.INSTANCE.toDto(taskEntity);
     }
-
-
 }

@@ -1,0 +1,28 @@
+databaseChangeLog:
+  - logicalFilePath: db/changelog/CreateDataBase/db.changelog-CreateTask.yaml
+  - changeSet:
+      id: 7
+      author: your_liquibase_username
+      changes:
+        - createTable:
+            tableName: task_entity
+            columns:
+              - column:
+                  name: task_id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: task_name
+                  type: varchar(50)
+              - column:
+                  name: task_status
+                  type: varchar(50)
+              - column:
+                  name: project_id
+                  type: INT
+              - column:
+                  name: release_id
+                  type: INT

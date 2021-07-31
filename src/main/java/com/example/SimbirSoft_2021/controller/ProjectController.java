@@ -28,14 +28,8 @@ public class ProjectController {
     public ResponseEntity registration(@Validated @RequestBody ProjectDto projectDto) throws Exception {
         try {
             return ResponseEntity.ok(projectService.registration(projectDto));
-        }catch (ProjectExistsException e){
-            return  ResponseEntity.badRequest().body(e.getMessage());
-        }catch (ReleaseNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }catch (ProjectAndDateTimeExistsException e){
-            return  ResponseEntity.badRequest().body(e.getMessage());
         }catch (Exception e){
-            return  ResponseEntity.badRequest().body("Error");
+            return  ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -45,10 +39,8 @@ public class ProjectController {
     public ResponseEntity getUsers(){
         try {
             return ResponseEntity.ok(projectService.getAll());
-        }catch (ProjectNotFoundException e){
-            return  ResponseEntity.badRequest().body(e.getMessage());
         }catch (Exception e){
-            return  ResponseEntity.badRequest().body("Error");
+            return  ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -58,10 +50,8 @@ public class ProjectController {
     public ResponseEntity getOne(@Validated @PathVariable Long projectId) throws Exception {
         try {
             return ResponseEntity.ok(projectService.getOne(projectId));
-        }catch (ProjectNotFoundException e){
-            return  ResponseEntity.badRequest().body(e.getMessage());
         }catch (Exception e){
-            return  ResponseEntity.badRequest().body("Error");
+            return  ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -71,12 +61,8 @@ public class ProjectController {
     public ResponseEntity deleteOne(@Validated @PathVariable Long projectId) throws Exception {
         try {
             return ResponseEntity.ok(projectService.deleteOne(projectId));
-        }catch (ProjectNotFoundException e){
-            return  ResponseEntity.badRequest().body(e.getMessage());
-        }catch (TaskNotFoundException e){
-            return  ResponseEntity.badRequest().body(e.getMessage());
         }catch (Exception e){
-            return  ResponseEntity.badRequest().body("Error");
+            return  ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -86,16 +72,8 @@ public class ProjectController {
     public ResponseEntity updateOne(@Validated @PathVariable Long projectId, @Validated @RequestBody ProjectDto projectDto) throws Exception {
         try {
             return ResponseEntity.ok(projectService.updateOne(projectId, projectDto));
-        }catch (ProjectNotFoundException e){
-            return  ResponseEntity.badRequest().body(e.getMessage());
-        }catch (ProjectExistsException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }catch (ReleaseNotFoundException e){
-            return  ResponseEntity.badRequest().body(e.getMessage());
-        }catch (ProjectAndDateTimeExistsException e){
-            return  ResponseEntity.badRequest().body(e.getMessage());
         }catch (Exception e){
-            return  ResponseEntity.badRequest().body("Error");
+            return  ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }
