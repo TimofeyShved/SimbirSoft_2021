@@ -1,13 +1,7 @@
 package com.example.SimbirSoft_2021.entity;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import javax.persistence.*;
-import java.util.List;
 
-@Getter
-@Setter
 @Entity
 @Table(name="role_entity")
 public class RoleEntity { // ----------------------------------------------- наш с вами пользователь
@@ -28,12 +22,6 @@ public class RoleEntity { // ----------------------------------------------- н�
     private Long userId;
 
     public RoleEntity() { // конструктор
-    }
-
-    public RoleEntity(String roleName, Long boardId, Long userId) {
-        this.roleName = roleName;
-        this.boardId = boardId;
-        this.userId = userId;
     }
 
     // ----------------------------------------------- гетеры и сетеры

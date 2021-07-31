@@ -3,7 +3,6 @@ package com.example.SimbirSoft_2021.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name="release_entity")
@@ -22,12 +21,6 @@ public class ReleaseEntity { // ----------------------------------------------- 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
     @Column(name = "data_end")
     private String dataEnd;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "releaseId")
-    private List<ProjectEntity> projectEntities;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "releaseId")
-    private List<TaskEntity> taskEntities;
 
     public ReleaseEntity() { // конструктор
     }

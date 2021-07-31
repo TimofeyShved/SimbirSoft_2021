@@ -1,133 +1,57 @@
 package com.example.SimbirSoft_2021.service;
 
-import com.example.SimbirSoft_2021.Dto.ReleaseDto;
-import com.example.SimbirSoft_2021.Dto.UserDto;
-import com.example.SimbirSoft_2021.entity.ProjectEntity;
 import com.example.SimbirSoft_2021.entity.ReleaseEntity;
-import com.example.SimbirSoft_2021.entity.UserEntity;
-import com.example.SimbirSoft_2021.exception.*;
-import com.example.SimbirSoft_2021.mappers.ReleaseMapper;
-import com.example.SimbirSoft_2021.mappers.UserMapper;
-import com.example.SimbirSoft_2021.repository.ProjectCrud;
-import com.example.SimbirSoft_2021.repository.ReleaseCrud;
-import com.example.SimbirSoft_2021.service.interfaceService.ProjectServiceInterface;
-import com.example.SimbirSoft_2021.service.interfaceService.StandartServiceInterface;
+import com.example.SimbirSoft_2021.exception.UserNotFoundException;
+import com.example.SimbirSoft_2021.repository.ReleaseCRUD;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
-// 1 способ
-//@RequiredArgsConstructor
 @Service
-public class ReleaseService implements StandartServiceInterface, ProjectServiceInterface {
+public class ReleaseService {
 
-    // 2 способ
-    //@Autowired
-    //private ReleaseCrud releaseCRUD;
+    @Autowired
+    private ReleaseCRUD releaseCRUD; // создаём интерфейс для взаимодействия с бд
 
-    private ReleaseCrud releaseCrud; // создаём интерфейс для взаимодействия с бд
-
-    // 3 способ
-    public ReleaseService(ReleaseCrud releaseCrud) {
-        this.releaseCrud = releaseCrud;
+    public ReleaseEntity registration(ReleaseEntity releaseEntity) throws Exception {
+        System.out.println(releaseEntity.getDataStart());
+        if ((releaseCRUD.findReleaseEntityByDataStart(releaseEntity.getDataStart())!=null)
+                &&((releaseCRUD.findReleaseEntityByDataEnd(releaseEntity.getDataEnd())!=null))){
+            throw new Exception("code: RELEASE_EXISTS");
+        }
+        return releaseCRUD.save(releaseEntity);
     }
 
-    @Transactional
-    @Override
-    public ReleaseDto registration(Object o) throws ReleaseExistsException, ReleaseDateFormatException {
-        ReleaseDto releaseDto = (ReleaseDto) o;
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // формат времени
-        //Calendar cal = Calendar.getInstance(); // вытащить дату из системы
-        try {
-            releaseDto.setDataStart(dateFormat.format(dateFormat.parse(releaseDto.getDataStart())));
-            releaseDto.setDataEnd(dateFormat.format(dateFormat.parse(releaseDto.getDataEnd())));
-        }
-        catch (Exception e){
-            throw new ReleaseDateFormatException();
-        }
-
-        ReleaseEntity releaseEntity = ReleaseMapper.INSTANCE.toEntity(releaseDto);
-        /* // ReleaseExistsException
-        if (releaseCrud.findByDataStartAndDataEnd(releaseEntity.getDataStart(), releaseEntity.getDataEnd())!=null){
-            throw new ReleaseExistsException();
-        }
-         */
-        releaseCrud.save(releaseEntity);
-        return ReleaseMapper.INSTANCE.toDto(releaseEntity);
-    }
-
-    @Transactional
-    @Override
-    public List<ReleaseDto> getAll() throws ReleaseNotFoundException {
-        List<ReleaseEntity> releaseEntityList = releaseCrud.findAll();
-        if (releaseEntityList==null){
-            throw new ReleaseNotFoundException();
-        }
-        List<ReleaseDto> releaseDtoList = new ArrayList<>();
-        for (ReleaseEntity e:releaseEntityList){
-            releaseDtoList.add(ReleaseMapper.INSTANCE.toDto(e));
-        }
-        return releaseDtoList;
-    }
-
-    @Transactional
-    @Override
-    public ReleaseDto getOne(Long id) throws ReleaseNotFoundException {
-        ReleaseEntity releaseEntity = releaseCrud.findByReleaseId(id);
+    public ReleaseEntity getOne(Long id) throws UserNotFoundException {
+        ReleaseEntity releaseEntity = releaseCRUD.findById(id).get();
         if (releaseEntity==null){
-            throw new ReleaseNotFoundException();
+            throw new UserNotFoundException("code: RELEASE_NOT_FOUND");
         }
-        return ReleaseMapper.INSTANCE.toDto(releaseEntity);
+        return releaseEntity;
     }
 
-    @Transactional
-    @Override
-    public Long deleteOne(Long id) throws ReleaseNotFoundException {
-        if (releaseCrud.findByReleaseId(id)==null){
-            throw new ReleaseNotFoundException();
+    public Long deleteOne(Long id) throws UserNotFoundException {
+        if (releaseCRUD.findById(id).get()==null){
+            throw new UserNotFoundException("code: RELEASE_NOT_FOUND");
         }
-        releaseCrud.deleteById(id);
+        releaseCRUD.deleteById(id);
         return id;
     }
 
-    @Transactional
-    @Override
-    public ReleaseDto updateOne(Long id, Object o) throws ReleaseNotFoundException, ReleaseExistsException, ReleaseDateFormatException {
-        if (releaseCrud.findByReleaseId(id)==null){
-            throw new ReleaseNotFoundException();
+    public ReleaseEntity updateOne(Long id, ReleaseEntity releaseEntityNew) throws Exception {
+        ReleaseEntity releaseEntity = releaseCRUD.findById(id).get();
+        if (releaseCRUD.findById(id).get()==null){
+            throw new UserNotFoundException("code: TASK_NOT_FOUND");
         }
-        ReleaseDto releaseDto = (ReleaseDto) o;
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // формат времени
-        //Calendar cal = Calendar.getInstance(); // вытащить дату из системы
-        try {
-            releaseDto.setDataStart(dateFormat.format(dateFormat.parse(releaseDto.getDataStart())));
-            releaseDto.setDataEnd(dateFormat.format(dateFormat.parse(releaseDto.getDataEnd())));
-        }
-        catch (Exception e){
-            throw new ReleaseDateFormatException();
-        }
-
-        ReleaseEntity releaseEntityNew = ReleaseMapper.INSTANCE.toEntity(releaseDto);
-        /* // ReleaseExistsException
-        if (releaseCrud.findByDataStartAndDataEnd(releaseEntity.getDataStart(), releaseEntity.getDataEnd())!=null){
-            throw new ReleaseExistsException();
-        }
-         */
-
-        ReleaseEntity releaseEntity = releaseCrud.findByReleaseId(id);
-
-        if (releaseCrud.findByDataStartAndDataEnd(releaseEntityNew.getDataStart(), releaseEntityNew.getDataEnd())!=null){
-            throw new ReleaseExistsException();
+        if ((releaseCRUD.findReleaseEntityByDataStart(releaseEntityNew.getDataStart())!=null)
+                &&((releaseCRUD.findReleaseEntityByDataEnd(releaseEntityNew.getDataEnd())!=null))){
+            throw new Exception("code: RELEASE_EXISTS");
         }
         releaseEntity.setDataStart(releaseEntityNew.getDataStart());
         releaseEntity.setDataEnd(releaseEntityNew.getDataEnd());
-        releaseCrud.save(releaseEntity);
-        return ReleaseMapper.INSTANCE.toDto(releaseEntity);
+        return releaseCRUD.save(releaseEntity);
     }
 }

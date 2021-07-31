@@ -38,14 +38,13 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8070/control/user",
+							"raw": "http://localhost:8070/user",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8070",
 							"path": [
-								"control",
 								"user"
 							]
 						}
@@ -73,14 +72,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8070/control/users",
+							"raw": "http://localhost:8070/users",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8070",
 							"path": [
-								"control",
 								"users"
 							]
 						}
@@ -108,14 +106,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8070/control/user/1",
+							"raw": "http://localhost:8070/user/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8070",
 							"path": [
-								"control",
 								"user",
 								"1"
 							]
@@ -153,14 +150,13 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8070/control/user/3",
+							"raw": "http://localhost:8070/user/3",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8070",
 							"path": [
-								"control",
 								"user",
 								"3"
 							]
@@ -189,14 +185,13 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8070/control/user/4",
+							"raw": "http://localhost:8070/user/4",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8070",
 							"path": [
-								"control",
 								"user",
 								"4"
 							]
@@ -239,14 +234,13 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8070/control/project",
+							"raw": "http://localhost:8070/project",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8070",
 							"path": [
-								"control",
 								"project"
 							]
 						}
@@ -274,14 +268,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8070/control/projects",
+							"raw": "http://localhost:8070/projects",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8070",
 							"path": [
-								"control",
 								"projects"
 							]
 						}
@@ -294,16 +287,15 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8070/control/project/2",
+							"raw": "http://localhost:8070/project/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8070",
 							"path": [
-								"control",
 								"project",
-								"2"
+								"1"
 							]
 						}
 					},
@@ -339,14 +331,13 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8070/control/project/1",
+							"raw": "http://localhost:8070/project/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8070",
 							"path": [
-								"control",
 								"project",
 								"1"
 							]
@@ -375,14 +366,13 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8070/control/project/4",
+							"raw": "http://localhost:8070/project/4",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8070",
 							"path": [
-								"control",
 								"project",
 								"4"
 							]
@@ -417,7 +407,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"projectId\": 2,\r\n    \"taskId\": 1\r\n}",
+							"raw": "{\r\n    \"projectName\": \"project\",\r\n    \"projectStatus\": \"project\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -425,15 +415,14 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8070/control/board",
+							"raw": "http://localhost:8070/project",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8070",
 							"path": [
-								"control",
-								"board"
+								"project"
 							]
 						}
 					},
@@ -460,15 +449,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8070/control/boards",
+							"raw": "http://localhost:8070/projects",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8070",
 							"path": [
-								"control",
-								"boards"
+								"projects"
 							]
 						}
 					},
@@ -480,16 +468,15 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8070/control/board/4",
+							"raw": "http://localhost:8070/project/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8070",
 							"path": [
-								"control",
-								"board",
-								"4"
+								"project",
+								"1"
 							]
 						}
 					},
@@ -517,7 +504,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"projectId\": 1,\r\n    \"taskId\": 3\r\n}",
+							"raw": "{\r\n    \"projectName\": \"project\",\r\n    \"projectStatus\": \"DONE\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -525,16 +512,15 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8070/control/board/1",
+							"raw": "http://localhost:8070/project/4",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8070",
 							"path": [
-								"control",
-								"board",
-								"1"
+								"project",
+								"4"
 							]
 						}
 					},
@@ -561,16 +547,15 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8070/control/board/3",
+							"raw": "http://localhost:8070/project/4",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8070",
 							"path": [
-								"control",
-								"board",
-								"3"
+								"project",
+								"4"
 							]
 						}
 					},
@@ -611,14 +596,13 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8070/control/task",
+							"raw": "http://localhost:8070/task",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8070",
 							"path": [
-								"control",
 								"task"
 							]
 						}
@@ -646,14 +630,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8070/control/tasks",
+							"raw": "http://localhost:8070/tasks",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8070",
 							"path": [
-								"control",
 								"tasks"
 							]
 						}
@@ -681,14 +664,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8070/control/task/2",
+							"raw": "http://localhost:8070/task/2",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8070",
 							"path": [
-								"control",
 								"task",
 								"2"
 							]
@@ -726,16 +708,15 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8070/control/task/5",
+							"raw": "http://localhost:8070/task/4",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8070",
 							"path": [
-								"control",
 								"task",
-								"5"
+								"4"
 							]
 						}
 					},
@@ -762,14 +743,13 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8070/control/task/5",
+							"raw": "http://localhost:8070/task/5",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8070",
 							"path": [
-								"control",
 								"task",
 								"5"
 							]
@@ -804,7 +784,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"roleName\": \"implementer\",\r\n    \"boardId\": 4,\r\n    \"userId\": 1\r\n}",
+							"raw": "{\r\n    \"roleName\": \"implementer\",\r\n    \"boardId\": 1,\r\n    \"userId\": 4\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -812,14 +792,13 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8070/control/role",
+							"raw": "http://localhost:8070/role",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8070",
 							"path": [
-								"control",
 								"role"
 							]
 						}
@@ -847,14 +826,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8070/control/rols",
+							"raw": "http://localhost:8070/rols",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8070",
 							"path": [
-								"control",
 								"rols"
 							]
 						}
@@ -882,14 +860,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8070/control/role/2",
+							"raw": "http://localhost:8070/role/2",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8070",
 							"path": [
-								"control",
 								"role",
 								"2"
 							]
@@ -919,7 +896,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"roleName\": \"implementer\",\r\n    \"boardId\": 1,\r\n    \"userId\": 4\r\n}",
+							"raw": "{\r\n    \"roleName\": \"author & implementer\",\r\n    \"boardId\": 1,\r\n    \"userId\": 4\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -927,16 +904,15 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8070/control/role/1",
+							"raw": "http://localhost:8070/role/4",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8070",
 							"path": [
-								"control",
 								"role",
-								"1"
+								"4"
 							]
 						}
 					},
@@ -963,16 +939,15 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8070/control/role/12",
+							"raw": "http://localhost:8070/role/4",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8070",
 							"path": [
-								"control",
 								"role",
-								"12"
+								"4"
 							]
 						}
 					},
@@ -1013,14 +988,13 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8070/control/release",
+							"raw": "http://localhost:8070/release",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8070",
 							"path": [
-								"control",
 								"release"
 							]
 						}
@@ -1048,14 +1022,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8070/control/releases",
+							"raw": "http://localhost:8070/releases",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8070",
 							"path": [
-								"control",
 								"releases"
 							]
 						}
@@ -1083,14 +1056,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8070/control/release/2",
+							"raw": "http://localhost:8070/release/2",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8070",
 							"path": [
-								"control",
 								"release",
 								"2"
 							]
@@ -1128,16 +1100,15 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8070/control/release/7",
+							"raw": "http://localhost:8070/release/5",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8070",
 							"path": [
-								"control",
 								"release",
-								"7"
+								"5"
 							]
 						}
 					},
@@ -1164,16 +1135,15 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8070/control/release/7",
+							"raw": "http://localhost:8070/release/5",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8070",
 							"path": [
-								"control",
 								"release",
-								"7"
+								"5"
 							]
 						}
 					},

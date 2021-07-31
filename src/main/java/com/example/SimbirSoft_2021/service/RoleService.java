@@ -1,121 +1,51 @@
 package com.example.SimbirSoft_2021.service;
 
-import com.example.SimbirSoft_2021.Dto.BoardDto;
-import com.example.SimbirSoft_2021.Dto.RoleDto;
-import com.example.SimbirSoft_2021.Dto.UserDto;
-import com.example.SimbirSoft_2021.entity.BoardEntity;
 import com.example.SimbirSoft_2021.entity.RoleEntity;
-import com.example.SimbirSoft_2021.entity.UserEntity;
-import com.example.SimbirSoft_2021.exception.*;
-import com.example.SimbirSoft_2021.mappers.BoardMapper;
-import com.example.SimbirSoft_2021.mappers.RoleMapper;
-import com.example.SimbirSoft_2021.mappers.UserMapper;
-import com.example.SimbirSoft_2021.repository.*;
-import com.example.SimbirSoft_2021.service.interfaceService.RoleServiceInterface;
-import com.example.SimbirSoft_2021.service.interfaceService.StandartServiceInterface;
+import com.example.SimbirSoft_2021.exception.UserNotFoundException;
+import com.example.SimbirSoft_2021.repository.RoleCRUD;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-
-// 1 способ
-//@RequiredArgsConstructor
 @Service
-public class RoleService implements StandartServiceInterface, RoleServiceInterface {
+public class RoleService {
 
-    // 2 способ
-    //@Autowired
-    //private RoleCrud roleCRUD;
+    @Autowired
+    private RoleCRUD roleCRUD; // создаём интерфейс для взаимодействия с бд
 
-    private RoleCrud roleCrud; // создаём интерфейс для взаимодействия с бд
-    private UserCrud userCrud;
-    private BoardCrud boardCrud;
-
-    // 3 способ
-
-    public RoleService(RoleCrud roleCrud, UserCrud userCrud, BoardCrud boardCrud) {
-        this.roleCrud = roleCrud;
-        this.userCrud = userCrud;
-        this.boardCrud = boardCrud;
+    public RoleEntity registration(RoleEntity roleEntity) throws Exception {
+        if ((roleCRUD.findRoleEntityByRoleName(roleEntity.getRoleName())!=null)&&(roleCRUD.findRoleEntityByUserId(roleEntity.getUserId())!=null)){
+            throw new Exception("code: ROLE_EXISTS");
+        }
+        return roleCRUD.save(roleEntity);
     }
 
-    @Transactional
-    @Override
-    public RoleDto registration(Object o) throws RoleExistsException, BoardNotFoundException, UserNotFoundException {
-        RoleDto roleDto = (RoleDto) o;
-        if ((boardCrud.findByBoardId(roleDto.getBoardId())==null)){
-            throw new BoardNotFoundException();
-        }
-        if (userCrud.findByUserId(roleDto.getUserId())==null){
-            throw new UserNotFoundException();
-        }
-        RoleEntity roleEntity = RoleMapper.INSTANCE.toEntity(roleDto);
-        if (roleCrud.findByRoleNameAndBoardIdAndUserId(roleEntity.getRoleName(), roleEntity.getBoardId(), roleEntity.getUserId())!=null){
-            throw new RoleExistsException();
-        }
-        roleCrud.save(roleEntity);
-        return RoleMapper.INSTANCE.toDto(roleEntity);
-    }
-
-    @Transactional
-    @Override
-    public List<RoleDto> getAll() throws RoleNotFoundException {
-        List<RoleEntity> roleEntityList = roleCrud.findAll();
-        if (roleEntityList==null){
-            throw new RoleNotFoundException();
-        }
-        List<RoleDto> roleDtoList = new ArrayList<>();
-        for (RoleEntity e:roleEntityList){
-            roleDtoList.add(RoleMapper.INSTANCE.toDto(e));
-        }
-        return roleDtoList;
-    }
-
-    @Transactional
-    @Override
-    public RoleDto getOne(Long id) throws RoleNotFoundException {
-        RoleEntity roleEntity = roleCrud.findByRoleId(id);
+    public RoleEntity getOne(Long id) throws UserNotFoundException {
+        RoleEntity roleEntity = roleCRUD.findById(id).get();
         if (roleEntity==null){
-            throw new RoleNotFoundException();
+            throw new UserNotFoundException("code: ROLE_NOT_FOUND");
         }
-        return RoleMapper.INSTANCE.toDto(roleEntity);
+        return roleEntity;
     }
 
-
-    @Transactional
-    @Override
-    public Long deleteOne(Long id) throws RoleNotFoundException {
-        if (roleCrud.findByRoleId(id)==null){
-            throw new RoleNotFoundException();
+    public Long deleteOne(Long id) throws UserNotFoundException {
+        if (roleCRUD.findById(id).get()==null){
+            throw new UserNotFoundException("code: ROLE_NOT_FOUND");
         }
-        roleCrud.deleteById(id);
+        roleCRUD.deleteById(id);
         return id;
     }
 
-    @Transactional
-    @Override
-    public RoleDto updateOne(Long id, Object o) throws RoleNotFoundException, RoleExistsException, BoardNotFoundException, UserNotFoundException {
-        if (roleCrud.findByRoleId(id)==null){
-            throw new RoleNotFoundException();
+    public RoleEntity updateOne(Long id, RoleEntity roleEntityNew) throws Exception {
+        RoleEntity roleEntity = roleCRUD.findById(id).get();
+        if (roleCRUD.findById(id).get()==null){
+            throw new UserNotFoundException("code: ROLE_NOT_FOUND");
         }
-        RoleEntity roleEntityNew = RoleMapper.INSTANCE.toEntity((RoleDto) o);
-        RoleEntity roleEntity = roleCrud.findByRoleId(id);
-
-        if ((boardCrud.findByBoardId(roleEntityNew.getBoardId())==null)){
-            throw new BoardNotFoundException();
+        if ((roleCRUD.findRoleEntityByRoleName(roleEntityNew.getRoleName())!=null)&&(roleCRUD.findRoleEntityByUserId(roleEntityNew.getUserId())!=null)){
+            throw new Exception("code: ROLE_EXISTS");
         }
-        if (userCrud.findByUserId(roleEntityNew.getUserId())==null){
-            throw new UserNotFoundException();
-        }
-        if (roleCrud.findByRoleNameAndBoardIdAndUserId(roleEntityNew.getRoleName(), roleEntityNew.getBoardId(), roleEntityNew.getUserId())!=null){
-            throw new RoleExistsException();
-        }
-
         roleEntity.setRoleName(roleEntityNew.getRoleName());
         roleEntity.setBoardId(roleEntityNew.getBoardId());
         roleEntity.setUserId(roleEntityNew.getUserId());
-        roleCrud.save(roleEntity);
-        return RoleMapper.INSTANCE.toDto(roleEntity);
+        return roleCRUD.save(roleEntity);
     }
 }
