@@ -1,120 +1,50 @@
 package com.example.SimbirSoft_2021.service;
 
-import com.example.SimbirSoft_2021.Dto.BoardDto;
-import com.example.SimbirSoft_2021.Dto.ProjectDto;
-import com.example.SimbirSoft_2021.Dto.UserDto;
 import com.example.SimbirSoft_2021.entity.BoardEntity;
-import com.example.SimbirSoft_2021.entity.UserEntity;
-import com.example.SimbirSoft_2021.exception.*;
-import com.example.SimbirSoft_2021.mappers.BoardMapper;
-import com.example.SimbirSoft_2021.mappers.UserMapper;
-import com.example.SimbirSoft_2021.repository.BoardCrud;
-import com.example.SimbirSoft_2021.repository.ProjectCrud;
-import com.example.SimbirSoft_2021.repository.TaskCrud;
-import com.example.SimbirSoft_2021.service.interfaceService.BoardServiceInterface;
-import com.example.SimbirSoft_2021.service.interfaceService.StandartServiceInterface;
-import lombok.RequiredArgsConstructor;
+import com.example.SimbirSoft_2021.exception.UserNotFoundException;
+import com.example.SimbirSoft_2021.repository.BoardCRUD;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-
-// 1 способ
-//@RequiredArgsConstructor
 @Service
-public class BoardService implements StandartServiceInterface, BoardServiceInterface {
+public class BoardService {
 
-    // 2 способ
-    //@Autowired
-    //private BoardCrud boardCrud;
+    @Autowired
+    private BoardCRUD boardCRUD; // создаём интерфейс для взаимодействия с бд
 
-    private BoardCrud boardCrud; // создаём интерфейс для взаимодействия с бд
-    private ProjectCrud projectCrud;
-    private TaskCrud taskCrud;
-
-    // 3 способ
-    public BoardService(BoardCrud boardCrud, ProjectCrud projectCrud, TaskCrud taskCrud) {
-        this.boardCrud = boardCrud;
-        this.projectCrud = projectCrud;
-        this.taskCrud = taskCrud;
+    public BoardEntity registration(BoardEntity boardEntity) throws Exception {
+        if ((boardCRUD.findBoardEntityByProjectId(boardEntity.getProjectId())!=null)&&(boardCRUD.findBoardEntityByProjectId(boardEntity.getTaskId())!=null)){
+            throw new Exception("code: BOARD_EXISTS");
+        }
+        return boardCRUD.save(boardEntity);
     }
 
-    @Transactional
-    @Override
-    public BoardDto registration(Object o) throws BoardExistsException, ProjectNotFoundException, TaskNotFoundException {
-        BoardDto boardDto = (BoardDto) o;
-        BoardEntity boardEntity = BoardMapper.INSTANCE.toEntity(boardDto);
-        if (projectCrud.findByProjectId(boardDto.getProjectId())==null){
-            throw new ProjectNotFoundException();
-        }
-        if (taskCrud.findByTaskId(boardDto.getTaskId())==null){
-            throw new TaskNotFoundException();
-        }
-        if ((boardCrud.findByTaskId(boardEntity.getTaskId())!=null)){
-            throw new BoardExistsException();
-        }
-        boardCrud.save(boardEntity);
-        return BoardMapper.INSTANCE.toDto(boardEntity);
-    }
-
-    @Transactional
-    @Override
-    public List<BoardDto> getAll() throws BoardNotFoundException {
-        List<BoardEntity> boardEntityList = boardCrud.findAll();
-        if (boardEntityList==null){
-            throw new BoardNotFoundException();
-        }
-        List<BoardDto> boardDtoList = new ArrayList<>();
-        for (BoardEntity e:boardEntityList){
-            boardDtoList.add(BoardMapper.INSTANCE.toDto(e));
-        }
-        return boardDtoList;
-    }
-
-    @Transactional
-    @Override
-    public BoardDto getOne(Long id) throws BoardNotFoundException {
-        BoardEntity boardEntity = boardCrud.findByBoardId(id);
+    public BoardEntity getOne(Long id) throws UserNotFoundException {
+        BoardEntity boardEntity = boardCRUD.findById(id).get();
         if (boardEntity==null){
-            throw new BoardNotFoundException();
+            throw new UserNotFoundException("code: BOARD_NOT_FOUND");
         }
-        return BoardMapper.INSTANCE.toDto(boardEntity);
+        return boardEntity;
     }
 
-    @Transactional
-    @Override
-    public Long deleteOne(Long id) throws BoardNotFoundException {
-        if (boardCrud.findByBoardId(id)==null){
-            throw new BoardNotFoundException();
+    public Long deleteOne(Long id) throws UserNotFoundException {
+        if (boardCRUD.findById(id).get()==null){
+            throw new UserNotFoundException("code: BOARD_NOT_FOUND");
         }
-        boardCrud.deleteById(id);
+        boardCRUD.deleteById(id);
         return id;
     }
 
-    @Transactional
-    @Override
-    public BoardDto updateOne(Long id, Object o) throws BoardNotFoundException, BoardExistsException, ProjectNotFoundException, TaskNotFoundException {
-        if (boardCrud.findByBoardId(id)==null){
-            throw new BoardNotFoundException();
+    public BoardEntity updateOne(Long id, BoardEntity boardEntityNew) throws Exception {
+        BoardEntity boardEntity = boardCRUD.findById(id).get();
+        if (boardCRUD.findById(id).get()==null){
+            throw new UserNotFoundException("code: BOARD_NOT_FOUND");
         }
-        BoardEntity boardEntityNew = BoardMapper.INSTANCE.toEntity((BoardDto) o);
-        BoardEntity boardEntity = boardCrud.findByBoardId(id);
-
-        if (projectCrud.findByProjectId(boardEntityNew.getProjectId())==null){
-            throw new ProjectNotFoundException();
+        if ((boardCRUD.findBoardEntityByProjectId(boardEntity.getProjectId())!=null)&&(boardCRUD.findBoardEntityByProjectId(boardEntity.getTaskId())!=null)){
+            throw new Exception("code: BOARD_EXISTS");
         }
-        if (taskCrud.findByTaskId(boardEntityNew.getTaskId())==null){
-            throw new TaskNotFoundException();
-        }
-        if (boardCrud.findByTaskId(boardEntityNew.getTaskId())!=null){
-            throw new BoardExistsException();
-        }
-
         boardEntity.setProjectId(boardEntityNew.getProjectId());
         boardEntity.setTaskId(boardEntityNew.getTaskId());
-        boardCrud.save(boardEntity);
-        return BoardMapper.INSTANCE.toDto(boardEntity);
+        return boardCRUD.save(boardEntity);
     }
 }

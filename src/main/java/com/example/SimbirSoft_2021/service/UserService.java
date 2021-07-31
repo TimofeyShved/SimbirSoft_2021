@@ -1,99 +1,51 @@
 package com.example.SimbirSoft_2021.service;
 
-import com.example.SimbirSoft_2021.Dto.UserDto;
-import com.example.SimbirSoft_2021.entity.ProjectEntity;
 import com.example.SimbirSoft_2021.entity.UserEntity;
-import com.example.SimbirSoft_2021.exception.*;
-import com.example.SimbirSoft_2021.mappers.UserMapper;
-import com.example.SimbirSoft_2021.repository.ProjectCrud;
-import com.example.SimbirSoft_2021.repository.UserCrud;
-import com.example.SimbirSoft_2021.service.interfaceService.ProjectServiceInterface;
-import com.example.SimbirSoft_2021.service.interfaceService.StandartServiceInterface;
-import com.example.SimbirSoft_2021.service.interfaceService.UserServiceInterface;
+import com.example.SimbirSoft_2021.exception.UserNotFoundException;
+import com.example.SimbirSoft_2021.repository.UserCRUD;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-
-// 1 способ
-//@RequiredArgsConstructor
 @Service
-public class UserService implements StandartServiceInterface, UserServiceInterface {
+public class UserService {
 
-    // 2 способ
-    //@Autowired
-    //private ProjectCrud projectCRUD;
+    @Autowired
+    private UserCRUD userCRUD; // создаём интерфейс для взаимодействия с бд
 
-    private UserCrud userCrud; // создаём интерфейс для взаимодействия с бд
-
-    // 3 способ
-    public UserService(UserCrud userCrud) {
-        this.userCrud = userCrud;
+    public UserEntity registration(UserEntity userEntity) throws Exception {
+        if ((userCRUD.findUserEntityByFirstName(userEntity.getFirstName())!=null)&&(userCRUD.findUserEntityBylastName(userEntity.getLastName())!=null)){
+            throw new Exception("code: USER_EXISTS");
+        }
+        return userCRUD.save(userEntity);
     }
 
-    @Transactional
-    @Override
-    public UserDto registration(Object o) throws UserExistsException {
-        UserEntity userEntity = UserMapper.INSTANCE.toEntity((UserDto) o);
-        if ((userCrud.findByFirstNameAndLastName(userEntity.getFirstName(), userEntity.getLastName())!=null)){
-            throw new UserExistsException();
-        }
-        userCrud.save(userEntity);
-        return UserMapper.INSTANCE.toDto(userEntity);
-    }
-
-    @Transactional
-    @Override
-    public List<UserDto> getAll() throws UserNotFoundException {
-        List<UserEntity> userEntityList = userCrud.findAll();
-        if (userEntityList==null){
-            throw new UserNotFoundException();
-        }
-        List<UserDto> userDtoList = new ArrayList<>();
-        for (UserEntity e:userEntityList){
-            userDtoList.add(UserMapper.INSTANCE.toDto(e));
-        }
-        return userDtoList;
-    }
-
-    @Transactional
-    @Override
-    public UserDto getOne(Long id) throws UserNotFoundException {
-        UserEntity userEntity = userCrud.findByUserId(id);
+    public UserEntity getOne(Long id) throws UserNotFoundException {
+        UserEntity userEntity = userCRUD.findById(id).get();
+        System.out.println(userEntity.getFirstName());
         if (userEntity==null){
-            throw new UserNotFoundException();
+            throw new UserNotFoundException("code: USER_NOT_FOUND");
         }
-        return UserMapper.INSTANCE.toDto(userEntity);
+        return userEntity;
     }
 
-    @Transactional
-    @Override
     public Long deleteOne(Long id) throws UserNotFoundException {
-        if (userCrud.findByUserId(id)==null){
-            throw new UserNotFoundException();
+        if (userCRUD.findById(id).get()==null){
+            throw new UserNotFoundException("code: USER_NOT_FOUND");
         }
-        userCrud.deleteById(id);
+        userCRUD.deleteById(id);
         return id;
     }
 
-    @Transactional
-    @Override
-    public UserDto updateOne(Long id, Object o) throws UserNotFoundException, UserExistsException {
-        if (userCrud.findByUserId(id)==null){
-            throw new UserNotFoundException();
+    public UserEntity updateOne(Long id, UserEntity userEntityNew) throws Exception {
+        UserEntity userEntity = userCRUD.findById(id).get();
+        if (userCRUD.findById(id).get()==null){
+            throw new UserNotFoundException("code: USER_NOT_FOUND");
         }
-        UserEntity userEntityNew = UserMapper.INSTANCE.toEntity((UserDto) o);
-        UserEntity userEntity = userCrud.findByUserId(id);
-
-        if ((userCrud.findByFirstNameAndLastName(userEntityNew.getFirstName(), userEntityNew.getLastName())!=null)){
-            throw new UserExistsException();
+        if ((userCRUD.findUserEntityByFirstName(userEntityNew.getFirstName())!=null)&&(userCRUD.findUserEntityBylastName(userEntityNew.getLastName())!=null)){
+            throw new Exception("code: USER_EXISTS");
         }
         userEntity.setFirstName(userEntityNew.getFirstName());
         userEntity.setLastName(userEntityNew.getLastName());
-        userEntity.setPatronymic(userEntityNew.getPatronymic());
-        userCrud.save(userEntity);
-        return UserMapper.INSTANCE.toDto(userEntity);
+        return userCRUD.save(userEntity);
     }
 }
