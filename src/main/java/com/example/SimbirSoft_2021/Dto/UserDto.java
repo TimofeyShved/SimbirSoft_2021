@@ -1,36 +1,29 @@
-package com.example.SimbirSoft_2021.entity;
+package com.example.SimbirSoft_2021.Dto;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
-@Entity
-@Table(name="user_entity")
-public class UserEntity { // ----------------------------------------------- наш с вами пользователь
+@Schema(description = "Люди")
+public class UserDto { // ----------------------------------------------- наш с вами пользователь
 
     // ----------------------------------------------- переменные
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // автогенерация значений ключа
-    @Column(name = "user_id")
+    @Schema(description = "Id человека")
     private Long userId;
 
-    @Column(name = "first_name")
+    @Schema(description = "Имя")
     private String firstName;
 
-    @Column(name = "last_name")
+    @Schema(description = "Фамилия")
     private String lastName;
 
-    @Column(name = "patronymic")
+    @Schema(description = "Отчество")
     private String patronymic;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
-    private List<RoleEntity> roleEntities;
-
-    public UserEntity(){ // конструктор
+    public UserDto(){ // конструктор
     }
 
-    public UserEntity(String firstName, String lastName, String patronymic) {
+    public UserDto(String firstName, String lastName, String patronymic) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.patronymic = patronymic;

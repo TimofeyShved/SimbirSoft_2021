@@ -1,36 +1,28 @@
-package com.example.SimbirSoft_2021.entity;
+package com.example.SimbirSoft_2021.Dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-import javax.persistence.*;
-import java.util.List;
 
-@Getter
-@Setter
-@Entity
-@Table(name="role_entity")
-public class RoleEntity { // ----------------------------------------------- наш с вами пользователь
+@Schema(description = "Роли человека")
+public class RoleDto { // ----------------------------------------------- наш с вами пользователь
 
     // ----------------------------------------------- переменные
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // автогенерация значений ключа
-    @Column(name = "role_id")
+    @Schema(description = "Id выбранной роли")
     private Long roleId;
 
-    @Column(name = "role_name")
+    @Schema(description = "Имя роли")
     private String roleName;
 
-    @Column(name = "board_id")
+    @Schema(description = "Id закреплённой доски, к которой указываем роли")
     private Long boardId;
 
-    @Column(name = "user_id")
+    @Schema(description = "Id человека, которого мы берём")
     private Long userId;
 
-    public RoleEntity() { // конструктор
+    public RoleDto() { // конструктор
     }
 
-    public RoleEntity(String roleName, Long boardId, Long userId) {
+    public RoleDto(String roleName, Long boardId, Long userId) {
         this.roleName = roleName;
         this.boardId = boardId;
         this.userId = userId;

@@ -1,31 +1,34 @@
-package com.example.SimbirSoft_2021.entity;
+package com.example.SimbirSoft_2021.Dto;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.persistence.*;
 import java.util.List;
 
-@Entity
-@Table(name="project_entity")
-public class ProjectEntity { // ----------------------------------------------- наш с вами пользователь
+@Schema(description = "Проект")
+public class ProjectDto { // ----------------------------------------------- наш с вами пользователь
 
     // ----------------------------------------------- переменные
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // автогенерация значений ключа
-    @Column(name = "project_id")
+    @Schema(description = "Id выбранного проекта")
     private Long projectId;
 
-    @Column(name = "project_name")
+    @Schema(description = "Имя проекта")
     private String projectName;
 
-    @Column(name = "project_status")
+    @Schema(description = "Статус проекта")
     private String projectStatus;
 
-    @Column(name = "release_id")
+    @Schema(description = "Id реализации нашего проекта")
     private Long releaseId;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "projectId")
-    private List<BoardEntity> boardEntities;
 
-    public ProjectEntity(){ // конструктор
+    public ProjectDto(){ // конструктор
+    }
+
+    public ProjectDto(String projectName, String projectStatus, Long releaseId) {
+        this.projectName = projectName;
+        this.projectStatus = projectStatus;
+        this.releaseId = releaseId;
     }
 
     // ----------------------------------------------- гетеры и сетеры
@@ -63,11 +66,4 @@ public class ProjectEntity { // ----------------------------------------------- 
         this.releaseId = releaseId;
     }
 
-    public List<BoardEntity> getBoard() {
-        return boardEntities;
-    }
-
-    public void setBoard(List<BoardEntity> boardEntities) {
-        this.boardEntities = boardEntities;
-    }
 }

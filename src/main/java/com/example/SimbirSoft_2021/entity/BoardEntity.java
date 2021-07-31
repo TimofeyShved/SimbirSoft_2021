@@ -1,7 +1,13 @@
 package com.example.SimbirSoft_2021.entity;
 
-import javax.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+import javax.persistence.*;
+import java.util.List;
+
+//@Getter
+//@Setter
 @Entity
 @Table(name="board_entity")
 public class BoardEntity { // ----------------------------------------------- наш с вами пользователь
@@ -17,6 +23,9 @@ public class BoardEntity { // ----------------------------------------------- н
 
     @Column(name = "task_id")
     private Long taskId;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "boardId")
+    private List<RoleEntity> roleEntities;
 
     public BoardEntity() { // конструктор
     }
@@ -45,5 +54,13 @@ public class BoardEntity { // ----------------------------------------------- н
 
     public void setTaskId(Long taskId) {
         this.taskId = taskId;
+    }
+
+    public List<RoleEntity> getRoleEntities() {
+        return roleEntities;
+    }
+
+    public void setRoleEntities(List<RoleEntity> roleEntities) {
+        this.roleEntities = roleEntities;
     }
 }

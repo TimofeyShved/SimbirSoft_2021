@@ -1,38 +1,29 @@
-package com.example.SimbirSoft_2021.entity;
+package com.example.SimbirSoft_2021.Dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.persistence.*;
-import java.util.List;
 
-@Entity
-@Table(name="release_entity")
-public class ReleaseEntity { // ----------------------------------------------- наш с вами пользователь
+@Schema(description = "Реализация (Дата/время)")
+public class ReleaseDto { // ----------------------------------------------- наш с вами пользователь
 
     // ----------------------------------------------- переменные
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // автогенерация значений ключа
-    @Column(name = "release_id")
+    @Schema(description = "Id реализации")
     private Long releaseId;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
-    @Column(name = "data_start")
+    @Schema(description = "Начало реализации (Дата/время)")
     private String dataStart;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
-    @Column(name = "data_end")
+    @Schema(description = "Конец реализации (Дата/время)")
     private String dataEnd;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "releaseId")
-    private List<ProjectEntity> projectEntities;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "releaseId")
-    private List<TaskEntity> taskEntities;
-
-    public ReleaseEntity() { // конструктор
+    public ReleaseDto() { // конструктор
     }
 
-    public ReleaseEntity(String dataStart, String dataEnd) {
+    public ReleaseDto(String dataStart, String dataEnd) {
         this.dataStart = dataStart;
         this.dataEnd = dataEnd;
     }

@@ -1,35 +1,30 @@
-package com.example.SimbirSoft_2021.entity;
+package com.example.SimbirSoft_2021.Dto;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.persistence.*;
-import java.util.List;
 
 
-@Entity
-@Table(name="task_entity")
-public class TaskEntity { // ----------------------------------------------- наш с вами пользователь
+@Schema(description = "Задачи")
+public class TaskDto { // ----------------------------------------------- наш с вами пользователь
 
     // ----------------------------------------------- переменные
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // автогенерация значений ключа
-    @Column(name = "task_id")
+    @Schema(description = "Id задачи")
     private Long taskId;
 
-    @Column(name = "task_name")
+    @Schema(description = "Имя задачи")
     private String taskName;
 
-    @Column(name = "task_status")
+    @Schema(description = "Статус задачи")
     private String taskStatus;
 
-    @Column(name = "release_id")
+    @Schema(description = "Id реализации нашей задачи")
     private Long releaseId;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "taskId")
-    private List<BoardEntity> boardEntities;
-
-    public TaskEntity() { // конструктор
+    public TaskDto() { // конструктор
     }
 
-    public TaskEntity(String taskName, String taskStatus, Long releaseId) {
+    public TaskDto(String taskName, String taskStatus, Long releaseId) {
         this.taskName = taskName;
         this.taskStatus = taskStatus;
         this.releaseId = releaseId;
@@ -67,13 +62,5 @@ public class TaskEntity { // ----------------------------------------------- н�
 
     public void setReleaseId(Long releaseId) {
         this.releaseId = releaseId;
-    }
-
-    public List<BoardEntity> getBoardEntities() {
-        return boardEntities;
-    }
-
-    public void setBoardEntities(List<BoardEntity> boardEntities) {
-        this.boardEntities = boardEntities;
     }
 }
