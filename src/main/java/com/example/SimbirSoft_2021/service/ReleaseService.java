@@ -11,6 +11,7 @@ import com.example.SimbirSoft_2021.mappers.UserMapper;
 import com.example.SimbirSoft_2021.repository.ProjectCrud;
 import com.example.SimbirSoft_2021.repository.ReleaseCrud;
 import com.example.SimbirSoft_2021.service.interfaceService.ProjectServiceInterface;
+import com.example.SimbirSoft_2021.service.interfaceService.ReleaseServiceInterface;
 import com.example.SimbirSoft_2021.service.interfaceService.StandartServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ import java.util.List;
 // 1 способ
 //@RequiredArgsConstructor
 @Service
-public class ReleaseService implements StandartServiceInterface, ProjectServiceInterface {
+public class ReleaseService implements StandartServiceInterface, ReleaseServiceInterface {
 
     // 2 способ
     //@Autowired
@@ -38,6 +39,7 @@ public class ReleaseService implements StandartServiceInterface, ProjectServiceI
         this.releaseCrud = releaseCrud;
     }
 
+    // ----------------------------------------------------------------------------------------------------------------------------------------
     @Transactional
     @Override // ----------------- регистрация
     public ReleaseDto registration(Object o) throws ReleaseExistsException, ReleaseDateFormatException {
@@ -67,6 +69,7 @@ public class ReleaseService implements StandartServiceInterface, ProjectServiceI
         return ReleaseMapper.INSTANCE.toDto(releaseEntity);
     }
 
+    // ----------------------------------------------------------------------------------------------------------------------------------------
     @Transactional
     @Override // ----------------- вытащить все реализации
     public List<ReleaseDto> getAll() throws ReleaseNotFoundException {
@@ -86,6 +89,7 @@ public class ReleaseService implements StandartServiceInterface, ProjectServiceI
         return releaseDtoList;
     }
 
+    // ----------------------------------------------------------------------------------------------------------------------------------------
     @Transactional
     @Override // ----------------- вытащить одну реализацию
     public ReleaseDto getOne(Long id) throws ReleaseNotFoundException {
@@ -99,6 +103,7 @@ public class ReleaseService implements StandartServiceInterface, ProjectServiceI
         return ReleaseMapper.INSTANCE.toDto(releaseEntity);
     }
 
+    // ----------------------------------------------------------------------------------------------------------------------------------------
     @Transactional
     @Override // ----------------- удалить одну реализацию
     public Long deleteOne(Long id) throws ReleaseNotFoundException {
@@ -112,6 +117,7 @@ public class ReleaseService implements StandartServiceInterface, ProjectServiceI
         return id;
     }
 
+    // ----------------------------------------------------------------------------------------------------------------------------------------
     @Transactional
     @Override // ----------------- обновить один проект
     public ReleaseDto updateOne(Long id, Object o) throws ReleaseNotFoundException, ReleaseExistsException, ReleaseDateFormatException {

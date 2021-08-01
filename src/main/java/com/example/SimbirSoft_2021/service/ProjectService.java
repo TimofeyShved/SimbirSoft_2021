@@ -2,10 +2,12 @@ package com.example.SimbirSoft_2021.service;
 
 import com.example.SimbirSoft_2021.Dto.ProjectDto;
 import com.example.SimbirSoft_2021.entity.ProjectEntity;
+import com.example.SimbirSoft_2021.entity.ReleaseEntity;
 import com.example.SimbirSoft_2021.exception.*;
 import com.example.SimbirSoft_2021.mappers.ProjectMapper;
 import com.example.SimbirSoft_2021.repository.ProjectCrud;
 import com.example.SimbirSoft_2021.repository.ReleaseCrud;
+import com.example.SimbirSoft_2021.repository.TaskCrud;
 import com.example.SimbirSoft_2021.service.interfaceService.ProjectServiceInterface;
 import com.example.SimbirSoft_2021.service.interfaceService.StandartServiceInterface;
 import org.springframework.stereotype.Service;
@@ -24,30 +26,33 @@ public class ProjectService implements StandartServiceInterface, ProjectServiceI
     //@Autowired
     //private ProjectCrud projectCRUD;
 
-    private ProjectCrud projectCrud; // создаём интерфейс для взаимодействия с бд
-    private ReleaseService releaseService;
-    private TaskService taskService;
+    private final ProjectCrud projectCrud; // создаём интерфейс для взаимодействия с бд
+    private final ReleaseCrud releaseCrud;
+    private final TaskCrud taskCrud;
+    private final TaskService taskService;
 
     // 3 способ
-    public ProjectService(ProjectCrud projectCrud, ReleaseService releaseService, TaskService taskService) {
+    public ProjectService(ProjectCrud projectCrud, ReleaseCrud releaseCrud, TaskCrud taskCrud, TaskService taskService) {
         this.projectCrud = projectCrud;
-        this.releaseService = releaseService;
+        this.releaseCrud = releaseCrud;
+        this.taskCrud = taskCrud;
         this.taskService = taskService;
     }
 
+    // ----------------------------------------------------------------------------------------------------------------------------------------
     @Transactional
     @Override // ----------------- регистрация
     public ProjectDto registration(Object o) throws ProjectExistsException, ReleaseNotFoundException, ProjectAndDateTimeExistsException, TaskAndDateTimeExistsException, TaskNotFoundException {
         ProjectEntity projectEntity = ProjectMapper.INSTANCE.toEntity((ProjectDto) o);
 
         //  проверка
-        if (releaseService.getOne(projectEntity.getReleaseId())==null){ // проверить, что есть такая реализация существует
+        if (releaseCrud.findByReleaseId(projectEntity.getReleaseId())==null){ // проверить, что есть такая реализация существует
             throw new ReleaseNotFoundException();
         }
         if (projectCrud.findByReleaseId(projectEntity.getReleaseId())!=null){ // что реализации нет среди проектов
             throw new ProjectAndDateTimeExistsException();
         }
-        if (taskService.findByReleaseId(projectEntity.getReleaseId())!=null){ // что реализации нет среди задач
+        if (taskCrud.findByReleaseId(projectEntity.getReleaseId())!=null){ // что реализации нет среди задач
             throw new TaskAndDateTimeExistsException();
         }
         if (projectCrud.findByProjectName(projectEntity.getProjectName())!=null){ // что имя проекта не повторяется
@@ -59,6 +64,7 @@ public class ProjectService implements StandartServiceInterface, ProjectServiceI
         return ProjectMapper.INSTANCE.toDto(projectEntity);
     }
 
+    // ----------------------------------------------------------------------------------------------------------------------------------------
     @Transactional
     @Override // ----------------- вытащить все проекты
     public List<ProjectDto> getAll() throws ProjectNotFoundException {
@@ -79,6 +85,7 @@ public class ProjectService implements StandartServiceInterface, ProjectServiceI
         return projectDtoList;
     }
 
+    // ----------------------------------------------------------------------------------------------------------------------------------------
     @Transactional
     @Override // ----------------- вытащить один проект
     public ProjectDto getOne(Long id) throws ProjectNotFoundException {
@@ -92,9 +99,24 @@ public class ProjectService implements StandartServiceInterface, ProjectServiceI
         return ProjectMapper.INSTANCE.toDto(projectEntity);
     }
 
+    // ----------------------------------------------------------------------------------------------------------------------------------------
+    @Transactional
+    @Override // --------------- поиск по реализации
+    public ProjectDto findByReleaseId(Long releaseId) {
+        ProjectEntity projectEntity = projectCrud.findByReleaseId(releaseId);
+
+        //  проверка на то что проект вообще существуют
+        if (projectEntity==null){
+            return null;
+        }
+
+        return ProjectMapper.INSTANCE.toDto(projectEntity);
+    }
+
+    // ----------------------------------------------------------------------------------------------------------------------------------------
     @Transactional
     @Override // ----------------- удалить один проект
-    public Long deleteOne(Long id) throws ProjectNotFoundException, TaskNotFoundException, ReleaseNotFoundException {
+    public Long deleteOne(Long id) throws ProjectNotFoundException, TaskNotFoundException, ReleaseNotFoundException, RoleNotFoundException {
         ProjectEntity projectEntity = projectCrud.findByProjectId(id);
 
         //  проверка на то что проект вообще существуют
@@ -102,12 +124,16 @@ public class ProjectService implements StandartServiceInterface, ProjectServiceI
             throw new ProjectNotFoundException();
         }
 
-        releaseService.deleteOne(projectEntity.getReleaseId());
-        taskService.deleteByProjectId(id);
+        ReleaseEntity releaseEntity = releaseCrud.findByReleaseId(projectEntity.getReleaseId());
+        if (releaseEntity!=null){
+            releaseCrud.delete(releaseEntity);
+        }
+        taskService.deleteTaskByProjectId(id);
         projectCrud.delete(projectEntity);
         return id;
     }
 
+    // ----------------------------------------------------------------------------------------------------------------------------------------
     @Transactional
     @Override // ----------------- обновить один проект
     public ProjectDto updateOne(Long id, Object o) throws ProjectNotFoundException, ProjectExistsException, ReleaseNotFoundException,
@@ -125,14 +151,14 @@ public class ProjectService implements StandartServiceInterface, ProjectServiceI
         ProjectEntity projectEntity = projectCrud.findByProjectId(id);
 
         // проверка
-        if (releaseService.getOne(projectEntityNew.getReleaseId())==null){ // проверить, что есть такая реализация существует
+        if (releaseCrud.findByReleaseId(projectEntityNew.getReleaseId())==null){ // проверить, что есть такая реализация существует
             throw new ReleaseNotFoundException();
         }
         if ((projectCrud.findByReleaseId(projectEntityNew.getReleaseId())!=null)
                 &&(projectEntity.getReleaseId()!=projectEntityNew.getReleaseId())){ // что реализации нет среди проектов
             throw new ProjectAndDateTimeExistsException();
         }
-        if (taskService.findByReleaseId(projectEntityNew.getReleaseId())!=null){ // что реализации нет среди задач
+        if (taskCrud.findByReleaseId(projectEntityNew.getReleaseId())!=null){ // что реализации нет среди задач
             throw new TaskAndDateTimeExistsException();
         }
         if ((projectCrud.findByProjectName(projectEntityNew.getProjectName())!=null)
@@ -149,4 +175,5 @@ public class ProjectService implements StandartServiceInterface, ProjectServiceI
         projectCrud.save(projectEntity);
         return ProjectMapper.INSTANCE.toDto(projectEntity);
     }
+
 }

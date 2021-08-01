@@ -87,6 +87,30 @@ public class RoleService implements StandartServiceInterface, RoleServiceInterfa
         return id;
     }
 
+    // ----------------------------------------------------------------------------------------------------------------------------------------
+    @Transactional
+    @Override // ----------------- удалить роли связанные с задачами
+    public List<RoleDto> deleteByTaskId(Long taskId) throws RoleNotFoundException {
+        List<RoleEntity> roleEntityList = roleCrud.findAll();
+
+        //  проверка на то что роли вообще существуют
+        if (roleEntityList==null){
+            throw new RoleNotFoundException();
+        }
+
+        List<RoleDto> roleDtoList = new ArrayList<>();
+
+        //  вытаскиваем и удаляем по одной роли, и сохраняем в коллекцию
+        for (RoleEntity e:roleEntityList){
+            if (e.getTaskId() == taskId){ //  проверка
+                roleDtoList.add(RoleMapper.INSTANCE.toDto(e));
+                deleteOne(e.getRoleId());
+            }
+        }
+
+        return roleDtoList;
+    }
+
     @Transactional
     @Override
     public RoleDto updateOne(Long id, Object o) throws RoleNotFoundException, RoleExistsException, TaskNotFoundException, UserNotFoundException {

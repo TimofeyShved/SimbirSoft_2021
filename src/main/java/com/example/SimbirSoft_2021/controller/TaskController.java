@@ -38,14 +38,8 @@ public class TaskController {
     public ResponseEntity registration(@Validated @RequestBody TaskDto taskDto) throws Exception {
         try {
             return ResponseEntity.ok(taskService.registration(taskDto));
-        }catch (ReleaseExistsException e){
-            return  ResponseEntity.badRequest().body(e.getMessage());
-        }catch (ReleaseNotFoundException e){
-            return  ResponseEntity.badRequest().body(e.getMessage());
-        }catch (TaskAndDateTimeExistsException e){
-            return  ResponseEntity.badRequest().body(e.getMessage());
         }catch (Exception e){
-            return  ResponseEntity.badRequest().body("Error");
+            return  ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -55,10 +49,8 @@ public class TaskController {
     public ResponseEntity getUsers(){
         try {
             return ResponseEntity.ok(taskService.getAll());
-        }catch (TaskNotFoundException e){
-            return  ResponseEntity.badRequest().body(e.getMessage());
         }catch (Exception e){
-            return  ResponseEntity.badRequest().body("Error");
+            return  ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -68,10 +60,8 @@ public class TaskController {
     public ResponseEntity getOne(@Validated @PathVariable Long taskId) throws Exception {
         try {
             return ResponseEntity.ok(taskService.getOne(taskId));
-        }catch (TaskNotFoundException e){
-            return  ResponseEntity.badRequest().body(e.getMessage());
         }catch (Exception e){
-            return  ResponseEntity.badRequest().body("Error");
+            return  ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -81,10 +71,8 @@ public class TaskController {
     public ResponseEntity deleteOne(@Validated @PathVariable Long taskId) throws Exception {
         try {
             return ResponseEntity.ok(taskService.deleteOne(taskId));
-        }catch (TaskNotFoundException e){
-            return  ResponseEntity.badRequest().body(e.getMessage());
         }catch (Exception e){
-            return  ResponseEntity.badRequest().body("Error");
+            return  ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -94,16 +82,8 @@ public class TaskController {
     public ResponseEntity updateOne(@Validated @PathVariable Long taskId, @Validated @RequestBody TaskDto taskDto) throws Exception {
         try {
             return ResponseEntity.ok(taskService.updateOne(taskId, taskDto));
-        }catch (TaskNotFoundException e){
-            return  ResponseEntity.badRequest().body(e.getMessage());
-        }catch (ReleaseExistsException e){
-            return  ResponseEntity.badRequest().body(e.getMessage());
-        }catch (ReleaseNotFoundException e){
-            return  ResponseEntity.badRequest().body(e.getMessage());
-        }catch (TaskAndDateTimeExistsException e){
-            return  ResponseEntity.badRequest().body(e.getMessage());
         }catch (Exception e){
-            return  ResponseEntity.badRequest().body("Error");
+            return  ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }

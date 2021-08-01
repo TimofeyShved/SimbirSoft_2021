@@ -11,4 +11,5 @@ import org.springframework.stereotype.Repository;
 public interface TaskCrud extends JpaRepository<TaskEntity, Long> {
     TaskEntity findByTaskId(Long taskId);
     TaskEntity findByReleaseId(Long releaseId);
+    TaskEntity findByTaskNameAndProjectIdAndReleaseId(String taskName,Long projectId, Long releaseId);
 }
