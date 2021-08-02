@@ -1,7 +1,7 @@
 package com.example.SimbirSoft_2021.exception;
 
 public class ProjectExistsException extends  Exception{
-    private static String message = "code: PROJECT_EXISTS";
+    private static final String message = "Ошибка (Error): Такой проект уже существует (Project exists)";
     public ProjectExistsException(String message) {
         super(message);
     }

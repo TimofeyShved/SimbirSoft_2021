@@ -1,7 +1,7 @@
 package com.example.SimbirSoft_2021.exception;
 
 public class ProjectAndDateTimeExistsException extends Exception{
-    private static String message = "code: DATE_TIME_RELEASE_IN_PROJECTS_EXISTS";
+    private static final String message = "Ошибка (Error): Данная дата/время реализации уже существует среди проектов (Data and time release exists in project)";
     public ProjectAndDateTimeExistsException(String message) {
         super(message);
     }

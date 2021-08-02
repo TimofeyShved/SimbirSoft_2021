@@ -1,7 +1,7 @@
 package com.example.SimbirSoft_2021.exception;
 
 public class TaskAndDateTimeExistsException extends Exception{
-    private static String message = "code: DATA_TIME_RELEASE_IN_TASKS_EXISTS";
+    private static final String message = "Ошибка (Error): Данная дата/время реализации уже существует среди задач (Data and time release exists in task)";
     public TaskAndDateTimeExistsException(String message) {
         super(message);
     }

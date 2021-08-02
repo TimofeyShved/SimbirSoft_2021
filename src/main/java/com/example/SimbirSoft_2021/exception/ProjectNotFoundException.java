@@ -1,7 +1,7 @@
 package com.example.SimbirSoft_2021.exception;
 
 public class ProjectNotFoundException extends  Exception{
-    private static String message = "code: PROJECT_NOT_FOUND";
+    private static final String message = "Ошибка (Error): Проект не найден (Project not found)";
     public ProjectNotFoundException(String message) {
         super(message);
     }

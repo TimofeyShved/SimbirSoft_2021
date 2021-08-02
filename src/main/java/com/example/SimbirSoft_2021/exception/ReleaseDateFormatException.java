@@ -1,7 +1,7 @@
 package com.example.SimbirSoft_2021.exception;
 
 public class ReleaseDateFormatException extends Exception{
-    private static String message = "code: RELEASE_ERROR_DATE_FORMAT(yyyy-MM-dd HH:mm:ss)";
+    private static final String message = "Ошибка (Error): Неправильно указан формат даты/времени в реализации, нужно: yyyy-MM-dd HH:mm:ss (Release error in date format: yyyy-MM-dd HH:mm:ss)";
     public ReleaseDateFormatException(String message) {
         super(message);
     }

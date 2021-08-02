@@ -1,7 +1,7 @@
 package com.example.SimbirSoft_2021.exception;
 
 public class TaskNotFoundException extends  Exception{
-    private static String message = "code: TASK_NOT_FOUND";
+    private static final String message = "Ошибка (Error): Задача не найдена (Task not found)";
     public TaskNotFoundException(String message) {
         super(message);
     }
