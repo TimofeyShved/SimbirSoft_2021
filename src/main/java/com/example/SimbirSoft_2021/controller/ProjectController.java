@@ -13,14 +13,23 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-
+// 1 способ
+//@RequiredArgsConstructor
 @Tag(name = "Управление проектами")
 @RequestMapping("/control")
 @RestController
 public class ProjectController {
 
-    @Autowired
-    private ProjectService projectService;
+    // 2 способ
+    //@Autowired
+    //private final ProjectService projectService;
+
+    private final ProjectService projectService;
+
+    // 3 способ
+    public ProjectController(ProjectService projectService) {
+        this.projectService = projectService;
+    }
 
     @Operation(summary = "Добавить проект")
     @RequestMapping(value = "/project", method = RequestMethod.POST) // создать

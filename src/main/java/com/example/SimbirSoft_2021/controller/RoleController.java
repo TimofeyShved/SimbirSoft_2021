@@ -24,7 +24,7 @@ public class RoleController {
     //@Autowired
     //private RoleService roleService;
 
-    private RoleService roleService;
+    private final RoleService roleService;
 
     // 3 способ
     public RoleController(RoleService roleService) {
@@ -37,12 +37,8 @@ public class RoleController {
     public ResponseEntity registration(@Validated @RequestBody RoleDto roleDto) throws Exception {
         try {
             return ResponseEntity.ok(roleService.registration(roleDto));
-        } catch (RoleExistsException e){
+        } catch (Exception e){
             return  ResponseEntity.badRequest().body(e.getMessage());
-        }catch (UserNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }catch (Exception e){
-            return  ResponseEntity.badRequest().body("Error");
         }
     }
 
@@ -52,10 +48,8 @@ public class RoleController {
     public ResponseEntity getUsers(){
         try {
             return ResponseEntity.ok(roleService.getAll());
-        }catch (RoleNotFoundException e){
-            return  ResponseEntity.badRequest().body(e.getMessage());
         }catch (Exception e){
-            return  ResponseEntity.badRequest().body("Error");
+            return  ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -65,10 +59,8 @@ public class RoleController {
     public ResponseEntity getOne(@Validated @PathVariable Long roleId) throws Exception {
         try {
             return ResponseEntity.ok(roleService.getOne(roleId));
-        }catch (RoleNotFoundException e){
-            return  ResponseEntity.badRequest().body(e.getMessage());
         }catch (Exception e){
-            return  ResponseEntity.badRequest().body("Error");
+            return  ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -78,10 +70,8 @@ public class RoleController {
     public ResponseEntity deleteOne(@Validated @PathVariable Long roleId) throws Exception {
         try {
             return ResponseEntity.ok(roleService.deleteOne(roleId));
-        }catch (RoleNotFoundException e){
-            return  ResponseEntity.badRequest().body(e.getMessage());
         }catch (Exception e){
-            return  ResponseEntity.badRequest().body("Error");
+            return  ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -91,14 +81,8 @@ public class RoleController {
     public ResponseEntity updateOne(@PathVariable Long roleId, @Validated @RequestBody RoleDto roleDto) throws Exception {
         try {
             return ResponseEntity.ok(roleService.updateOne(roleId, roleDto));
-        }catch (RoleNotFoundException e){
-            return  ResponseEntity.badRequest().body(e.getMessage());
-        }catch (RoleExistsException e){
-            return  ResponseEntity.badRequest().body(e.getMessage());
-        }catch (UserNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
         }catch (Exception e){
-            return  ResponseEntity.badRequest().body("Error");
+            return  ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }

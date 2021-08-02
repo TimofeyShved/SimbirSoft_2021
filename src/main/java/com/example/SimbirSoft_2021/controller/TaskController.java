@@ -25,7 +25,7 @@ public class TaskController {
     //@Autowired
     //private TaskService taskService;
 
-    private TaskService taskService; // создаём интерфейс для взаимодействия с бд
+    private final TaskService taskService; // создаём интерфейс для взаимодействия с бд
 
     // 3 способ
     public TaskController(TaskService taskService) {

@@ -22,9 +22,9 @@ public class RoleService implements StandartServiceInterface, RoleServiceInterfa
     //@Autowired
     //private RoleCrud roleCRUD;
 
-    private RoleCrud roleCrud; // создаём интерфейс для взаимодействия с бд
-    private UserCrud userCrud;
-    private TaskCrud taskCrud;
+    private final RoleCrud roleCrud; // создаём интерфейс для взаимодействия с бд
+    private final UserCrud userCrud;
+    private final TaskCrud taskCrud;
 
     // 3 способ
 
@@ -34,10 +34,13 @@ public class RoleService implements StandartServiceInterface, RoleServiceInterfa
         this.taskCrud = taskCrud;
     }
 
+    // ----------------------------------------------------------------------------------------------------------------------------------------
     @Transactional
-    @Override
+    @Override // ----------------- регистрация
     public RoleDto registration(Object o) throws RoleExistsException, TaskNotFoundException, UserNotFoundException {
         RoleDto roleDto = (RoleDto) o;
+
+        //  проверка
         if ((taskCrud.findByTaskId(roleDto.getTaskId())==null)){
             throw new TaskNotFoundException();
         }
@@ -48,41 +51,57 @@ public class RoleService implements StandartServiceInterface, RoleServiceInterfa
         if (roleCrud.findByRoleNameAndTaskIdAndUserId(roleEntity.getRoleName(), roleEntity.getTaskId(), roleEntity.getUserId())!=null){
             throw new RoleExistsException();
         }
+
+        // сохраняем
         roleCrud.save(roleEntity);
         return RoleMapper.INSTANCE.toDto(roleEntity);
     }
 
+    // ----------------------------------------------------------------------------------------------------------------------------------------
     @Transactional
-    @Override
+    @Override // ----------------- вытащить все роли
     public List<RoleDto> getAll() throws RoleNotFoundException {
         List<RoleEntity> roleEntityList = roleCrud.findAll();
+
+        //  проверка на то что роли вообще существуют
         if (roleEntityList==null){
             throw new RoleNotFoundException();
         }
+
         List<RoleDto> roleDtoList = new ArrayList<>();
+
+        //  вытаскиваем по одной роли и сохраняем в коллекцию
         for (RoleEntity e:roleEntityList){
             roleDtoList.add(RoleMapper.INSTANCE.toDto(e));
         }
+
         return roleDtoList;
     }
 
+    // ----------------------------------------------------------------------------------------------------------------------------------------
     @Transactional
-    @Override
+    @Override  // ----------------- вытащить одну роль
     public RoleDto getOne(Long id) throws RoleNotFoundException {
         RoleEntity roleEntity = roleCrud.findByRoleId(id);
+
+        //  проверка на то что роль вообще существуют
         if (roleEntity==null){
             throw new RoleNotFoundException();
         }
+
         return RoleMapper.INSTANCE.toDto(roleEntity);
     }
 
-
+    // ----------------------------------------------------------------------------------------------------------------------------------------
     @Transactional
-    @Override
+    @Override // ----------------- удалить одну роль
     public Long deleteOne(Long id) throws RoleNotFoundException {
+
+        //  проверка на то что роль вообще существуют
         if (roleCrud.findByRoleId(id)==null){
             throw new RoleNotFoundException();
         }
+
         roleCrud.deleteById(id);
         return id;
     }
@@ -111,9 +130,36 @@ public class RoleService implements StandartServiceInterface, RoleServiceInterfa
         return roleDtoList;
     }
 
+    // ----------------------------------------------------------------------------------------------------------------------------------------
     @Transactional
-    @Override
+    @Override // ----------------- удалить роли связанные с человеком
+    public List<RoleDto> deleteByUserId(Long userId) throws RoleNotFoundException {
+        List<RoleEntity> roleEntityList = roleCrud.findAll();
+
+        //  проверка на то что роли вообще существуют
+        if (roleEntityList==null){
+            throw new RoleNotFoundException();
+        }
+
+        List<RoleDto> roleDtoList = new ArrayList<>();
+
+        //  вытаскиваем и удаляем по одной роли, и сохраняем в коллекцию
+        for (RoleEntity e:roleEntityList){
+            if (e.getUserId() == userId){ //  проверка
+                roleDtoList.add(RoleMapper.INSTANCE.toDto(e));
+                deleteOne(e.getRoleId());
+            }
+        }
+
+        return roleDtoList;
+    }
+
+    // ----------------------------------------------------------------------------------------------------------------------------------------
+    @Transactional
+    @Override // ----------------- обновить одну роль
     public RoleDto updateOne(Long id, Object o) throws RoleNotFoundException, RoleExistsException, TaskNotFoundException, UserNotFoundException {
+
+        //  проверка на то что роль вообще существуют
         if (roleCrud.findByRoleId(id)==null){
             throw new RoleNotFoundException();
         }
@@ -130,10 +176,14 @@ public class RoleService implements StandartServiceInterface, RoleServiceInterfa
             throw new RoleExistsException();
         }
 
+        // присваивание новых значений
         roleEntity.setRoleName(roleEntityNew.getRoleName());
         roleEntity.setTaskId(roleEntityNew.getTaskId());
         roleEntity.setUserId(roleEntityNew.getUserId());
+
+        // сохранение
         roleCrud.save(roleEntity);
         return RoleMapper.INSTANCE.toDto(roleEntity);
     }
+
 }

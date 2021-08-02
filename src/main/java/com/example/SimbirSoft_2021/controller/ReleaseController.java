@@ -24,7 +24,7 @@ public class ReleaseController {
     //@Autowired
     //private ReleaseService releaseService;
 
-    private ReleaseService releaseService;
+    private final ReleaseService releaseService;
 
     // 3 способ
     public ReleaseController(ReleaseService releaseService) {
@@ -37,12 +37,8 @@ public class ReleaseController {
     public ResponseEntity registration(@Validated @RequestBody ReleaseDto releaseDto) throws Exception {
         try {
             return ResponseEntity.ok(releaseService.registration(releaseDto));
-        }catch (ReleaseExistsException e){
-            return  ResponseEntity.badRequest().body(e.getMessage());
-        }catch (ReleaseDateFormatException e){
-            return  ResponseEntity.badRequest().body(e.getMessage());
         }catch (Exception e){
-            return  ResponseEntity.badRequest().body("Error");
+            return  ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -52,10 +48,8 @@ public class ReleaseController {
     public ResponseEntity getUsers(){
         try {
             return ResponseEntity.ok(releaseService.getAll());
-        }catch (ReleaseNotFoundException e){
-            return  ResponseEntity.badRequest().body(e.getMessage());
         }catch (Exception e){
-            return  ResponseEntity.badRequest().body("Error");
+            return  ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -65,10 +59,8 @@ public class ReleaseController {
     public ResponseEntity getOne(@Validated @PathVariable Long releaseId) throws Exception {
         try {
             return ResponseEntity.ok(releaseService.getOne(releaseId));
-        }catch (ReleaseNotFoundException e){
-            return  ResponseEntity.badRequest().body(e.getMessage());
         }catch (Exception e){
-            return  ResponseEntity.badRequest().body("Error");
+            return  ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -78,10 +70,8 @@ public class ReleaseController {
     public ResponseEntity deleteOne(@Validated @PathVariable Long releaseId) throws Exception {
         try {
             return ResponseEntity.ok(releaseService.deleteOne(releaseId));
-        }catch (ReleaseNotFoundException e){
-            return  ResponseEntity.badRequest().body(e.getMessage());
         }catch (Exception e){
-            return  ResponseEntity.badRequest().body("Error");
+            return  ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -91,14 +81,8 @@ public class ReleaseController {
     public ResponseEntity updateOne(@Validated @PathVariable Long releaseId, @Validated @RequestBody ReleaseDto releaseDto) throws Exception {
         try {
             return ResponseEntity.ok(releaseService.updateOne(releaseId, releaseDto));
-        }catch (ReleaseNotFoundException e){
-            return  ResponseEntity.badRequest().body(e.getMessage());
-        }catch (ReleaseExistsException e){
-            return  ResponseEntity.badRequest().body(e.getMessage());
-        }catch (ReleaseDateFormatException e){
-            return  ResponseEntity.badRequest().body(e.getMessage());
         }catch (Exception e){
-            return  ResponseEntity.badRequest().body("Error");
+            return  ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }

@@ -43,10 +43,8 @@ public class UserController {
     public ResponseEntity registration(@Validated @RequestBody UserDto userDto) throws Exception {
         try {
             return ResponseEntity.ok(userService.registration(userDto));
-        }catch (UserExistsException e){
-            return  ResponseEntity.badRequest().body(e.getMessage());
         }catch (Exception e){
-            return  ResponseEntity.badRequest().body("Error");
+            return  ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -56,10 +54,8 @@ public class UserController {
     public ResponseEntity getUsers(){
         try {
             return ResponseEntity.ok(userService.getAll());
-        }catch (UserNotFoundException e){
-            return  ResponseEntity.badRequest().body(e.getMessage());
         }catch (Exception e){
-            return  ResponseEntity.badRequest().body("Error");
+            return  ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -69,10 +65,8 @@ public class UserController {
     public ResponseEntity getOne(@Validated @PathVariable Long userId) throws Exception {
         try {
             return ResponseEntity.ok(userService.getOne(userId));
-        }catch (UserNotFoundException e){
-            return  ResponseEntity.badRequest().body(e.getMessage());
         }catch (Exception e){
-            return  ResponseEntity.badRequest().body("Error");
+            return  ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -82,10 +76,8 @@ public class UserController {
     public ResponseEntity deleteOne(@Validated @PathVariable Long userId) throws Exception {
         try {
             return ResponseEntity.ok(userService.deleteOne(userId));
-        }catch (UserNotFoundException e){
-            return  ResponseEntity.badRequest().body(e.getMessage());
         }catch (Exception e){
-            return  ResponseEntity.badRequest().body("Error");
+            return  ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -95,12 +87,8 @@ public class UserController {
     public ResponseEntity updateOne(@Validated @PathVariable Long userId, @Validated @RequestBody UserDto userDto) throws Exception {
         try {
             return ResponseEntity.ok(userService.updateOne(userId, userDto));
-        }catch (UserNotFoundException e){
-            return  ResponseEntity.badRequest().body(e.getMessage());
-        }catch (UserExistsException e){
-            return  ResponseEntity.badRequest().body(e.getMessage());
         }catch (Exception e){
-            return  ResponseEntity.badRequest().body("Error");
+            return  ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }
