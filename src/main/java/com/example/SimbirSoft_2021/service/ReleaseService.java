@@ -32,11 +32,14 @@ public class ReleaseService implements StandartServiceInterface, ReleaseServiceI
     //@Autowired
     //private ReleaseCrud releaseCRUD;
 
-    private ReleaseCrud releaseCrud; // создаём интерфейс для взаимодействия с бд
-
+    private final ReleaseCrud releaseCrud; // создаём интерфейс для взаимодействия с бд
+    private final ProjectService projectService;
+    private final TaskService taskService;
     // 3 способ
-    public ReleaseService(ReleaseCrud releaseCrud) {
+    public ReleaseService(ReleaseCrud releaseCrud, ProjectService projectService, TaskService taskService) {
         this.releaseCrud = releaseCrud;
+        this.projectService = projectService;
+        this.taskService = taskService;
     }
 
     // ----------------------------------------------------------------------------------------------------------------------------------------
@@ -112,7 +115,9 @@ public class ReleaseService implements StandartServiceInterface, ReleaseServiceI
             if (releaseCrud.findByReleaseId(id)==null){
                 throw new ReleaseNotFoundException();
             }
-            releaseCrud.deleteById(id);
+            if((projectService.deleteReleaseInProject(id))&&(taskService.deleteReleaseInTask(id))){
+                releaseCrud.deleteById(id);
+            }
         }
         return id;
     }

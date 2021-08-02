@@ -23,11 +23,14 @@ public class ReleaseEntity { // ----------------------------------------------- 
     @Column(name = "data_end")
     private String dataEnd;
 
+    /*
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "releaseId")
     private List<ProjectEntity> projectEntities;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "releaseId")
     private List<TaskEntity> taskEntities;
+
+     */
 
     public ReleaseEntity() { // конструктор
     }

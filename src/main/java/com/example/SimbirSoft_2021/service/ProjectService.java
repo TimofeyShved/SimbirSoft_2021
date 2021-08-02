@@ -125,12 +125,25 @@ public class ProjectService implements StandartServiceInterface, ProjectServiceI
         }
 
         ReleaseEntity releaseEntity = releaseCrud.findByReleaseId(projectEntity.getReleaseId());
+        if (taskService.deleteTaskByProjectId(id)){
+            projectCrud.delete(projectEntity);
+        }
         if (releaseEntity!=null){
             releaseCrud.delete(releaseEntity);
         }
-        taskService.deleteTaskByProjectId(id);
-        projectCrud.delete(projectEntity);
         return id;
+    }
+
+    // ----------------------------------------------------------------------------------------------------------------------------------------
+    @Transactional
+    @Override // ----------------- удалить реализацию связанную с проектом
+    public boolean deleteReleaseInProject(Long id) {
+        ProjectEntity projectEntity = projectCrud.findByReleaseId(id);
+        if(projectEntity!=null){
+            projectEntity.setReleaseId(null);
+            projectCrud.save(projectEntity);
+        }
+        return true;
     }
 
     // ----------------------------------------------------------------------------------------------------------------------------------------

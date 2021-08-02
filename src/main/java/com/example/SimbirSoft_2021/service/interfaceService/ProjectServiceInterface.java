@@ -4,4 +4,5 @@ import com.example.SimbirSoft_2021.Dto.ProjectDto;
 
 public interface ProjectServiceInterface {
     public ProjectDto findByReleaseId(Long releaseId);
+    public boolean deleteReleaseInProject(Long id);
 }

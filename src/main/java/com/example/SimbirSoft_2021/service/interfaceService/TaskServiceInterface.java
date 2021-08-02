@@ -9,5 +9,6 @@ import java.util.List;
 
 public interface TaskServiceInterface {
     public TaskDto findByReleaseId(Long releaseId) throws TaskNotFoundException;
-    public List<TaskDto> deleteTaskByProjectId(Long projectId) throws TaskNotFoundException, ReleaseNotFoundException, RoleNotFoundException;
+    public boolean deleteTaskByProjectId(Long projectId) throws TaskNotFoundException, ReleaseNotFoundException, RoleNotFoundException;
+    public boolean deleteReleaseInTask(Long id);
 }

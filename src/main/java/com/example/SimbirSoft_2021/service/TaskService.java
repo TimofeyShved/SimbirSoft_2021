@@ -144,7 +144,7 @@ public class TaskService implements StandartServiceInterface, TaskServiceInterfa
     // ----------------------------------------------------------------------------------------------------------------------------------------
     @Transactional
     @Override // ----------------- удалить задачи связанные с проектом
-    public List<TaskDto> deleteTaskByProjectId(Long projectId) throws TaskNotFoundException, ReleaseNotFoundException, RoleNotFoundException {
+    public boolean deleteTaskByProjectId(Long projectId) throws TaskNotFoundException, ReleaseNotFoundException, RoleNotFoundException {
         List<TaskEntity> taskEntityList = taskCrud.findAll();
 
         //  проверка на то что задача вообще существуют
@@ -152,18 +152,26 @@ public class TaskService implements StandartServiceInterface, TaskServiceInterfa
             throw new TaskNotFoundException();
         }
 
-        List<TaskDto> taskDtoList = new ArrayList<>();
-
         //  вытаскиваем и удаляем по одной задачи, и сохраняем в коллекцию
         for (TaskEntity e:taskEntityList){
-            System.out.println("################### "+e.getProjectId()+" == "+projectId);
             if (e.getProjectId() == projectId){ //  проверка
-                taskDtoList.add(TaskMapper.INSTANCE.toDto(e));
                 deleteOne(e.getTaskId());
             }
         }
 
-        return taskDtoList;
+        return true;
+    }
+
+    // ----------------------------------------------------------------------------------------------------------------------------------------
+    @Transactional
+    @Override // ----------------- удалить реализацию связанную с задачей
+    public boolean deleteReleaseInTask(Long id) {
+        TaskEntity taskEntity = taskCrud.findByReleaseId(id);
+        if(taskEntity!=null){
+            taskEntity.setReleaseId(null);
+            taskCrud.save(taskEntity);
+        }
+        return true;
     }
 
     // ----------------------------------------------------------------------------------------------------------------------------------------
@@ -206,4 +214,5 @@ public class TaskService implements StandartServiceInterface, TaskServiceInterfa
         taskCrud.save(taskEntity);
         return TaskMapper.INSTANCE.toDto(taskEntity);
     }
+
 }
