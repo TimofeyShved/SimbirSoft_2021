@@ -44,7 +44,7 @@ public class RoleController {
 
     @Operation(summary = "Получить список всех ролей")
     @RequestMapping(value = "/rols", method = RequestMethod.GET) // взять
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getUsers(){
         try {
             return ResponseEntity.ok(roleService.getAll());
@@ -55,7 +55,7 @@ public class RoleController {
 
     @Operation(summary = "Получить выбранную роль")
     @RequestMapping(value = "/role/{roleId}", method = RequestMethod.GET) // взять
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getOne(@Validated @PathVariable Long roleId) throws Exception {
         try {
             return ResponseEntity.ok(roleService.getOne(roleId));
@@ -66,7 +66,7 @@ public class RoleController {
 
     @Operation(summary = "Удалить выбранную роль")
     @RequestMapping(value = "/role/{roleId}", method = RequestMethod.DELETE) // удалить
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity deleteOne(@Validated @PathVariable Long roleId) throws Exception {
         try {
             return ResponseEntity.ok(roleService.deleteOne(roleId));
@@ -77,7 +77,7 @@ public class RoleController {
 
     @Operation(summary = "Обновить данные выбранной роли")
     @RequestMapping(value = "/role/{roleId}", method = RequestMethod.PUT) // обновить
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity updateOne(@PathVariable Long roleId, @Validated @RequestBody RoleDto roleDto) throws Exception {
         try {
             return ResponseEntity.ok(roleService.updateOne(roleId, roleDto));

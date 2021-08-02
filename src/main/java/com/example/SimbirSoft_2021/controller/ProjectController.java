@@ -44,7 +44,7 @@ public class ProjectController {
 
     @Operation(summary = "Получить список проектов")
     @RequestMapping(value = "/projects", method = RequestMethod.GET) // взять
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getUsers(){
         try {
             return ResponseEntity.ok(projectService.getAll());
@@ -55,7 +55,7 @@ public class ProjectController {
 
     @Operation(summary = "Получить выбранный проект")
     @RequestMapping(value = "/project/{projectId}", method = RequestMethod.GET) // взять
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getOne(@Validated @PathVariable Long projectId) throws Exception {
         try {
             return ResponseEntity.ok(projectService.getOne(projectId));
@@ -66,7 +66,7 @@ public class ProjectController {
 
     @Operation(summary = "Удалить выбранный проект")
     @RequestMapping(value = "/project/{projectId}", method = RequestMethod.DELETE) // удалить
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity deleteOne(@Validated @PathVariable Long projectId) throws Exception {
         try {
             return ResponseEntity.ok(projectService.deleteOne(projectId));
@@ -77,7 +77,7 @@ public class ProjectController {
 
     @Operation(summary = "Обновить данные выбранного проекта")
     @RequestMapping(value = "/project/{projectId}", method = RequestMethod.PUT) // обновить
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity updateOne(@Validated @PathVariable Long projectId, @Validated @RequestBody ProjectDto projectDto) throws Exception {
         try {
             return ResponseEntity.ok(projectService.updateOne(projectId, projectDto));

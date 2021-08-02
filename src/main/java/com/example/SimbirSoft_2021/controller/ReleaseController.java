@@ -44,7 +44,7 @@ public class ReleaseController {
 
     @Operation(summary = "Получить список времён реализации")
     @RequestMapping(value = "/releases", method = RequestMethod.GET) // взять
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getUsers(){
         try {
             return ResponseEntity.ok(releaseService.getAll());
@@ -55,7 +55,7 @@ public class ReleaseController {
 
     @Operation(summary = "Получить выбранное время реализации")
     @RequestMapping(value = "/release/{releaseId}", method = RequestMethod.GET) // взять
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getOne(@Validated @PathVariable Long releaseId) throws Exception {
         try {
             return ResponseEntity.ok(releaseService.getOne(releaseId));
@@ -66,7 +66,7 @@ public class ReleaseController {
 
     @Operation(summary = "Удалить выбранное время реализации")
     @RequestMapping(value = "/release/{releaseId}", method = RequestMethod.DELETE) // удалить
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity deleteOne(@Validated @PathVariable Long releaseId) throws Exception {
         try {
             return ResponseEntity.ok(releaseService.deleteOne(releaseId));
@@ -77,7 +77,7 @@ public class ReleaseController {
 
     @Operation(summary = "Обновить данные выбранного времени реализации")
     @RequestMapping(value = "/release/{releaseId}", method = RequestMethod.PUT) // обновить
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity updateOne(@Validated @PathVariable Long releaseId, @Validated @RequestBody ReleaseDto releaseDto) throws Exception {
         try {
             return ResponseEntity.ok(releaseService.updateOne(releaseId, releaseDto));

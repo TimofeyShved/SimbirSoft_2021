@@ -45,7 +45,7 @@ public class TaskController {
 
     @Operation(summary = "Получить список задач")
     @RequestMapping(value = "/tasks", method = RequestMethod.GET) // взять
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getUsers(){
         try {
             return ResponseEntity.ok(taskService.getAll());
@@ -56,7 +56,7 @@ public class TaskController {
 
     @Operation(summary = "Получить выбранную задачу")
     @RequestMapping(value = "/task/{taskId}", method = RequestMethod.GET) // взять
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getOne(@Validated @PathVariable Long taskId) throws Exception {
         try {
             return ResponseEntity.ok(taskService.getOne(taskId));
@@ -67,7 +67,7 @@ public class TaskController {
 
     @Operation(summary = "Удалить выбранную задачу")
     @RequestMapping(value = "/task/{taskId}", method = RequestMethod.DELETE) // удалить
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity deleteOne(@Validated @PathVariable Long taskId) throws Exception {
         try {
             return ResponseEntity.ok(taskService.deleteOne(taskId));
@@ -78,7 +78,7 @@ public class TaskController {
 
     @Operation(summary = "Обновить данные выбранной задачи")
     @RequestMapping(value = "/task/{taskId}", method = RequestMethod.PUT) // обновить
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity updateOne(@Validated @PathVariable Long taskId, @Validated @RequestBody TaskDto taskDto) throws Exception {
         try {
             return ResponseEntity.ok(taskService.updateOne(taskId, taskDto));

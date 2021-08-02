@@ -50,7 +50,7 @@ public class UserController {
 
     @Operation(summary = "Получить список людей")
     @RequestMapping(value = "/users", method = RequestMethod.GET) // взять
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getUsers(){
         try {
             return ResponseEntity.ok(userService.getAll());
@@ -61,7 +61,7 @@ public class UserController {
 
     @Operation(summary = "Получить выбранного человека")
     @RequestMapping(value = "/user/{userId}", method = RequestMethod.GET) // взять
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getOne(@Validated @PathVariable Long userId) throws Exception {
         try {
             return ResponseEntity.ok(userService.getOne(userId));
@@ -72,7 +72,7 @@ public class UserController {
 
     @Operation(summary = "Удалить выбранного человека")
     @RequestMapping(value = "/user/{userId}", method = RequestMethod.DELETE) // удалить
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity deleteOne(@Validated @PathVariable Long userId) throws Exception {
         try {
             return ResponseEntity.ok(userService.deleteOne(userId));
@@ -83,7 +83,7 @@ public class UserController {
 
     @Operation(summary = "Обновить данные выбранного человека")
     @RequestMapping(value = "/user/{userId}", method = RequestMethod.PUT) // обновить
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity updateOne(@Validated @PathVariable Long userId, @Validated @RequestBody UserDto userDto) throws Exception {
         try {
             return ResponseEntity.ok(userService.updateOne(userId, userDto));
