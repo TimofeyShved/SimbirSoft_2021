@@ -1,9 +1,11 @@
 package com.example.SimbirSoft_2021.service;
 
+import com.example.SimbirSoft_2021.Dto.TaskDto;
 import com.example.SimbirSoft_2021.Dto.UserDto;
 import com.example.SimbirSoft_2021.entity.ProjectEntity;
 import com.example.SimbirSoft_2021.entity.UserEntity;
 import com.example.SimbirSoft_2021.exception.*;
+import com.example.SimbirSoft_2021.mappers.TaskMapper;
 import com.example.SimbirSoft_2021.mappers.UserMapper;
 import com.example.SimbirSoft_2021.repository.ProjectCrud;
 import com.example.SimbirSoft_2021.repository.UserCrud;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 // 1 способ
 //@RequiredArgsConstructor
@@ -62,12 +65,8 @@ public class UserService implements StandartServiceInterface<UserDto>, UserServi
             throw new UserNotFoundException();
         }
 
-        List<UserDto> userDtoList = new ArrayList<>();
-
-        //  вытаскиваем по одному человеку и сохраняем в коллекцию
-        for (UserEntity e:userEntityList){
-            userDtoList.add(UserMapper.INSTANCE.toDto(e));
-        }
+        // перевод коллекции из одного вида в другой
+        List<UserDto> userDtoList = userEntityList.stream().map(x-> UserMapper.INSTANCE.toDto(x)).collect(Collectors.toList());
 
         return userDtoList;
     }

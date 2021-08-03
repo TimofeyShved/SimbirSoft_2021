@@ -1,11 +1,13 @@
 package com.example.SimbirSoft_2021.service;
 
+import com.example.SimbirSoft_2021.Dto.ProjectDto;
 import com.example.SimbirSoft_2021.Dto.ReleaseDto;
 import com.example.SimbirSoft_2021.Dto.UserDto;
 import com.example.SimbirSoft_2021.entity.ProjectEntity;
 import com.example.SimbirSoft_2021.entity.ReleaseEntity;
 import com.example.SimbirSoft_2021.entity.UserEntity;
 import com.example.SimbirSoft_2021.exception.*;
+import com.example.SimbirSoft_2021.mappers.ProjectMapper;
 import com.example.SimbirSoft_2021.mappers.ReleaseMapper;
 import com.example.SimbirSoft_2021.mappers.UserMapper;
 import com.example.SimbirSoft_2021.repository.ProjectCrud;
@@ -22,6 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.stream.Collectors;
 
 // 1 способ
 //@RequiredArgsConstructor
@@ -82,12 +85,9 @@ public class ReleaseService implements StandartServiceInterface<ReleaseDto>, Rel
             throw new ReleaseNotFoundException();
         }
 
-        List<ReleaseDto> releaseDtoList = new ArrayList<>();
+        // перевод коллекции из одного вида в другой
+        List<ReleaseDto> releaseDtoList = releaseEntityList.stream().map(x-> ReleaseMapper.INSTANCE.toDto(x)).collect(Collectors.toList());
 
-        //  вытаскиваем по одной реализации и сохраняем в коллекцию
-        for (ReleaseEntity e:releaseEntityList){
-            releaseDtoList.add(ReleaseMapper.INSTANCE.toDto(e));
-        }
         return releaseDtoList;
     }
 

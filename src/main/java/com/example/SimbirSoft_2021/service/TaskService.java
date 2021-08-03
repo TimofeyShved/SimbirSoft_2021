@@ -1,12 +1,14 @@
 package com.example.SimbirSoft_2021.service;
 
 import com.example.SimbirSoft_2021.Dto.ProjectDto;
+import com.example.SimbirSoft_2021.Dto.RoleDto;
 import com.example.SimbirSoft_2021.Dto.TaskDto;
 import com.example.SimbirSoft_2021.entity.ProjectEntity;
 import com.example.SimbirSoft_2021.entity.ReleaseEntity;
 import com.example.SimbirSoft_2021.entity.TaskEntity;
 import com.example.SimbirSoft_2021.exception.*;
 import com.example.SimbirSoft_2021.mappers.ProjectMapper;
+import com.example.SimbirSoft_2021.mappers.RoleMapper;
 import com.example.SimbirSoft_2021.mappers.TaskMapper;
 import com.example.SimbirSoft_2021.repository.ProjectCrud;
 import com.example.SimbirSoft_2021.repository.ReleaseCrud;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 // 1 способ
 //@RequiredArgsConstructor
@@ -80,12 +83,8 @@ public class TaskService implements StandartServiceInterface<TaskDto>, TaskServi
             throw new TaskNotFoundException();
         }
 
-        List<TaskDto> taskDtoList = new ArrayList<>();
-
-        //  вытаскиваем по одной задачи и сохраняем в коллекцию
-        for (TaskEntity e:taskEntityList){
-            taskDtoList.add(TaskMapper.INSTANCE.toDto(e));
-        }
+        // перевод коллекции из одного вида в другой
+        List<TaskDto> taskDtoList = taskEntityList.stream().map(x-> TaskMapper.INSTANCE.toDto(x)).collect(Collectors.toList());
 
         return taskDtoList;
     }

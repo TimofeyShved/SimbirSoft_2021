@@ -16,6 +16,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 // 1 способ
 //@RequiredArgsConstructor
@@ -75,12 +76,8 @@ public class ProjectService implements StandartServiceInterface<ProjectDto>, Pro
             throw new ProjectNotFoundException();
         }
 
-        List<ProjectDto> projectDtoList = new ArrayList<>();
-
-        //  вытаскиваем по одному проекту и сохраняем в коллекцию
-        for (ProjectEntity e:projectEntityList){
-            projectDtoList.add(ProjectMapper.INSTANCE.toDto(e));
-        }
+        // перевод коллекции из одного вида в другой
+        List<ProjectDto> projectDtoList = projectEntityList.stream().map(x->ProjectMapper.INSTANCE.toDto(x)).collect(Collectors.toList());
 
         return projectDtoList;
     }

@@ -1,8 +1,10 @@
 package com.example.SimbirSoft_2021.service;
 
+import com.example.SimbirSoft_2021.Dto.ReleaseDto;
 import com.example.SimbirSoft_2021.Dto.RoleDto;
 import com.example.SimbirSoft_2021.entity.RoleEntity;
 import com.example.SimbirSoft_2021.exception.*;
+import com.example.SimbirSoft_2021.mappers.ReleaseMapper;
 import com.example.SimbirSoft_2021.mappers.RoleMapper;
 import com.example.SimbirSoft_2021.repository.*;
 import com.example.SimbirSoft_2021.service.interfaceService.RoleServiceInterface;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 // 1 способ
 //@RequiredArgsConstructor
@@ -67,12 +70,8 @@ public class RoleService implements StandartServiceInterface<RoleDto>, RoleServi
             throw new RoleNotFoundException();
         }
 
-        List<RoleDto> roleDtoList = new ArrayList<>();
-
-        //  вытаскиваем по одной роли и сохраняем в коллекцию
-        for (RoleEntity e:roleEntityList){
-            roleDtoList.add(RoleMapper.INSTANCE.toDto(e));
-        }
+        // перевод коллекции из одного вида в другой
+        List<RoleDto> roleDtoList = roleEntityList.stream().map(x-> RoleMapper.INSTANCE.toDto(x)).collect(Collectors.toList());
 
         return roleDtoList;
     }
