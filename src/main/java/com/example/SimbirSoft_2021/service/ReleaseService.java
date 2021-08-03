@@ -26,7 +26,7 @@ import java.util.List;
 // 1 способ
 //@RequiredArgsConstructor
 @Service
-public class ReleaseService implements StandartServiceInterface, ReleaseServiceInterface {
+public class ReleaseService implements StandartServiceInterface<ReleaseDto>, ReleaseServiceInterface {
 
     // 2 способ
     //@Autowired
@@ -45,8 +45,7 @@ public class ReleaseService implements StandartServiceInterface, ReleaseServiceI
     // ----------------------------------------------------------------------------------------------------------------------------------------
     @Transactional
     @Override // ----------------- регистрация
-    public ReleaseDto registration(Object o) throws ReleaseExistsException, ReleaseDateFormatException {
-        ReleaseDto releaseDto = (ReleaseDto) o;
+    public ReleaseDto registration(ReleaseDto releaseDto) throws ReleaseExistsException, ReleaseDateFormatException {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // формат времени
         //Calendar cal = Calendar.getInstance(); // вытащить дату из системы
 
@@ -125,14 +124,13 @@ public class ReleaseService implements StandartServiceInterface, ReleaseServiceI
     // ----------------------------------------------------------------------------------------------------------------------------------------
     @Transactional
     @Override // ----------------- обновить один проект
-    public ReleaseDto updateOne(Long id, Object o) throws ReleaseNotFoundException, ReleaseExistsException, ReleaseDateFormatException {
+    public ReleaseDto updateOne(Long id, ReleaseDto releaseDto) throws ReleaseNotFoundException, ReleaseExistsException, ReleaseDateFormatException {
 
         //  проверка на то что реализации вообще существуют
         if (releaseCrud.findByReleaseId(id)==null){
             throw new ReleaseNotFoundException();
         }
 
-        ReleaseDto releaseDto = (ReleaseDto) o;
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // формат времени
         //Calendar cal = Calendar.getInstance(); // вытащить дату из системы
 

@@ -20,7 +20,7 @@ import java.util.Objects;
 // 1 способ
 //@RequiredArgsConstructor
 @Service
-public class ProjectService implements StandartServiceInterface, ProjectServiceInterface {
+public class ProjectService implements StandartServiceInterface<ProjectDto>, ProjectServiceInterface {
 
     // 2 способ
     //@Autowired
@@ -42,8 +42,8 @@ public class ProjectService implements StandartServiceInterface, ProjectServiceI
     // ----------------------------------------------------------------------------------------------------------------------------------------
     @Transactional
     @Override // ----------------- регистрация
-    public ProjectDto registration(Object o) throws ProjectExistsException, ReleaseNotFoundException, ProjectAndDateTimeExistsException, TaskAndDateTimeExistsException, TaskNotFoundException {
-        ProjectEntity projectEntity = ProjectMapper.INSTANCE.toEntity((ProjectDto) o);
+    public ProjectDto registration(ProjectDto projectDto) throws ProjectExistsException, ReleaseNotFoundException, ProjectAndDateTimeExistsException, TaskAndDateTimeExistsException, TaskNotFoundException {
+        ProjectEntity projectEntity = ProjectMapper.INSTANCE.toEntity(projectDto);
 
         //  проверка
         if (releaseCrud.findByReleaseId(projectEntity.getReleaseId())==null){ // проверить, что есть такая реализация существует
@@ -149,7 +149,7 @@ public class ProjectService implements StandartServiceInterface, ProjectServiceI
     // ----------------------------------------------------------------------------------------------------------------------------------------
     @Transactional
     @Override // ----------------- обновить один проект
-    public ProjectDto updateOne(Long id, Object o) throws ProjectNotFoundException, ProjectExistsException, ReleaseNotFoundException,
+    public ProjectDto updateOne(Long id, ProjectDto projectDto) throws ProjectNotFoundException, ProjectExistsException, ReleaseNotFoundException,
             ProjectAndDateTimeExistsException, TaskAndDateTimeExistsException, TaskNotFoundException {
 
         //  проверка на то что проект вообще существуют
@@ -158,7 +158,7 @@ public class ProjectService implements StandartServiceInterface, ProjectServiceI
         }
 
         // получение сущности нового проекта
-        ProjectEntity projectEntityNew = ProjectMapper.INSTANCE.toEntity((ProjectDto) o);
+        ProjectEntity projectEntityNew = ProjectMapper.INSTANCE.toEntity(projectDto);
 
         // получение сущности старого проекта
         ProjectEntity projectEntity = projectCrud.findByProjectId(id);

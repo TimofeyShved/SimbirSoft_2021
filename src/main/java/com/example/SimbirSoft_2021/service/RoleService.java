@@ -16,7 +16,7 @@ import java.util.List;
 // 1 способ
 //@RequiredArgsConstructor
 @Service
-public class RoleService implements StandartServiceInterface, RoleServiceInterface {
+public class RoleService implements StandartServiceInterface<RoleDto>, RoleServiceInterface {
 
     // 2 способ
     //@Autowired
@@ -37,8 +37,7 @@ public class RoleService implements StandartServiceInterface, RoleServiceInterfa
     // ----------------------------------------------------------------------------------------------------------------------------------------
     @Transactional
     @Override // ----------------- регистрация
-    public RoleDto registration(Object o) throws RoleExistsException, TaskNotFoundException, UserNotFoundException {
-        RoleDto roleDto = (RoleDto) o;
+    public RoleDto registration(RoleDto roleDto) throws RoleExistsException, TaskNotFoundException, UserNotFoundException {
 
         //  проверка
         if ((taskCrud.findByTaskId(roleDto.getTaskId())==null)){
@@ -157,13 +156,13 @@ public class RoleService implements StandartServiceInterface, RoleServiceInterfa
     // ----------------------------------------------------------------------------------------------------------------------------------------
     @Transactional
     @Override // ----------------- обновить одну роль
-    public RoleDto updateOne(Long id, Object o) throws RoleNotFoundException, RoleExistsException, TaskNotFoundException, UserNotFoundException {
+    public RoleDto updateOne(Long id, RoleDto roleDto) throws RoleNotFoundException, RoleExistsException, TaskNotFoundException, UserNotFoundException {
 
         //  проверка на то что роль вообще существуют
         if (roleCrud.findByRoleId(id)==null){
             throw new RoleNotFoundException();
         }
-        RoleEntity roleEntityNew = RoleMapper.INSTANCE.toEntity((RoleDto) o);
+        RoleEntity roleEntityNew = RoleMapper.INSTANCE.toEntity(roleDto);
         RoleEntity roleEntity = roleCrud.findByRoleId(id);
 
         if ((taskCrud.findByTaskId(roleEntityNew.getTaskId())==null)){

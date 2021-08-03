@@ -20,7 +20,7 @@ import java.util.List;
 // 1 способ
 //@RequiredArgsConstructor
 @Service
-public class UserService implements StandartServiceInterface, UserServiceInterface {
+public class UserService implements StandartServiceInterface<UserDto>, UserServiceInterface {
 
     // 2 способ
     //@Autowired
@@ -38,8 +38,8 @@ public class UserService implements StandartServiceInterface, UserServiceInterfa
     // ----------------------------------------------------------------------------------------------------------------------------------------
     @Transactional
     @Override // ----------------- регистрация
-    public UserDto registration(Object o) throws UserExistsException {
-        UserEntity userEntity = UserMapper.INSTANCE.toEntity((UserDto) o);
+    public UserDto registration(UserDto userDto) throws UserExistsException {
+        UserEntity userEntity = UserMapper.INSTANCE.toEntity(userDto);
 
         //  проверка
         if ((userCrud.findByFirstNameAndLastName(userEntity.getFirstName(), userEntity.getLastName())!=null)){ // проверить, что есть такая реализация существует
@@ -104,13 +104,13 @@ public class UserService implements StandartServiceInterface, UserServiceInterfa
     // ----------------------------------------------------------------------------------------------------------------------------------------
     @Transactional
     @Override // ----------------- обновить одного человека
-    public UserDto updateOne(Long id, Object o) throws UserNotFoundException, UserExistsException {
+    public UserDto updateOne(Long id, UserDto userDto) throws UserNotFoundException, UserExistsException {
 
         //  проверка на то что человек вообще существуют
         if (userCrud.findByUserId(id)==null){
             throw new UserNotFoundException();
         }
-        UserEntity userEntityNew = UserMapper.INSTANCE.toEntity((UserDto) o);
+        UserEntity userEntityNew = UserMapper.INSTANCE.toEntity(userDto);
         UserEntity userEntity = userCrud.findByUserId(id);
 
         //  проверка

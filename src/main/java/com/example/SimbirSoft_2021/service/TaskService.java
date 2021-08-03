@@ -23,7 +23,7 @@ import java.util.List;
 // 1 способ
 //@RequiredArgsConstructor
 @Service
-public class TaskService implements StandartServiceInterface, TaskServiceInterface {
+public class TaskService implements StandartServiceInterface<TaskDto>, TaskServiceInterface {
 
     // 2 способ
     //@Autowired
@@ -45,10 +45,8 @@ public class TaskService implements StandartServiceInterface, TaskServiceInterfa
     // ----------------------------------------------------------------------------------------------------------------------------------------
     @Transactional
     @Override // ----------------- регистрация
-    public TaskDto registration(Object o) throws ReleaseExistsException, ReleaseNotFoundException, TaskAndDateTimeExistsException,
+    public TaskDto registration(TaskDto taskDto) throws ReleaseExistsException, ReleaseNotFoundException, TaskAndDateTimeExistsException,
             ProjectAndDateTimeExistsException, TaskExistsException {
-
-        TaskDto taskDto = (TaskDto)o;
 
         //  проверка
         if (releaseCrud.findByReleaseId(taskDto.getReleaseId())==null){ // проверить, что есть такая реализация существует
@@ -177,7 +175,7 @@ public class TaskService implements StandartServiceInterface, TaskServiceInterfa
     // ----------------------------------------------------------------------------------------------------------------------------------------
     @Transactional
     @Override // ----------------- обновить одну задачу
-    public TaskDto updateOne(Long id, Object o) throws TaskNotFoundException, ReleaseExistsException, ReleaseNotFoundException,
+    public TaskDto updateOne(Long id, TaskDto taskDto) throws TaskNotFoundException, ReleaseExistsException, ReleaseNotFoundException,
             TaskAndDateTimeExistsException, ProjectAndDateTimeExistsException, TaskExistsException {
 
         //  проверка на то что задача вообще существуют
@@ -185,7 +183,7 @@ public class TaskService implements StandartServiceInterface, TaskServiceInterfa
             throw new TaskNotFoundException();
         }
 
-        TaskEntity taskEntityNew = TaskMapper.INSTANCE.toEntity((TaskDto) o);
+        TaskEntity taskEntityNew = TaskMapper.INSTANCE.toEntity(taskDto);
         TaskEntity taskEntity = taskCrud.findByTaskId(id);
 
         //  проверка
