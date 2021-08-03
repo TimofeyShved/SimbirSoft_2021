@@ -43,7 +43,7 @@ public class ProjectService implements StandartServiceInterface<ProjectDto>, Pro
     // ----------------------------------------------------------------------------------------------------------------------------------------
     @Transactional
     @Override // ----------------- регистрация
-    public ProjectDto registration(ProjectDto projectDto) throws ProjectExistsException, ReleaseNotFoundException, ProjectAndDateTimeExistsException, TaskAndDateTimeExistsException, TaskNotFoundException {
+    public ProjectDto registration(ProjectDto projectDto) throws ProjectExistsException, ReleaseNotFoundException, ProjectAndDateTimeExistsException, TaskAndDateTimeExistsException, TaskNotFoundException, StatusEnumException {
         ProjectEntity projectEntity = ProjectMapper.INSTANCE.toEntity(projectDto);
 
         //  проверка
@@ -147,7 +147,7 @@ public class ProjectService implements StandartServiceInterface<ProjectDto>, Pro
     @Transactional
     @Override // ----------------- обновить один проект
     public ProjectDto updateOne(Long id, ProjectDto projectDto) throws ProjectNotFoundException, ProjectExistsException, ReleaseNotFoundException,
-            ProjectAndDateTimeExistsException, TaskAndDateTimeExistsException, TaskNotFoundException {
+            ProjectAndDateTimeExistsException, TaskAndDateTimeExistsException, TaskNotFoundException, StatusEnumException {
 
         //  проверка на то что проект вообще существуют
         if (projectCrud.findByProjectId(id)==null){

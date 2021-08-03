@@ -1,5 +1,8 @@
 package com.example.SimbirSoft_2021.entity;
 
+import com.example.SimbirSoft_2021.enumertion.StatusEnum;
+import com.example.SimbirSoft_2021.exception.StatusEnumException;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -18,7 +21,8 @@ public class TaskEntity { // ----------------------------------------------- н�
     private String taskName;
 
     @Column(name = "task_status")
-    private String taskStatus;
+    @Enumerated(EnumType.STRING)
+    private StatusEnum taskStatus;
 
     @Column(name = "project_id")
     private Long projectId;
@@ -32,11 +36,6 @@ public class TaskEntity { // ----------------------------------------------- н�
     public TaskEntity() { // конструктор
     }
 
-    public TaskEntity(String taskName, String taskStatus, Long releaseId) {
-        this.taskName = taskName;
-        this.taskStatus = taskStatus;
-        this.releaseId = releaseId;
-    }
     // ----------------------------------------------- гетеры и сетеры
 
 
@@ -56,12 +55,16 @@ public class TaskEntity { // ----------------------------------------------- н�
         this.taskName = taskName;
     }
 
-    public String getTaskStatus() {
+    public StatusEnum getTaskStatus() {
         return taskStatus;
     }
 
-    public void setTaskStatus(String taskStatus) {
-        this.taskStatus = taskStatus;
+    public void setTaskStatus(StatusEnum taskStatus) throws StatusEnumException {
+        try {
+            this.taskStatus = taskStatus;
+        }catch (Exception e){
+            throw new StatusEnumException();
+        }
     }
 
     public Long getProjectId() {

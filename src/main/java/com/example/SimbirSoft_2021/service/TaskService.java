@@ -49,7 +49,7 @@ public class TaskService implements StandartServiceInterface<TaskDto>, TaskServi
     @Transactional
     @Override // ----------------- регистрация
     public TaskDto registration(TaskDto taskDto) throws ReleaseExistsException, ReleaseNotFoundException, TaskAndDateTimeExistsException,
-            ProjectAndDateTimeExistsException, TaskExistsException {
+            ProjectAndDateTimeExistsException, TaskExistsException, StatusEnumException {
 
         //  проверка
         if (releaseCrud.findByReleaseId(taskDto.getReleaseId())==null){ // проверить, что есть такая реализация существует
@@ -175,7 +175,7 @@ public class TaskService implements StandartServiceInterface<TaskDto>, TaskServi
     @Transactional
     @Override // ----------------- обновить одну задачу
     public TaskDto updateOne(Long id, TaskDto taskDto) throws TaskNotFoundException, ReleaseExistsException, ReleaseNotFoundException,
-            TaskAndDateTimeExistsException, ProjectAndDateTimeExistsException, TaskExistsException {
+            TaskAndDateTimeExistsException, ProjectAndDateTimeExistsException, TaskExistsException, StatusEnumException {
 
         //  проверка на то что задача вообще существуют
         if (taskCrud.findByTaskId(id)==null){
