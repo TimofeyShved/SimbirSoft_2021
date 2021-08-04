@@ -1,28 +1,18 @@
 package com.example.SimbirSoft_2021.service;
 
-import com.example.SimbirSoft_2021.Dto.ProjectDto;
 import com.example.SimbirSoft_2021.Dto.ReleaseDto;
-import com.example.SimbirSoft_2021.Dto.UserDto;
-import com.example.SimbirSoft_2021.entity.ProjectEntity;
 import com.example.SimbirSoft_2021.entity.ReleaseEntity;
-import com.example.SimbirSoft_2021.entity.UserEntity;
 import com.example.SimbirSoft_2021.exception.*;
-import com.example.SimbirSoft_2021.mappers.ProjectMapper;
 import com.example.SimbirSoft_2021.mappers.ReleaseMapper;
-import com.example.SimbirSoft_2021.mappers.UserMapper;
-import com.example.SimbirSoft_2021.repository.ProjectCrud;
 import com.example.SimbirSoft_2021.repository.ReleaseCrud;
-import com.example.SimbirSoft_2021.service.interfaceService.ProjectServiceInterface;
 import com.example.SimbirSoft_2021.service.interfaceService.ReleaseServiceInterface;
 import com.example.SimbirSoft_2021.service.interfaceService.StandartServiceInterface;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.SimbirSoft_2021.thread.ReleaseThread;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,11 +28,14 @@ public class ReleaseService implements StandartServiceInterface<ReleaseDto>, Rel
     private final ReleaseCrud releaseCrud; // создаём интерфейс для взаимодействия с бд
     private final ProjectService projectService;
     private final TaskService taskService;
+    private final ReleaseThread releaseThread;
+
     // 3 способ
-    public ReleaseService(ReleaseCrud releaseCrud, ProjectService projectService, TaskService taskService) {
+    public ReleaseService(ReleaseCrud releaseCrud, ProjectService projectService, TaskService taskService, ReleaseThread releaseThread) {
         this.releaseCrud = releaseCrud;
         this.projectService = projectService;
         this.taskService = taskService;
+        this.releaseThread = releaseThread;
     }
 
     // ----------------------------------------------------------------------------------------------------------------------------------------
@@ -71,6 +64,10 @@ public class ReleaseService implements StandartServiceInterface<ReleaseDto>, Rel
 
         // сохранение
         releaseCrud.save(releaseEntity);
+
+        // отправка в поток
+        releaseThread.set(ReleaseMapper.INSTANCE.toDto(releaseEntity));
+
         return ReleaseMapper.INSTANCE.toDto(releaseEntity);
     }
 
