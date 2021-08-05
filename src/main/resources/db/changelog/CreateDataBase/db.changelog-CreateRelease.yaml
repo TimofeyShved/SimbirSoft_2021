@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - logicalFilePath: db/changelog/CreateDataBase/db.changelog-CreateRelease.yaml
+  - changeSet:
+      id: 11
+      author: your_liquibase_username
+      changes:
+        - createTable:
+            tableName: release_entity
+            columns:
+              - column:
+                  name: release_id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: data_start
+                  type: varchar(50)
+              - column:
+                  name: data_end
+                  type: varchar(50)

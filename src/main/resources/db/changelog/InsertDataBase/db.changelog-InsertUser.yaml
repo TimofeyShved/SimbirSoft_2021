@@ -1,0 +1,71 @@
+databaseChangeLog:
+  - logicalFilePath: db/changelog/InsertDataBase/db.changelog-InsertUser.yaml
+  - changeSet:
+      id: 2
+      author: your_liquibase_username
+      comment: "Create admin user"
+      changes:
+        - insert:
+            tableName: user_entity
+            columns:
+              - column:
+                  name: last_name
+                  value: "Nicolas"
+              - column:
+                  name: first_name
+                  value: "Kim"
+              - column:
+                  name: patronymic
+                  value: "Coppola"
+        - insert:
+            tableName: user_entity
+            columns:
+              - column:
+                  name: last_name
+                  value: "Keanu"
+              - column:
+                  name: first_name
+                  value: "Reeves"
+              - column:
+                  name: patronymic
+                  value: "Charles"
+        - insert:
+            tableName: user_entity
+            columns:
+              - column:
+                  name: last_name
+                  value: "Hiddleston"
+              - column:
+                  name: first_name
+                  value: "Tom"
+              - column:
+                  name: patronymic
+                  value: "Charles"
+        - insert:
+            tableName: user_entity
+            columns:
+              - column:
+                  name: last_name
+                  value: "Watson"
+              - column:
+                  name: first_name
+                  value: "Emma"
+              - column:
+                  name: patronymic
+                  value: "Harrys"
+        - insert:
+            tableName: user_entity
+            columns:
+              - column:
+                  name: last_name
+                  value: "Moore"
+              - column:
+                  name: first_name
+                  value: "Julianne"
+              - column:
+                  name: patronymic
+                  value: "Coppola"
+      rollback:
+        - delete:
+            tableName: user_entity
+            where: username in ('Nicolas', 'Keanu')

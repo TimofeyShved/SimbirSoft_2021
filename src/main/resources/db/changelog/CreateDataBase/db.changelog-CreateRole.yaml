@@ -1,0 +1,25 @@
+databaseChangeLog:
+  - logicalFilePath: db/changelog/CreateDataBase/db.changelog-CreateRole.yaml
+  - changeSet:
+      id: 9
+      author: your_liquibase_username
+      changes:
+        - createTable:
+            tableName: role_entity
+            columns:
+              - column:
+                  name: role_id
+                  type: INT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: role_name
+                  type: varchar(50)
+              - column:
+                  name: task_id
+                  type: INT
+              - column:
+                  name: user_id
+                  type: INT

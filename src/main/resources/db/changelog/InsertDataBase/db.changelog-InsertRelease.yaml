@@ -1,0 +1,110 @@
+databaseChangeLog:
+  - logicalFilePath: db/changelog/InsertDataBase/db.changelog-InsertRelease.yaml
+  - changeSet:
+      id: 12
+      author: your_liquibase_username
+      comment: "Create admin release"
+      changes:
+        - insert:
+            tableName: release_entity
+            columns:
+              - column:
+                  name: data_start
+                  value: "2021-07-01 07:36:00"
+              - column:
+                  name: data_end
+                  value: "2021-11-10 19:25:00"
+        - insert:
+            tableName: release_entity
+            columns:
+              - column:
+                  name: data_start
+                  value: "2021-07-10 06:59:17"
+              - column:
+                  name: data_end
+                  value: "2021-12-20 20:22:14"
+        - insert:
+            tableName: release_entity
+            columns:
+              - column:
+                  name: data_start
+                  value: "2021-07-10 14:44:08"
+              - column:
+                  name: data_end
+                  value: "2021-07-25 11:27:36"
+        - insert:
+            tableName: release_entity
+            columns:
+              - column:
+                  name: data_start
+                  value: "2021-07-25 23:59:57"
+              - column:
+                  name: data_end
+                  value: "2021-08-10 20:47:57"
+        - insert:
+            tableName: release_entity
+            columns:
+              - column:
+                  name: data_start
+                  value: "2021-07-27 23:59:57"
+              - column:
+                  name: data_end
+                  value: "2021-08-12 20:00:57"
+        - insert:
+            tableName: release_entity
+            columns:
+              - column:
+                  name: data_start
+                  value: "2021-08-01 07:59:57"
+              - column:
+                  name: data_end
+                  value: "2021-08-13 20:47:12"
+        - insert:
+            tableName: release_entity
+            columns:
+              - column:
+                  name: data_start
+                  value: "2021-09-20 12:17:26"
+              - column:
+                  name: data_end
+                  value: "2021-10-01 20:47:33"
+        - insert:
+            tableName: release_entity
+            columns:
+              - column:
+                  name: data_start
+                  value: "2021-08-25 23:59:15"
+              - column:
+                  name: data_end
+                  value: "2021-08-27 20:47:57"
+        - insert:
+            tableName: release_entity
+            columns:
+              - column:
+                  name: data_start
+                  value: "2021-09-20 12:17:26"
+              - column:
+                  name: data_end
+                  value: "2021-10-01 20:47:33"
+        - insert:
+            tableName: release_entity
+            columns:
+              - column:
+                  name: data_start
+                  value: "2021-08-25 23:59:15"
+              - column:
+                  name: data_end
+                  value: "2021-08-27 20:47:57"
+        - insert:
+              tableName: release_entity
+              columns:
+                - column:
+                    name: data_start
+                    value: "2021-11-01 08:00:18"
+                - column:
+                    name: data_end
+                    value: "2021-12-27 17:03:23"
+      rollback:
+        - delete:
+            tableName: release_entity
+            where: data_start in ('2021-07-20 14:44:08', '2021-07-10 06:59:17')

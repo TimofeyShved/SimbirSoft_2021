@@ -1,71 +1,105 @@
 package com.example.SimbirSoft_2021.controller;
 
-import com.example.SimbirSoft_2021.entity.ProjectEntity;
-import com.example.SimbirSoft_2021.exception.UserNotFoundException;
-import com.example.SimbirSoft_2021.repository.ProjectCRUD;
+import com.example.SimbirSoft_2021.Dto.ProjectDto;
 import com.example.SimbirSoft_2021.service.ProjectService;
-import org.springframework.beans.factory.annotation.Autowired;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-
+// 1 способ
+//@RequiredArgsConstructor
+@Tag(name = "Управление проектами")
+@RequestMapping("/control")
 @RestController
-@RequestMapping
 public class ProjectController {
 
-    @Autowired
-    private ProjectService projectService;
+    // 2 способ
+    //@Autowired
+    //private final ProjectService projectService;
 
-    @Autowired
-    private ProjectCRUD projectCRUD; // создаём интерфейс для взаимодействия с бд
+    private final ProjectService projectService;
 
-    @PostMapping("/project") // создать
-    public ResponseEntity registration(@RequestBody ProjectEntity projectEntity) throws Exception {
+    // 3 способ
+    public ProjectController(ProjectService projectService) {
+        this.projectService = projectService;
+    }
+
+    @Operation(summary = "Добавить проект")
+    @RequestMapping(value = "/project", method = RequestMethod.POST) // создать
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity registration(@Validated @RequestBody ProjectDto projectDto) throws Exception {
         try {
-            projectService.registration(projectEntity);
-            return ResponseEntity.ok(projectEntity);
-        } catch (Exception e){
-            return  ResponseEntity.badRequest().body("code: USER_EXISTS");
+            return ResponseEntity.ok(projectService.registration(projectDto));
+        }catch (Exception e){
+            return  ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @GetMapping("/projects") // взять
+    @Operation(summary = "Получить список проектов")
+    @RequestMapping(value = "/projects", method = RequestMethod.GET) // взять
+    @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getUsers(){
         try {
-            return ResponseEntity.ok(projectCRUD.findAll());
+            return ResponseEntity.ok(projectService.getAll());
         }catch (Exception e){
-            return  ResponseEntity.badRequest().body("code: USER_NOT_FOUND");
+            return  ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @GetMapping("/project/{projectId}") // взять
-    public ResponseEntity getOne(@PathVariable Long projectId) throws Exception {
+    @Operation(summary = "Получить выбранный проект")
+    @RequestMapping(value = "/project/{projectId}", method = RequestMethod.GET) // взять
+    @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity getOne(@Validated @PathVariable Long projectId) throws Exception {
         try {
             return ResponseEntity.ok(projectService.getOne(projectId));
-        }catch (UserNotFoundException e){
-            return  ResponseEntity.badRequest().body(e.getMessage());
         }catch (Exception e){
-            return  ResponseEntity.badRequest().body("code: ERROR");
+            return  ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @DeleteMapping("/project/{projectId}") // удалить
-    public ResponseEntity deleteOne(@PathVariable Long projectId) throws Exception {
+    @Operation(summary = "Получить список проектов по статусу")
+    @RequestMapping(value = "/project/status", method = RequestMethod.GET) // взять
+    @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity getOneByStatus(@Validated @RequestBody String status) throws Exception {
+        try {
+            return ResponseEntity.ok(projectService.getAllByStatus(status));
+        }catch (Exception e){
+            return  ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+
+    @Operation(summary = "Получить количество проектов по статусу")
+    @RequestMapping(value = "/project/status/count", method = RequestMethod.GET) // взять
+    @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity getCountByStatus(@Validated @RequestBody String status) throws Exception {
+        try {
+            return ResponseEntity.ok(projectService.getCountByStatus(status));
+        }catch (Exception e){
+            return  ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @Operation(summary = "Удалить выбранный проект")
+    @RequestMapping(value = "/project/{projectId}", method = RequestMethod.DELETE) // удалить
+    @DeleteMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity deleteOne(@Validated @PathVariable Long projectId) throws Exception {
         try {
             return ResponseEntity.ok(projectService.deleteOne(projectId));
-        }catch (UserNotFoundException e){
-            return  ResponseEntity.badRequest().body(e.getMessage());
         }catch (Exception e){
-            return  ResponseEntity.badRequest().body("code: ERROR");
+            return  ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @PutMapping("/project/{projectId}") // обновить
-    public ResponseEntity updateOne(@PathVariable Long projectId, @RequestBody ProjectEntity projectEntity) throws Exception {
+    @Operation(summary = "Обновить данные выбранного проекта")
+    @RequestMapping(value = "/project/{projectId}", method = RequestMethod.PUT) // обновить
+    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity updateOne(@Validated @PathVariable Long projectId, @Validated @RequestBody ProjectDto projectDto) throws Exception {
         try {
-            return ResponseEntity.ok(projectService.updateOne(projectId, projectEntity));
-        }catch (UserNotFoundException e){
-            return  ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.ok(projectService.updateOne(projectId, projectDto));
         }catch (Exception e){
             return  ResponseEntity.badRequest().body(e.getMessage());
         }

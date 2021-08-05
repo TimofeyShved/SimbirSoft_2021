@@ -1,0 +1,299 @@
+databaseChangeLog:
+  - logicalFilePath: db/changelog/InsertDataBase/db.changelog-InsertRole.yaml
+  - changeSet:
+      id: 10
+      author: your_liquibase_username
+      comment: "Create admin user"
+      changes:
+        - insert:
+            tableName: role_entity
+            columns:
+              - column:
+                  name: role_name
+                  value: "author"
+              - column:
+                  name: task_id
+                  value: 1
+              - column:
+                  name: user_id
+                  value: 1
+        - insert:
+            tableName: role_entity
+            columns:
+              - column:
+                  name: role_name
+                  value: "customer"
+              - column:
+                  name: task_id
+                  value: 1
+              - column:
+                  name: user_id
+                  value: 2
+        - insert:
+            tableName: role_entity
+            columns:
+              - column:
+                  name: role_name
+                  value: "implementer"
+              - column:
+                  name: task_id
+                  value: 1
+              - column:
+                  name: user_id
+                  value: 3
+        - insert:
+            tableName: role_entity
+            columns:
+              - column:
+                  name: role_name
+                  value: "author"
+              - column:
+                  name: task_id
+                  value: 2
+              - column:
+                  name: user_id
+                  value: 1
+        - insert:
+            tableName: role_entity
+            columns:
+              - column:
+                  name: role_name
+                  value: "customer"
+              - column:
+                  name: task_id
+                  value: 2
+              - column:
+                  name: user_id
+                  value: 2
+        - insert:
+            tableName: role_entity
+            columns:
+              - column:
+                  name: role_name
+                  value: "implementer"
+              - column:
+                  name: task_id
+                  value: 2
+              - column:
+                  name: user_id
+                  value: 3
+        - insert:
+            tableName: role_entity
+            columns:
+              - column:
+                  name: role_name
+                  value: "author"
+              - column:
+                  name: task_id
+                  value: 3
+              - column:
+                  name: user_id
+                  value: 1
+        - insert:
+            tableName: role_entity
+            columns:
+              - column:
+                  name: role_name
+                  value: "customer"
+              - column:
+                  name: task_id
+                  value: 3
+              - column:
+                  name: user_id
+                  value: 2
+        - insert:
+            tableName: role_entity
+            columns:
+              - column:
+                  name: role_name
+                  value: "implementer"
+              - column:
+                  name: task_id
+                  value: 3
+              - column:
+                  name: user_id
+                  value: 3
+        - insert:
+            tableName: role_entity
+            columns:
+              - column:
+                  name: role_name
+                  value: "author"
+              - column:
+                  name: task_id
+                  value: 4
+              - column:
+                  name: user_id
+                  value: 1
+        - insert:
+            tableName: role_entity
+            columns:
+              - column:
+                  name: role_name
+                  value: "customer"
+              - column:
+                  name: task_id
+                  value: 4
+              - column:
+                  name: user_id
+                  value: 2
+        - insert:
+            tableName: role_entity
+            columns:
+              - column:
+                  name: role_name
+                  value: "implementer"
+              - column:
+                  name: task_id
+                  value: 4
+              - column:
+                  name: user_id
+                  value: 3
+        - insert:
+            tableName: role_entity
+            columns:
+              - column:
+                  name: role_name
+                  value: "author"
+              - column:
+                  name: task_id
+                  value: 5
+              - column:
+                  name: user_id
+                  value: 3
+        - insert:
+            tableName: role_entity
+            columns:
+              - column:
+                  name: role_name
+                  value: "customer"
+              - column:
+                  name: task_id
+                  value: 5
+              - column:
+                  name: user_id
+                  value: 4
+        - insert:
+            tableName: role_entity
+            columns:
+              - column:
+                  name: role_name
+                  value: "implementer"
+              - column:
+                  name: task_id
+                  value: 5
+              - column:
+                  name: user_id
+                  value: 5
+        - insert:
+            tableName: role_entity
+            columns:
+              - column:
+                  name: role_name
+                  value: "author"
+              - column:
+                  name: task_id
+                  value: 6
+              - column:
+                  name: user_id
+                  value: 3
+        - insert:
+            tableName: role_entity
+            columns:
+              - column:
+                  name: role_name
+                  value: "customer"
+              - column:
+                  name: task_id
+                  value: 6
+              - column:
+                  name: user_id
+                  value: 4
+        - insert:
+            tableName: role_entity
+            columns:
+              - column:
+                  name: role_name
+                  value: "implementer"
+              - column:
+                  name: task_id
+                  value: 6
+              - column:
+                  name: user_id
+                  value: 5
+        - insert:
+            tableName: role_entity
+            columns:
+              - column:
+                  name: role_name
+                  value: "author"
+              - column:
+                  name: task_id
+                  value: 7
+              - column:
+                  name: user_id
+                  value: 3
+        - insert:
+            tableName: role_entity
+            columns:
+              - column:
+                  name: role_name
+                  value: "customer"
+              - column:
+                  name: task_id
+                  value: 7
+              - column:
+                  name: user_id
+                  value: 4
+        - insert:
+            tableName: role_entity
+            columns:
+              - column:
+                  name: role_name
+                  value: "implementer"
+              - column:
+                  name: task_id
+                  value: 7
+              - column:
+                  name: user_id
+                  value: 5
+        - insert:
+            tableName: role_entity
+            columns:
+              - column:
+                  name: role_name
+                  value: "author"
+              - column:
+                  name: task_id
+                  value: 8
+              - column:
+                  name: user_id
+                  value: 3
+        - insert:
+            tableName: role_entity
+            columns:
+              - column:
+                  name: role_name
+                  value: "customer"
+              - column:
+                  name: task_id
+                  value: 8
+              - column:
+                  name: user_id
+                  value: 4
+        - insert:
+            tableName: role_entity
+            columns:
+              - column:
+                  name: role_name
+                  value: "implementer"
+              - column:
+                  name: task_id
+                  value: 8
+              - column:
+                  name: user_id
+                  value: 5
+      rollback:
+        - delete:
+            tableName: role_entity
+            where: username in ('Implementation', 'Testing')
