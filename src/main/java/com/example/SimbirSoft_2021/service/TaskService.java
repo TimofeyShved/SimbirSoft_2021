@@ -105,6 +105,57 @@ public class TaskService implements StandartServiceInterface<TaskDto>, TaskServi
 
     // ----------------------------------------------------------------------------------------------------------------------------------------
     @Transactional
+    @Override // ----------------- вытащить задачи по статусу и проекту
+    public List<TaskDto> getAllByStatus(Long projectId, String status) throws TaskNotFoundException {
+        List<TaskEntity> taskEntityList = taskCrud.findAll();
+
+        //  проверка на то что задачи вообще существуют
+        if (taskEntityList==null){
+            throw new TaskNotFoundException();
+        }
+
+        // перевод коллекции из одного вида в другой
+        List<TaskDto> taskDtoList = new ArrayList<>();
+
+        //  вытаскиваем по одной задачи == статусу, и сохраняем в коллекцию
+        for (TaskEntity e:taskEntityList){
+            if ((e.getProjectId() == projectId)||(projectId==null)){ //  проверка
+                if (e.getTaskStatus().toString().equals(status)){ //  проверка
+                    taskDtoList.add(TaskMapper.INSTANCE.toDto(e));
+                }
+            }
+        }
+
+        return taskDtoList;
+    }
+
+    // ----------------------------------------------------------------------------------------------------------------------------------------
+    @Transactional
+    @Override // ----------------- вытащить количество задач по статусу и проекту
+    public Long getCountByStatus(Long projectId, String status) throws TaskNotFoundException {
+        List<TaskEntity> taskEntityList = taskCrud.findAll();
+
+        //  проверка на то что задачи вообще существуют
+        if (taskEntityList==null){
+            throw new TaskNotFoundException();
+        }
+
+        Long countTask = 0L;
+
+        //  вытаскиваем по одной задачи == статусу, и сохраняем в коллекцию
+        for (TaskEntity e:taskEntityList){
+            if ((e.getProjectId() == projectId)||(projectId==null)){ //  проверка
+                if (e.getTaskStatus().toString().equals(status)){ //  проверка
+                    countTask++;
+                }
+            }
+        }
+
+        return countTask;
+    }
+
+    // ----------------------------------------------------------------------------------------------------------------------------------------
+    @Transactional
     @Override // --------------- поиск по реализации
     public TaskDto findByReleaseId(Long releaseId) {
         TaskEntity taskEntity = taskCrud.findByReleaseId(releaseId);
@@ -211,5 +262,4 @@ public class TaskService implements StandartServiceInterface<TaskDto>, TaskServi
         taskCrud.save(taskEntity);
         return TaskMapper.INSTANCE.toDto(taskEntity);
     }
-
 }

@@ -65,6 +65,50 @@ public class TaskController {
         }
     }
 
+    @Operation(summary = "Получить список задач по статусу")
+    @RequestMapping(value = "/task/status", method = RequestMethod.GET) // взять
+    @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity getOneByStatus(@Validated @RequestBody String status) throws Exception {
+        try {
+            return ResponseEntity.ok(taskService.getAllByStatus(null, status));
+        }catch (Exception e){
+            return  ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @Operation(summary = "Получить список задач по статусу и проекту")
+    @RequestMapping(value = "/task/status/{projectId}", method = RequestMethod.GET) // взять
+    @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity getOneByStatusAndProject(@Validated @PathVariable Long projectId, @Validated @RequestBody String status) throws Exception {
+        try {
+            return ResponseEntity.ok(taskService.getAllByStatus(projectId, status));
+        }catch (Exception e){
+            return  ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @Operation(summary = "Получить количество задач по статусу")
+    @RequestMapping(value = "/task/status/count", method = RequestMethod.GET) // взять
+    @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity getCountByStatus(@Validated @RequestBody String status) throws Exception {
+        try {
+            return ResponseEntity.ok(taskService.getCountByStatus(null, status));
+        }catch (Exception e){
+            return  ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @Operation(summary = "Получить количество задач по статусу и проекту")
+    @RequestMapping(value = "/task/status/count/{projectId}", method = RequestMethod.GET) // взять
+    @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity getCountByStatusAndProject(@Validated @PathVariable Long projectId, @Validated @RequestBody String status) throws Exception {
+        try {
+            return ResponseEntity.ok(taskService.getCountByStatus(projectId, status));
+        }catch (Exception e){
+            return  ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @Operation(summary = "Удалить выбранную задачу")
     @RequestMapping(value = "/task/{taskId}", method = RequestMethod.DELETE) // удалить
     @DeleteMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

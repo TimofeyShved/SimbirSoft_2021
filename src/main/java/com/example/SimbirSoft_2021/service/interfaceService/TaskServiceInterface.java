@@ -11,4 +11,6 @@ public interface TaskServiceInterface {
     public TaskDto findByReleaseId(Long releaseId) throws TaskNotFoundException;
     public boolean deleteTaskByProjectId(Long projectId) throws TaskNotFoundException, ReleaseNotFoundException, RoleNotFoundException;
     public boolean deleteReleaseInTask(Long id);
+    public List<TaskDto> getAllByStatus(Long projectId, String status) throws TaskNotFoundException;
+    public Long getCountByStatus(Long projectId, String status) throws TaskNotFoundException;
 }
