@@ -1,6 +1,9 @@
 package com.example.SimbirSoft_2021.entity;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name="user_entity")
@@ -20,6 +23,9 @@ public class UserEntity { // ----------------------------------------------- н�
 
     @Column(name = "patronymic")
     private String patronymic;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
+    private List<RoleEntity> roleEntities;
 
     public UserEntity(){ // конструктор
     }

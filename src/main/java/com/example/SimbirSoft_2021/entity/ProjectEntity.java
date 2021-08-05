@@ -1,5 +1,9 @@
 package com.example.SimbirSoft_2021.entity;
 
+import com.example.SimbirSoft_2021.enumertion.StatusEnum;
+import com.example.SimbirSoft_2021.exception.StatusEnumException;
+import com.example.SimbirSoft_2021.exception.TaskNotFoundException;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -17,13 +21,14 @@ public class ProjectEntity { // ----------------------------------------------- 
     private String projectName;
 
     @Column(name = "project_status")
-    private String projectStatus;
+    @Enumerated(EnumType.STRING)
+    private StatusEnum projectStatus;
 
     @Column(name = "release_id")
     private Long releaseId;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "projectId")
-    private List<BoardEntity> board;
+    private List<TaskEntity> taskEntities;
 
     public ProjectEntity(){ // конструктор
     }
@@ -47,12 +52,16 @@ public class ProjectEntity { // ----------------------------------------------- 
         this.projectName = projectName;
     }
 
-    public String getProjectStatus() {
+    public StatusEnum getProjectStatus() {
         return projectStatus;
     }
 
-    public void setProjectStatus(String projectStatus) {
-        this.projectStatus = projectStatus;
+    public void setProjectStatus(StatusEnum projectStatus) throws StatusEnumException {
+        try {
+            this.projectStatus = projectStatus;
+        }catch (Exception e){
+            throw new StatusEnumException();
+        }
     }
 
     public Long getReleaseId() {
@@ -63,11 +72,11 @@ public class ProjectEntity { // ----------------------------------------------- 
         this.releaseId = releaseId;
     }
 
-    public List<BoardEntity> getBoard() {
-        return board;
+    public List<TaskEntity> getTaskEntities() {
+        return taskEntities;
     }
 
-    public void setBoard(List<BoardEntity> board) {
-        this.board = board;
+    public void setTaskEntities(List<TaskEntity> taskEntities) {
+        this.taskEntities = taskEntities;
     }
 }

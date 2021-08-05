@@ -1,5 +1,11 @@
 databaseChangeLog:
   - include:
-      file: db/changelog/db.changelog-user.yaml
+      file: db/changelog/CreateDataBase/db.changelog-CreateRelease.yaml
   - include:
-      file: db/changelog/db.changelog-project.yaml
+      file: db/changelog/CreateDataBase/db.changelog-CreateProject.yaml
+  - include:
+      file: db/changelog/CreateDataBase/db.changelog-CreateTask.yaml
+  - include:
+      file: db/changelog/CreateDataBase/db.changelog-CreateUser.yaml
+  - include:
+      file: db/changelog/CreateDataBase/db.changelog-CreateRole.yaml

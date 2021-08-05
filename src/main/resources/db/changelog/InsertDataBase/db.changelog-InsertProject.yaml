@@ -1,28 +1,5 @@
 databaseChangeLog:
-  - logicalFilePath: db/changelog/db.changelog-project.yaml
-  - changeSet:
-      id: 3
-      author: your_liquibase_username
-      changes:
-        - createTable:
-            tableName: project_entity
-            columns:
-              - column:
-                  name: project_id
-                  type: INT
-                  autoIncrement: true
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-              - column:
-                  name: project_name
-                  type: varchar(50)
-              - column:
-                  name: project_status
-                  type: varchar(50)
-              - column:
-                  name: release_id
-                  type: INT
+  - logicalFilePath: db/changelog/InsertDataBase/db.changelog-InsertProject.yaml
   - changeSet:
       id: 4
       author: your_liquibase_username
@@ -39,7 +16,7 @@ databaseChangeLog:
                   value: "BACKLOG"
               - column:
                   name: release_id
-                  value: 4
+                  value: 1
         - insert:
             tableName: project_entity
             columns:
@@ -51,7 +28,7 @@ databaseChangeLog:
                   value: "IN_PROGRESS"
               - column:
                   name: release_id
-                  value: 5
+                  value: 2
         - insert:
             tableName: project_entity
             columns:
@@ -63,7 +40,7 @@ databaseChangeLog:
                   value: "DONE"
               - column:
                   name: release_id
-                  value: 6
+                  value: 11
       rollback:
         - delete:
             tableName: project_entity

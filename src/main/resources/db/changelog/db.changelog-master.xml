@@ -7,11 +7,17 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.2.xsd
             http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.2.xsd">
 
-    <include file="db/changelog/db.changelog-user.yaml" />
-    <include file="db/changelog/db.changelog-project.yaml" />
-    <include file="db/changelog/db.changelog-board.yaml" />
-    <include file="db/changelog/db.changelog-task.yaml" />
-    <include file="db/changelog/db.changelog-role.yaml" />
-    <include file="db/changelog/db.changelog-release.yaml" />
+    <include file="db/changelog/CreateDataBase/db.changelog-CreateRelease.yaml" />
+    <include file="db/changelog/CreateDataBase/db.changelog-CreateProject.yaml" />
+    <include file="db/changelog/CreateDataBase/db.changelog-CreateTask.yaml" />
+    <include file="db/changelog/CreateDataBase/db.changelog-CreateUser.yaml" />
+    <include file="db/changelog/CreateDataBase/db.changelog-CreateRole.yaml" />
+
+    <include file="db/changelog/InsertDataBase/db.changelog-InsertRelease.yaml" />
+    <include file="db/changelog/InsertDataBase/db.changelog-InsertProject.yaml" />
+    <include file="db/changelog/InsertDataBase/db.changelog-InsertTask.yaml" />
+    <include file="db/changelog/InsertDataBase/db.changelog-InsertUser.yaml" />
+    <include file="db/changelog/InsertDataBase/db.changelog-InsertRole.yaml" />
+
 
 </databaseChangeLog>

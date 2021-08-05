@@ -1,72 +1,86 @@
 package com.example.SimbirSoft_2021.controller;
 
-import com.example.SimbirSoft_2021.entity.UserEntity;
-import com.example.SimbirSoft_2021.exception.UserNotFoundException;
-import com.example.SimbirSoft_2021.repository.UserCRUD;
+import com.example.SimbirSoft_2021.Dto.UserDto;
 import com.example.SimbirSoft_2021.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-@RestController             // так как порт 8080 был занят, я его поменял на http://localhost:8070/user/ ------- не знаю, как у вас там всё устроено ¯\_(ツ)_/¯
-@RequestMapping
+
+// так как порт 8080 был занят, я его поменял на http://localhost:8070/user/ ------- не знаю, как у вас там всё устроено ¯\_(ツ)_/¯
+// 1 способ
+//@RequiredArgsConstructor
+@Tag(name = "Управление людьми")
+@RequestMapping("/control")
+@RestController
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    // 2 способ
+    //@Autowired
+    //private UserService userService;
 
-    @Autowired
-    private UserCRUD userCRUD; // создаём интерфейс для взаимодействия с бд
+    private final UserService userService;
 
-    @PostMapping("/user") // создать
-    public ResponseEntity registration(@RequestBody UserEntity userEntity) throws Exception {
+    // 3 способ
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
+    @Operation(summary = "Добавить человека")
+    @RequestMapping(value = "/user", method = RequestMethod.POST) // создать
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity registration(@Validated @RequestBody UserDto userDto) throws Exception {
         try {
-            userService.registration(userEntity);
-            return ResponseEntity.ok(userEntity);
-        } catch (Exception e){
-            return  ResponseEntity.badRequest().body("code: USER_EXISTS");
+            return ResponseEntity.ok(userService.registration(userDto));
+        }catch (Exception e){
+            return  ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @GetMapping("/users") // взять
+    @Operation(summary = "Получить список людей")
+    @RequestMapping(value = "/users", method = RequestMethod.GET) // взять
+    @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getUsers(){
         try {
-            return ResponseEntity.ok(userCRUD.findAll());
+            return ResponseEntity.ok(userService.getAll());
         }catch (Exception e){
-            return  ResponseEntity.badRequest().body("code: USER_NOT_FOUND");
+            return  ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @GetMapping("/user/{userId}") // взять
-    public ResponseEntity getOne(@PathVariable Long userId) throws Exception {
+    @Operation(summary = "Получить выбранного человека")
+    @RequestMapping(value = "/user/{userId}", method = RequestMethod.GET) // взять
+    @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity getOne(@Validated @PathVariable Long userId) throws Exception {
         try {
             return ResponseEntity.ok(userService.getOne(userId));
-        }catch (UserNotFoundException e){
-            return  ResponseEntity.badRequest().body(e.getMessage());
         }catch (Exception e){
-            return  ResponseEntity.badRequest().body("code: ERROR");
+            return  ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @DeleteMapping("/user/{userId}") // удалить
-    public ResponseEntity deleteOne(@PathVariable Long userId) throws Exception {
+    @Operation(summary = "Удалить выбранного человека")
+    @RequestMapping(value = "/user/{userId}", method = RequestMethod.DELETE) // удалить
+    @DeleteMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity deleteOne(@Validated @PathVariable Long userId) throws Exception {
         try {
             return ResponseEntity.ok(userService.deleteOne(userId));
-        }catch (UserNotFoundException e){
-            return  ResponseEntity.badRequest().body(e.getMessage());
         }catch (Exception e){
-            return  ResponseEntity.badRequest().body("code: ERROR");
+            return  ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @PutMapping("/user/{userId}") // обновить
-    public ResponseEntity updateOne(@PathVariable Long userId, @RequestBody UserEntity userEntity) throws Exception {
+    @Operation(summary = "Обновить данные выбранного человека")
+    @RequestMapping(value = "/user/{userId}", method = RequestMethod.PUT) // обновить
+    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity updateOne(@Validated @PathVariable Long userId, @Validated @RequestBody UserDto userDto) throws Exception {
         try {
-            return ResponseEntity.ok(userService.updateOne(userId, userEntity));
-        }catch (UserNotFoundException e){
-            return  ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.ok(userService.updateOne(userId, userDto));
         }catch (Exception e){
-            return  ResponseEntity.badRequest().body("code: ERROR");
+            return  ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }
