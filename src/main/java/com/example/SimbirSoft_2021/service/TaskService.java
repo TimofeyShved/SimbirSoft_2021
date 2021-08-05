@@ -114,7 +114,6 @@ public class TaskService implements StandartServiceInterface<TaskDto>, TaskServi
             throw new TaskNotFoundException();
         }
 
-        // перевод коллекции из одного вида в другой
         List<TaskDto> taskDtoList = new ArrayList<>();
 
         //  вытаскиваем по одной задачи == статусу, и сохраняем в коллекцию

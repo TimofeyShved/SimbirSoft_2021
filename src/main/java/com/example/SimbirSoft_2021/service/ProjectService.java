@@ -1,8 +1,10 @@
 package com.example.SimbirSoft_2021.service;
 
 import com.example.SimbirSoft_2021.Dto.ProjectDto;
+import com.example.SimbirSoft_2021.Dto.TaskDto;
 import com.example.SimbirSoft_2021.entity.ProjectEntity;
 import com.example.SimbirSoft_2021.entity.ReleaseEntity;
+import com.example.SimbirSoft_2021.entity.TaskEntity;
 import com.example.SimbirSoft_2021.exception.*;
 import com.example.SimbirSoft_2021.mappers.ProjectMapper;
 import com.example.SimbirSoft_2021.repository.ProjectCrud;
@@ -98,6 +100,52 @@ public class ProjectService implements StandartServiceInterface<ProjectDto>, Pro
 
     // ----------------------------------------------------------------------------------------------------------------------------------------
     @Transactional
+    @Override // ----------------- вытащить все проекты по статусу
+    public List<ProjectDto> getAllByStatus(String status) throws ProjectNotFoundException {
+        List<ProjectEntity> projectEntityList = projectCrud.findAll();
+
+        //  проверка на то что проекты вообще существуют
+        if (projectEntityList==null){
+            throw new ProjectNotFoundException();
+        }
+
+        List<ProjectDto> projectDtoList = new ArrayList<>();
+
+        //  вытаскиваем один проект == статусу, и сохраняем в коллекцию
+        for (ProjectEntity e:projectEntityList){
+            if (e.getProjectStatus().toString().equals(status)){ //  проверка
+                projectDtoList.add(ProjectMapper.INSTANCE.toDto(e));
+            }
+        }
+
+        return projectDtoList;
+    }
+
+    // ----------------------------------------------------------------------------------------------------------------------------------------
+    @Transactional
+    @Override // ----------------- вытащить количество проектов по статусу
+    public Long getCountByStatus(String status) throws ProjectNotFoundException {
+        List<ProjectEntity> projectEntityList = projectCrud.findAll();
+
+        //  проверка на то что проекты вообще существуют
+        if (projectEntityList==null){
+            throw new ProjectNotFoundException();
+        }
+
+        Long projectCount = 0L;
+
+        //  вытаскиваем один проект == статусу, и сохраняем в коллекцию
+        for (ProjectEntity e:projectEntityList){
+            if (e.getProjectStatus().toString().equals(status)){ //  проверка
+                projectCount++;
+            }
+        }
+
+        return projectCount;
+    }
+
+    // ----------------------------------------------------------------------------------------------------------------------------------------
+    @Transactional
     @Override // --------------- поиск по реализации
     public ProjectDto findByReleaseId(Long releaseId) {
         ProjectEntity projectEntity = projectCrud.findByReleaseId(releaseId);
@@ -185,5 +233,4 @@ public class ProjectService implements StandartServiceInterface<ProjectDto>, Pro
         projectCrud.save(projectEntity);
         return ProjectMapper.INSTANCE.toDto(projectEntity);
     }
-
 }

@@ -64,6 +64,29 @@ public class ProjectController {
         }
     }
 
+    @Operation(summary = "Получить список проектов по статусу")
+    @RequestMapping(value = "/project/status", method = RequestMethod.GET) // взять
+    @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity getOneByStatus(@Validated @RequestBody String status) throws Exception {
+        try {
+            return ResponseEntity.ok(projectService.getAllByStatus(status));
+        }catch (Exception e){
+            return  ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+
+    @Operation(summary = "Получить количество проектов по статусу")
+    @RequestMapping(value = "/project/status/count", method = RequestMethod.GET) // взять
+    @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity getCountByStatus(@Validated @RequestBody String status) throws Exception {
+        try {
+            return ResponseEntity.ok(projectService.getCountByStatus(status));
+        }catch (Exception e){
+            return  ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @Operation(summary = "Удалить выбранный проект")
     @RequestMapping(value = "/project/{projectId}", method = RequestMethod.DELETE) // удалить
     @DeleteMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
