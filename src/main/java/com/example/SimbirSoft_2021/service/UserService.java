@@ -57,7 +57,7 @@ public class UserService implements StandartServiceInterface<UserDto>, UserServi
      * Это основной метод регистрации, из стандартного интерфейса
      * использующий метод registration.
      * Основная задача которой сохранить нового пользователя в бд.
-     * @param userDto Это первый и единственный параметр метода getOne, который обозначает данные пользователя.
+     * @param userDto Это первый и единственный параметр метода registration, который обозначает данные пользователя.
      * @return UserDto Вернёт пользователя.
      * @exception UserExistsException При ошибке если такая реализация существует.
      */

@@ -14,6 +14,30 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * <h1> Ролевой сервис - (RoleService) </h1>
+ * Данный класс реализует запросы, которые
+ * приходят в контроллер ролей (RoleController),
+ * результат он возвращаяет обратно.
+ * <p>
+ * <b>Примечание:</b>
+ * В данном классе можно конструтор, организовать 3
+ * разными способами.
+ * А так же он использует свой интерфейс:
+ * удалить все роли связанные с задачами (deleteByTaskId),
+ * удалить все роли связанные с человеком (deleteByUserId).
+ * И стандартный для этого проекта, а это:
+ * регистрация (registration),
+ * вытащить всё (getAll),
+ * вытащить одно (getOne),
+ * удалить одно (deleteOne),
+ * обновить одно (updateOne).
+ *
+ * @автор  Швед Т.Ю.
+ * @версия 0.4
+ * @от   2021-08-13
+ */
+
 // 1 способ
 //@RequiredArgsConstructor
 @Service
@@ -28,16 +52,24 @@ public class RoleService implements StandartServiceInterface<RoleDto>, RoleServi
     private final TaskCrud taskCrud;
 
     // 3 способ
-
     public RoleService(RoleCrud roleCrud, UserCrud userCrud, TaskCrud taskCrud) {
         this.roleCrud = roleCrud;
         this.userCrud = userCrud;
         this.taskCrud = taskCrud;
     }
 
-    // ----------------------------------------------------------------------------------------------------------------------------------------
+    /**
+     * Это основной метод регистрации, из стандартного интерфейса
+     * использующий метод registration.
+     * Основная задача которой сохранить новоую роль в бд.
+     * @param roleDto Это первый и единственный параметр метода registration, который обозначает данные роли.
+     * @return RoleDto Вернёт роль.
+     * @throws RoleExistsException При ошибке если такая реализация существует.
+     * @throws TaskNotFoundException При ошибке если такая задача вообще не существует.
+     * @throws UserNotFoundException При ошибке если такой пользователь вообще не существует.
+     */
     @Transactional
-    @Override // ----------------- регистрация
+    @Override
     public RoleDto registration(RoleDto roleDto) throws RoleExistsException, TaskNotFoundException, UserNotFoundException {
 
         //  проверка
@@ -57,9 +89,16 @@ public class RoleService implements StandartServiceInterface<RoleDto>, RoleServi
         return RoleMapper.INSTANCE.toDto(roleEntity);
     }
 
-    // ----------------------------------------------------------------------------------------------------------------------------------------
+    /**
+     * Это основной метод вытащить всё, из стандартного интерфейса
+     * использующий метод getAll.
+     * Основная задача которой вытащить все роли из бд.
+     * @param () Не используется.
+     * @return List<RoleDto> Вернёт коллекцию ролей.
+     * @throws RoleNotFoundException При ошибке если такая реализация вообще не существует.
+     */
     @Transactional
-    @Override // ----------------- вытащить все роли
+    @Override
     public List<RoleDto> getAll() throws RoleNotFoundException {
         List<RoleEntity> roleEntityList = roleCrud.findAll();
 
@@ -74,9 +113,16 @@ public class RoleService implements StandartServiceInterface<RoleDto>, RoleServi
         return roleDtoList;
     }
 
-    // ----------------------------------------------------------------------------------------------------------------------------------------
+    /**
+     * Это основной метод вытащить одну роль, из стандартного интерфейса
+     * использующий метод getOne.
+     * Основная задача которой вытащить одну роль из бд.
+     * @param id Это первый и единственный параметр метода getOne, который обозначает номер роли в бд.
+     * @return RoleDto Вернёт роль.
+     * @throws RoleNotFoundException При ошибке если такая реализация вообще не существует.
+     */
     @Transactional
-    @Override  // ----------------- вытащить одну роль
+    @Override
     public RoleDto getOne(Long id) throws RoleNotFoundException {
         RoleEntity roleEntity = roleCrud.findByRoleId(id);
 
@@ -88,9 +134,16 @@ public class RoleService implements StandartServiceInterface<RoleDto>, RoleServi
         return RoleMapper.INSTANCE.toDto(roleEntity);
     }
 
-    // ----------------------------------------------------------------------------------------------------------------------------------------
+    /**
+     * Это основной метод удаления одной роли, из стандартного интерфейса
+     * использующий метод deleteOne.
+     * Основная задача которой удалить одну роль из бд.
+     * @param id Это первый и единственный параметр метода getOne, который обозначает номер роли в бд.
+     * @return Long Номер роли.
+     * @throws RoleNotFoundException При ошибке если такая реализация вообще не существует.
+     */
     @Transactional
-    @Override // ----------------- удалить одну роль
+    @Override
     public Long deleteOne(Long id) throws RoleNotFoundException {
 
         //  проверка на то что роль вообще существуют
@@ -102,9 +155,16 @@ public class RoleService implements StandartServiceInterface<RoleDto>, RoleServi
         return id;
     }
 
-    // ----------------------------------------------------------------------------------------------------------------------------------------
+    /**
+     * Это дополнительный метод удаления роли связанную с задачами, из личного интерфейса
+     * использующий метод deleteByTaskId.
+     * Основная задача которой удалить все роли связанные с задачами из бд.
+     * @param taskId Это первый и единственный параметр метода getOne, который обозначает номер задачи в роли в бд.
+     * @return List<RoleDto> Вернёт коллекцию ролей.
+     * @throws RoleNotFoundException При ошибке если такая реализация вообще не существует.
+     */
     @Transactional
-    @Override // ----------------- удалить роли связанные с задачами
+    @Override
     public List<RoleDto> deleteByTaskId(Long taskId) throws RoleNotFoundException {
         List<RoleEntity> roleEntityList = roleCrud.findAll();
 
@@ -126,9 +186,16 @@ public class RoleService implements StandartServiceInterface<RoleDto>, RoleServi
         return roleDtoList;
     }
 
-    // ----------------------------------------------------------------------------------------------------------------------------------------
+    /**
+     * Это дополнительный метод удаления роли связанную с человеком, из личного интерфейса
+     * использующий метод deleteByTaskId.
+     * Основная задача которой удалить все роли связанные с человеком из бд.
+     * @param userId Это первый и единственный параметр метода deleteByUserId, который обозначает номер человека в роли в бд.
+     * @return List<RoleDto> Вернёт коллекцию ролей.
+     * @throws RoleNotFoundException При ошибке если такая реализация вообще не существует.
+     */
     @Transactional
-    @Override // ----------------- удалить роли связанные с человеком
+    @Override
     public List<RoleDto> deleteByUserId(Long userId) throws RoleNotFoundException {
         List<RoleEntity> roleEntityList = roleCrud.findAll();
 
@@ -150,9 +217,20 @@ public class RoleService implements StandartServiceInterface<RoleDto>, RoleServi
         return roleDtoList;
     }
 
-    // ----------------------------------------------------------------------------------------------------------------------------------------
+    /**
+     * Это основной метод обновить одну роль, из стандартного интерфейса
+     * использующий метод updateOne.
+     * Основная задача которой обновить одну роль в бд.
+     * @param id Это первый параметр метода updateOne, который обозначает номер роли в бд.
+     * @param roleDto Это второй параметр метода updateOne, который обозначает данные роли.
+     * @return RoleDto Вернёт роль.
+     * @throws RoleNotFoundException При ошибке если такая реализация вообще не существует.
+     * @throws RoleExistsException При ошибке если такая реализация существует.
+     * @throws TaskNotFoundException При ошибке если такая задача вообще не существует.
+     * @throws UserNotFoundException При ошибке если такой пользователь вообще не существует.
+     */
     @Transactional
-    @Override // ----------------- обновить одну роль
+    @Override
     public RoleDto updateOne(Long id, RoleDto roleDto) throws RoleNotFoundException, RoleExistsException, TaskNotFoundException, UserNotFoundException {
 
         //  проверка на то что роль вообще существуют
