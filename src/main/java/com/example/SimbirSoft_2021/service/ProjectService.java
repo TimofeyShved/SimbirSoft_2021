@@ -18,6 +18,32 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+/**
+ * <h1> Сервис проектов - (ProjectService) </h1>
+ * Данный класс реализует запросы, которые
+ * приходят в контроллер пользователей (ProjectController),
+ * результат он возвращаяет обратно.
+ * <p>
+ * <b>Примечание:</b>
+ * В данном классе можно конструтор, организовать 3
+ * разными способами.
+ * А так же он использует свой интерфейс:
+ * вытащить все проекты по статусу (getAllByStatus),
+ * вытащить количество проектов по статусу (getCountByStatus),
+ * поискать проект по реализации (findByReleaseId),
+ * удалить реализацию связанную с проектом (deleteReleaseInProject).
+ * И стандартный для этого проекта, а это:
+ * регистрация (registration),
+ * вытащить всё (getAll),
+ * вытащить одно (getOne),
+ * удалить одно (deleteOne),
+ * обновить одно (updateOne).
+ *
+ * @автор  Швед Т.Ю.
+ * @версия 0.4
+ * @от   2021-08-13
+ */
+
 // 1 способ
 //@RequiredArgsConstructor
 @Service
@@ -40,10 +66,22 @@ public class ProjectService implements StandartServiceInterface<ProjectDto>, Pro
         this.taskService = taskService;
     }
 
-    // ----------------------------------------------------------------------------------------------------------------------------------------
+    /**
+     * Это основной метод регистрации, из стандартного интерфейса
+     * использующий метод registration.
+     * Основная задача которой сохранить новый проект в бд.
+     * @param projectDto Это первый и единственный параметр метода registration, который обозначает данные проекта.
+     * @return ProjectDto Вернёт проект.
+     * @throws ProjectExistsException При ошибке если такая реализация проекта уже существует.
+     * @throws ReleaseNotFoundException При ошибке если такая реализация даты/времени ещё не существует.
+     * @throws ProjectAndDateTimeExistsException При ошибке если такая реализация даты/времени среди проектов уже существует.
+     * @throws TaskAndDateTimeExistsException При ошибке если такая реализация даты/времени среди задач уже существует.
+     * @throws StatusEnumException При ошибке если такой статус проекта не существует.
+     */
     @Transactional
-    @Override // ----------------- регистрация
-    public ProjectDto registration(ProjectDto projectDto) throws ProjectExistsException, ReleaseNotFoundException, ProjectAndDateTimeExistsException, TaskAndDateTimeExistsException, TaskNotFoundException, StatusEnumException {
+    @Override
+    public ProjectDto registration(ProjectDto projectDto) throws ProjectExistsException, ReleaseNotFoundException, ProjectAndDateTimeExistsException,
+            TaskAndDateTimeExistsException, StatusEnumException {
         ProjectEntity projectEntity = ProjectMapper.INSTANCE.toEntity(projectDto);
 
         //  проверка
@@ -65,9 +103,16 @@ public class ProjectService implements StandartServiceInterface<ProjectDto>, Pro
         return ProjectMapper.INSTANCE.toDto(projectEntity);
     }
 
-    // ----------------------------------------------------------------------------------------------------------------------------------------
+    /**
+     * Это основной метод вытащить всё, из стандартного интерфейса
+     * использующий метод getAll.
+     * Основная задача которой вытащить все проекты из бд.
+     * @param () Не используется.
+     * @return List<ProjectDto> Вернёт список проектов.
+     * @throws ProjectNotFoundException При ошибке если проектов ещё не существует.
+     */
     @Transactional
-    @Override // ----------------- вытащить все проекты
+    @Override
     public List<ProjectDto> getAll() throws ProjectNotFoundException {
         List<ProjectEntity> projectEntityList = projectCrud.findAll();
 
@@ -82,9 +127,16 @@ public class ProjectService implements StandartServiceInterface<ProjectDto>, Pro
         return projectDtoList;
     }
 
-    // ----------------------------------------------------------------------------------------------------------------------------------------
+    /**
+     * Это основной метод вытащить один проект, из стандартного интерфейса
+     * использующий метод getOne.
+     * Основная задача которой вытащить один проект из бд.
+     * @param id Это первый и единственный параметр метода getOne, который обозначает номер проекта в бд.
+     * @return ProjectDto Вернёт проект.
+     * @throws ProjectNotFoundException При ошибке если проектов ещё не существует.
+     */
     @Transactional
-    @Override // ----------------- вытащить один проект
+    @Override
     public ProjectDto getOne(Long id) throws ProjectNotFoundException {
         ProjectEntity projectEntity = projectCrud.findByProjectId(id);
 
@@ -96,9 +148,17 @@ public class ProjectService implements StandartServiceInterface<ProjectDto>, Pro
         return ProjectMapper.INSTANCE.toDto(projectEntity);
     }
 
-    // ----------------------------------------------------------------------------------------------------------------------------------------
+    /**
+     * Это дополнительный метод, что-бы
+     * вытащить все проекты по статусу, из личного интерфейса
+     * использующий метод getAllByStatus.
+     * Основная задача которой вытащить все проекты по статусу из бд.
+     * @param status Это первый и единственный параметр метода getAllByStatus, который обозначает статус проекта в бд.
+     * @return List<ProjectDto> Вернёт список проектов.
+     * @throws ProjectNotFoundException При ошибке если проектов ещё не существует.
+     */
     @Transactional
-    @Override // ----------------- вытащить все проекты по статусу
+    @Override
     public List<ProjectDto> getAllByStatus(String status) throws ProjectNotFoundException {
         List<ProjectEntity> projectEntityList = projectCrud.findAll();
 
@@ -119,9 +179,17 @@ public class ProjectService implements StandartServiceInterface<ProjectDto>, Pro
         return projectDtoList;
     }
 
-    // ----------------------------------------------------------------------------------------------------------------------------------------
+    /**
+     * Это дополнительный метод, что-бы
+     * вытащить количество проектов по статусу, из личного интерфейса
+     * использующий метод getCountByStatus.
+     * Основная задача которой вытащить все проекты по статусу из бд.
+     * @param status Это первый и единственный параметр метода getAllByStatus, который обозначает статус проекта в бд.
+     * @return Long Вернёт количество проектов.
+     * @throws ProjectNotFoundException При ошибке если проектов ещё не существует.
+     */
     @Transactional
-    @Override // ----------------- вытащить количество проектов по статусу
+    @Override
     public Long getCountByStatus(String status) throws ProjectNotFoundException {
         List<ProjectEntity> projectEntityList = projectCrud.findAll();
 
@@ -142,9 +210,16 @@ public class ProjectService implements StandartServiceInterface<ProjectDto>, Pro
         return projectCount;
     }
 
-    // ----------------------------------------------------------------------------------------------------------------------------------------
+    /**
+     * Это дополнительный метод, что-бы
+     * поискать проект по реализации, из личного интерфейса
+     * использующий метод findByReleaseId.
+     * Основная задача которой поиск по реализации из бд.
+     * @param releaseId Это первый и единственный параметр метода findByReleaseId, который обозначает номер проекта в бд.
+     * @return ProjectDto Вернёт проект.
+     */
     @Transactional
-    @Override // --------------- поиск по реализации
+    @Override
     public ProjectDto findByReleaseId(Long releaseId) {
         ProjectEntity projectEntity = projectCrud.findByReleaseId(releaseId);
 
@@ -156,9 +231,19 @@ public class ProjectService implements StandartServiceInterface<ProjectDto>, Pro
         return ProjectMapper.INSTANCE.toDto(projectEntity);
     }
 
-    // ----------------------------------------------------------------------------------------------------------------------------------------
+    /**
+     * Это основной метод удалить одного проекта, из стандартного интерфейса
+     * использующий метод deleteOne.
+     * Основная задача которой удалить один проект из бд.
+     * @param id Это первый и единственный параметр метода deleteOne, который обозначает номер проекта в бд.
+     * @return Long Вернёт номер проекта.
+     * @throws ProjectNotFoundException При ошибке если проектов ещё не существует.
+     * @throws TaskNotFoundException При ошибке если задач ещё не существует.
+     * @throws ReleaseNotFoundException При ошибке если реализации даты/времени ещё не существует.
+     * @throws RoleNotFoundException При ошибке если ролей ещё не существует.
+     */
     @Transactional
-    @Override // ----------------- удалить один проект
+    @Override
     public Long deleteOne(Long id) throws ProjectNotFoundException, TaskNotFoundException, ReleaseNotFoundException, RoleNotFoundException {
         ProjectEntity projectEntity = projectCrud.findByProjectId(id);
 
@@ -177,9 +262,16 @@ public class ProjectService implements StandartServiceInterface<ProjectDto>, Pro
         return id;
     }
 
-    // ----------------------------------------------------------------------------------------------------------------------------------------
+    /**
+     * Это дополнительный метод, что-бы
+     * удалить реализацию связанную с проектом, из личного интерфейса
+     * использующий метод getCountByStatus.
+     * Основная задача которой удалить реализацию связанную с проектом из бд.
+     * @param id Это первый и единственный параметр метода deleteOne, который обозначает номер проекта в бд.
+     * @return boolean Вернёт значение успеха выполения данного действия (логический).
+     */
     @Transactional
-    @Override // ----------------- удалить реализацию связанную с проектом
+    @Override
     public boolean deleteReleaseInProject(Long id) {
         ProjectEntity projectEntity = projectCrud.findByReleaseId(id);
         if(projectEntity!=null){
@@ -189,9 +281,23 @@ public class ProjectService implements StandartServiceInterface<ProjectDto>, Pro
         return true;
     }
 
-    // ----------------------------------------------------------------------------------------------------------------------------------------
+    /**
+     * Это основной метод обновить один проект, из стандартного интерфейса
+     * использующий метод updateOne.
+     * Основная задача которой обновить один проект в бд.
+     * @param id Это первый параметр метода updateOne, который обозначает номер проекта в бд.
+     * @param projectDto Это второй параметр метода updateOne, который обозначает данные проекта.
+     * @return ProjectDto Вернёт проект.
+     * @throws ProjectNotFoundException При ошибке если проектов ещё не существует.
+     * @throws ProjectExistsException При ошибке если такая реализация проекта уже существует.
+     * @throws ReleaseNotFoundException При ошибке если реализации даты/времени ещё не существует.
+     * @throws ProjectAndDateTimeExistsException При ошибке если такая реализация даты/времени среди проектов уже существует.
+     * @throws TaskAndDateTimeExistsException При ошибке если такая реализация даты/времени среди задач уже существует.
+     * @throws TaskNotFoundException При ошибке если задач ещё не существует.
+     * @throws StatusEnumException При ошибке если такой статус проекта не существует.
+     */
     @Transactional
-    @Override // ----------------- обновить один проект
+    @Override
     public ProjectDto updateOne(Long id, ProjectDto projectDto) throws ProjectNotFoundException, ProjectExistsException, ReleaseNotFoundException,
             ProjectAndDateTimeExistsException, TaskAndDateTimeExistsException, TaskNotFoundException, StatusEnumException {
 
