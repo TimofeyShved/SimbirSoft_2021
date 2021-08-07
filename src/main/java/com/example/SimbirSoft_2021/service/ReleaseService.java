@@ -16,6 +16,28 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * <h1> Сервис реализации даты/времени - (ReleaseService) </h1>
+ * Данный класс реализует запросы, которые
+ * приходят в контроллер пользователей (ReleaseController),
+ * результат он возвращаяет обратно.
+ * <p>
+ * <b>Примечание:</b>
+ * В данном классе можно конструтор, организовать 3
+ * разными способами.
+ * А так же он использует свой интерфейс.
+ * И стандартный для этого проекта, а это:
+ * регистрация (registration),
+ * вытащить всё (getAll),
+ * вытащить одно (getOne),
+ * удалить одно (deleteOne),
+ * обновить одно (updateOne).
+ *
+ * @автор  Швед Т.Ю.
+ * @версия 0.4
+ * @от   2021-08-13
+ */
+
 // 1 способ
 //@RequiredArgsConstructor
 @Service
@@ -38,9 +60,17 @@ public class ReleaseService implements StandartServiceInterface<ReleaseDto>, Rel
         this.releaseThread = releaseThread;
     }
 
-    // ----------------------------------------------------------------------------------------------------------------------------------------
+    /**
+     * Это основной метод регистрации, из стандартного интерфейса
+     * использующий метод registration.
+     * Основная задача которой сохранить новую реализацию времени в бд.
+     * @param releaseDto Это первый и единственный параметр метода registration, который обозначает данные реализации времени.
+     * @return ReleaseDto Вернёт реализацию времени.
+     * @throws ReleaseExistsException При ошибке если такая реализация существует.
+     * @throws ReleaseDateFormatException При ошибке если неверный формат даты/времени реализации.
+     */
     @Transactional
-    @Override // ----------------- регистрация
+    @Override
     public ReleaseDto registration(ReleaseDto releaseDto) throws ReleaseExistsException, ReleaseDateFormatException {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // формат времени
         //Calendar cal = Calendar.getInstance(); // вытащить дату из системы
@@ -71,9 +101,16 @@ public class ReleaseService implements StandartServiceInterface<ReleaseDto>, Rel
         return ReleaseMapper.INSTANCE.toDto(releaseEntity);
     }
 
-    // ----------------------------------------------------------------------------------------------------------------------------------------
+    /**
+     * Это основной метод вытащить все реализации времени, из стандартного интерфейса
+     * использующий метод getAll.
+     * Основная задача которой вытащить все реализации времени из бд.
+     * @param () Не используется.
+     * @return List<ReleaseDto> Вернёт список всех реализации времени.
+     * @throws ReleaseNotFoundException При ошибке если такой реализации даты/времени вообще не существуют.
+     */
     @Transactional
-    @Override // ----------------- вытащить все реализации
+    @Override
     public List<ReleaseDto> getAll() throws ReleaseNotFoundException {
         List<ReleaseEntity> releaseEntityList = releaseCrud.findAll();
 
@@ -88,9 +125,16 @@ public class ReleaseService implements StandartServiceInterface<ReleaseDto>, Rel
         return releaseDtoList;
     }
 
-    // ----------------------------------------------------------------------------------------------------------------------------------------
+    /**
+     * Это основной метод вытащить одну реализацию времени, из стандартного интерфейса
+     * использующий метод getOne.
+     * Основная задача которой вытащить одну реализацию времени из бд.
+     * @param id Это первый и единственный параметр метода getOne, который обозначает номер реализации времени.
+     * @return ReleaseDto Вернёт реализацию времени.
+     * @throws ReleaseNotFoundException При ошибке если такой реализации даты/времени вообще не существуют.
+     */
     @Transactional
-    @Override // ----------------- вытащить одну реализацию
+    @Override
     public ReleaseDto getOne(Long id) throws ReleaseNotFoundException {
         ReleaseEntity releaseEntity = releaseCrud.findByReleaseId(id);
 
@@ -102,9 +146,16 @@ public class ReleaseService implements StandartServiceInterface<ReleaseDto>, Rel
         return ReleaseMapper.INSTANCE.toDto(releaseEntity);
     }
 
-    // ----------------------------------------------------------------------------------------------------------------------------------------
+    /**
+     * Это основной метод удалить одну реализацию времени, из стандартного интерфейса
+     * использующий метод deleteOne.
+     * Основная задача которой удалить одну реализацию времени из бд.
+     * @param id Это первый и единственный параметр метода deleteOne, который обозначает номер реализации времени.
+     * @return Long Вернёт номер реализации времени.
+     * @throws ReleaseNotFoundException При ошибке если такой реализации даты/времени вообще не существуют.
+     */
     @Transactional
-    @Override // ----------------- удалить одну реализацию
+    @Override
     public Long deleteOne(Long id) throws ReleaseNotFoundException {
         if (id!=null){
             //  проверка на то что реализации вообще существуют
@@ -118,7 +169,17 @@ public class ReleaseService implements StandartServiceInterface<ReleaseDto>, Rel
         return id;
     }
 
-    // ----------------------------------------------------------------------------------------------------------------------------------------
+    /**
+     * Это основной метод обновить одну реализацию времени, из стандартного интерфейса
+     * использующий метод updateOne.
+     * Основная задача которой обновить одну реализацию времени в бд.
+     * @param id Это первый параметр метода updateOne, который обозначает номер реализации времени в бд.
+     * @param releaseDto Это второй параметр метода updateOne, который обозначает данные реализации времени.
+     * @return ReleaseDto Вернёт реализацию времени.
+     * @throws ReleaseNotFoundException При ошибке если такой реализации даты/времени вообще не существуют.
+     * @throws ReleaseExistsException При ошибке если такая реализация существует.
+     * @throws ReleaseDateFormatException При ошибке если неверный формат даты/времени реализации.
+     */
     @Transactional
     @Override // ----------------- обновить один проект
     public ReleaseDto updateOne(Long id, ReleaseDto releaseDto) throws ReleaseNotFoundException, ReleaseExistsException, ReleaseDateFormatException {
