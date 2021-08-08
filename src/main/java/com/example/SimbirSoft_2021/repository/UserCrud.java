@@ -1,6 +1,7 @@
 package com.example.SimbirSoft_2021.repository;
 
 import com.example.SimbirSoft_2021.entity.UserEntity;
+import liquibase.pro.packaged.S;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -8,4 +9,5 @@ import org.springframework.stereotype.Repository;
 public interface UserCrud extends JpaRepository<UserEntity, Long> {
     UserEntity findByUserId(Long userId);
     UserEntity findByFirstNameAndLastName(String firstName, String lastName);
+    UserEntity findByEmail(String email);
 }

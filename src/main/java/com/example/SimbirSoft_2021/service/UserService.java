@@ -4,6 +4,7 @@ import com.example.SimbirSoft_2021.Dto.UserDto;
 import com.example.SimbirSoft_2021.entity.UserEntity;
 import com.example.SimbirSoft_2021.exception.*;
 import com.example.SimbirSoft_2021.mappers.UserMapper;
+import com.example.SimbirSoft_2021.model.UserModel;
 import com.example.SimbirSoft_2021.repository.UserCrud;
 import com.example.SimbirSoft_2021.service.interfaceService.StandartServiceInterface;
 import com.example.SimbirSoft_2021.service.interfaceService.UserServiceInterface;
@@ -67,7 +68,7 @@ public class UserService implements StandartServiceInterface<UserDto>, UserServi
         UserEntity userEntity = UserMapper.INSTANCE.toEntity(userDto);
 
         //  проверка
-        if ((userCrud.findByFirstNameAndLastName(userEntity.getFirstName(), userEntity.getLastName())!=null)){ // проверить, что есть такая реализация существует
+        if ((userCrud.findByEmail(userEntity.getEmail())!=null)){ // проверить, что есть такая реализация существует
             throw new UserExistsException();
         }
 
@@ -86,7 +87,7 @@ public class UserService implements StandartServiceInterface<UserDto>, UserServi
      */
     @Transactional
     @Override
-    public List<UserDto> getAll() throws UserNotFoundException {
+    public List<UserModel> getAll() throws UserNotFoundException {
         List<UserEntity> userEntityList = userCrud.findAll();
 
         //  проверка на то что люди вообще существуют
@@ -96,8 +97,8 @@ public class UserService implements StandartServiceInterface<UserDto>, UserServi
 
         // перевод коллекции из одного вида в другой
         List<UserDto> userDtoList = userEntityList.stream().map(x-> UserMapper.INSTANCE.toDto(x)).collect(Collectors.toList());
-
-        return userDtoList;
+        List<UserModel> userModelList = userDtoList.stream().map(x->new UserModel(x)).collect(Collectors.toList());
+        return userModelList;
     }
 
     /**
@@ -110,15 +111,16 @@ public class UserService implements StandartServiceInterface<UserDto>, UserServi
      */
     @Transactional
     @Override
-    public UserDto getOne(Long id) throws UserNotFoundException {
+    public UserModel getOne(Long id) throws UserNotFoundException {
         UserEntity userEntity = userCrud.findByUserId(id);
 
         //  проверка на то что человек вообще существуют
         if (userEntity==null){
             throw new UserNotFoundException();
         }
-
-        return UserMapper.INSTANCE.toDto(userEntity);
+        
+        UserModel userModel = new UserModel(UserMapper.INSTANCE.toDto(userEntity));
+        return userModel;
     }
 
     /**
@@ -166,7 +168,7 @@ public class UserService implements StandartServiceInterface<UserDto>, UserServi
         UserEntity userEntity = userCrud.findByUserId(id);
 
         //  проверка
-        if ((userCrud.findByFirstNameAndLastName(userEntityNew.getFirstName(), userEntityNew.getLastName())!=null)){ // проверить, что есть такая реализация существует
+        if ((userCrud.findByEmail(userEntityNew.getEmail())!=null)){ // проверить, что есть такая реализация существует
             throw new UserExistsException();
         }
 
@@ -174,6 +176,8 @@ public class UserService implements StandartServiceInterface<UserDto>, UserServi
         userEntity.setFirstName(userEntityNew.getFirstName());
         userEntity.setLastName(userEntityNew.getLastName());
         userEntity.setPatronymic(userEntityNew.getPatronymic());
+        userEntity.setEmail(userEntityNew.getEmail());
+        userEntity.setPassword(userEntityNew.getPassword());
 
         // сохранение
         userCrud.save(userEntity);
