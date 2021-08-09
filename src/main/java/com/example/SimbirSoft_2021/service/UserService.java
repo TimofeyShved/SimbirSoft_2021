@@ -118,9 +118,15 @@ public class UserService implements StandartServiceInterface<UserDto>, UserServi
         if (userEntity==null){
             throw new UserNotFoundException();
         }
-        
+
         UserModel userModel = new UserModel(UserMapper.INSTANCE.toDto(userEntity));
         return userModel;
+    }
+
+    @Override
+    public UserEntity findByEmail(String email) {
+        UserEntity userEntity = userCrud.findByEmail(email);
+        return userEntity;
     }
 
     /**

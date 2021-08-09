@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 // 1 способ
 //@RequiredArgsConstructor
 @Tag(name = "Управление людьми")
-@RequestMapping("/control")
+@RequestMapping("/User")
 @RestController
 public class UserController {
 
@@ -30,7 +30,7 @@ public class UserController {
     }
 
     @Operation(summary = "Добавить человека")
-    @RequestMapping(value = "/user", method = RequestMethod.POST) // создать
+    @RequestMapping(value = "/postUser", method = RequestMethod.POST) // создать
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity registration(@Validated @RequestBody UserDto userDto) throws Exception {
         try {
@@ -41,7 +41,7 @@ public class UserController {
     }
 
     @Operation(summary = "Получить список людей")
-    @RequestMapping(value = "/users", method = RequestMethod.GET) // взять
+    @RequestMapping(value = "/getUsers", method = RequestMethod.GET) // взять
     @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getUsers(){
         try {
@@ -52,7 +52,7 @@ public class UserController {
     }
 
     @Operation(summary = "Получить выбранного человека")
-    @RequestMapping(value = "/user/{userId}", method = RequestMethod.GET) // взять
+    @RequestMapping(value = "/getUser/{userId}", method = RequestMethod.GET) // взять
     @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getOne(@Validated @PathVariable Long userId) throws Exception {
         try {
@@ -63,7 +63,7 @@ public class UserController {
     }
 
     @Operation(summary = "Удалить выбранного человека")
-    @RequestMapping(value = "/user/{userId}", method = RequestMethod.DELETE) // удалить
+    @RequestMapping(value = "/deleteUser/{userId}", method = RequestMethod.DELETE) // удалить
     @DeleteMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity deleteOne(@Validated @PathVariable Long userId) throws Exception {
         try {
@@ -74,7 +74,7 @@ public class UserController {
     }
 
     @Operation(summary = "Обновить данные выбранного человека")
-    @RequestMapping(value = "/user/{userId}", method = RequestMethod.PUT) // обновить
+    @RequestMapping(value = "/putUser/{userId}", method = RequestMethod.PUT) // обновить
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity updateOne(@Validated @PathVariable Long userId, @Validated @RequestBody UserDto userDto) throws Exception {
         try {
