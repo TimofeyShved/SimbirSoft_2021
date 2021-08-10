@@ -12,15 +12,18 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtTokenProvider jwtTokenProvider;
 
-    private static final String AUTHOR = "/*";
-    private static final String CUSTOMER = "/*";
-    private static final String IMPLEMENTER = "/*";
+    private static final String USER = "/user/**";
+    private static final String PROJECT = "/project/**";
+    private static final String TASK = "/task/**";
+    private static final String ROLE = "/role/**";
+    private static final String DATATIMERELEASE = "/release/**";
 
     // author, customer, implementer
 
@@ -31,9 +34,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception{
+    public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
+
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -44,13 +48,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/control/login").permitAll()
-                .antMatchers("/User/*").permitAll()
-                .antMatchers(AUTHOR).hasRole("author")
-                .antMatchers(CUSTOMER).hasRole("customer")
-                .antMatchers(IMPLEMENTER).hasRole("implementer")
+                .antMatchers(""+TASK).hasAnyRole( "author", "implementer")
+                .antMatchers(""+PROJECT).hasAnyRole("customer", "author", "implementer")
+                .antMatchers(""+ROLE).hasAnyRole("customer", "author")
+                .antMatchers(""+USER).hasAnyRole("customer", "author")
+                .antMatchers(""+DATATIMERELEASE).hasAnyRole( "customer", "author")
+                .antMatchers("/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .apply(new JwtConfigurer(jwtTokenProvider));
 
+                /*
+                .and()
+                .formLogin()
+                .loginPage("/control/login").permitAll()
+                .defaultSuccessUrl("/").permitAll()
+                .and()
+                .logout()
+                .logoutRequestMatcher(new AntPathRequestMatcher("/control/login", "POST"));
+
+                 */
     }
 }

@@ -3,7 +3,9 @@ package com.example.SimbirSoft_2021.model;
 import com.example.SimbirSoft_2021.Dto.UserDto;
 import com.example.SimbirSoft_2021.entity.UserEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
 
+@Data
 public class UserModel {
 
     // ----------------------------------------------- переменные
