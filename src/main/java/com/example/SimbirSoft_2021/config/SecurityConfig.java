@@ -14,11 +14,14 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+// конфигурация нашего доступа к нашему проекту
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    // провайдер токена
     private final JwtTokenProvider jwtTokenProvider;
 
+    // переменные пути
     private static final String USER = "/user/**";
     private static final String PROJECT = "/project/**";
     private static final String TASK = "/task/**";
@@ -27,35 +30,44 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     // author, customer, implementer
 
+    // конструктор
     @Autowired
     public SecurityConfig(JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
+    // уантетификация
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
 
-
+    // конфигурация запроса
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                // защита от влома
                 .httpBasic().disable()
                 .csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
+                // отключаем сессию
+                //.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                //.and()
+                // должны быть авторезованы
                 .authorizeRequests()
+                // разрешить всем
+                .antMatchers("/").permitAll()
                 .antMatchers("/control/login").permitAll()
+                // по ролям
                 .antMatchers(""+TASK).hasAnyRole( "author", "implementer")
                 .antMatchers(""+PROJECT).hasAnyRole("customer", "author", "implementer")
                 .antMatchers(""+ROLE).hasAnyRole("customer", "author")
                 .antMatchers(""+USER).hasAnyRole("customer", "author")
                 .antMatchers(""+DATATIMERELEASE).hasAnyRole( "customer", "author")
-                .antMatchers("/**").permitAll()
+                // все остальные запросы должны быть авторезованы
                 .anyRequest().authenticated()
                 .and()
+                // проходя через провайдер токена
                 .apply(new JwtConfigurer(jwtTokenProvider));
 
                 /*

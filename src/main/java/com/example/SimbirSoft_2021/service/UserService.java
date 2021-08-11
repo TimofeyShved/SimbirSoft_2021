@@ -8,6 +8,7 @@ import com.example.SimbirSoft_2021.model.UserModel;
 import com.example.SimbirSoft_2021.repository.UserCrud;
 import com.example.SimbirSoft_2021.service.interfaceService.StandartServiceInterface;
 import com.example.SimbirSoft_2021.service.interfaceService.UserServiceInterface;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -39,6 +40,7 @@ import java.util.stream.Collectors;
 // 1 способ
 //@RequiredArgsConstructor
 @Service
+@Slf4j
 public class UserService implements StandartServiceInterface<UserDto>, UserServiceInterface {
 
     // 2 способ

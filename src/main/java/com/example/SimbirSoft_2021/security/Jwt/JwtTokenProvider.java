@@ -23,32 +23,35 @@ import java.util.List;
 @Component
 public class JwtTokenProvider {
 
-    @Value("${jwt.token.secret}")
+    @Value("${jwt.token.secret}") // секретное слово
     private String secret;
 
-    @Value("${jwt.token.expired}")
+    @Value("${jwt.token.expired}") // время на обновление в (сек)
     private Long validityInMilliseconds;
 
     @Autowired
     private UserDetailsService userDetailsService;
 
+    // что бы закодировать пароль нашего пользователя
     @Bean
     public BCryptPasswordEncoder passwordEncoder(){
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         return  bCryptPasswordEncoder;
     }
 
+    // инициализация, кодировка серетного слова
     @PostConstruct
     protected void init(){secret = Base64.getEncoder().encodeToString(secret.getBytes());}
 
+    // создание токена
     public String createToken(String username, List<RoleEntity> roleEntityList){
-        Claims claims = Jwts.claims().setSubject(username);
-        claims.put("role", getRoleNames(roleEntityList));
+        Claims claims = Jwts.claims().setSubject(username); // создаём климо по имени
+        claims.put("role", getRoleNames(roleEntityList)); // а так же записываем в него роли
 
-        Date now = new Date();
+        Date now = new Date(); // устанавливаем время
         Date vlidation = new Date(now.getTime()+validityInMilliseconds);
 
-        return Jwts.builder()
+        return Jwts.builder() // собираем токен
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(vlidation)
@@ -61,36 +64,43 @@ public class JwtTokenProvider {
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
+    // вернёт имя
     public String getUsername (String token){
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject();
     }
 
+    // проверка пришедшего токена
     public String resolveToken(HttpServletRequest req){
-        String bearerToken = req.getHeader("Authorization");
-        if(bearerToken != null && bearerToken.startsWith("Bearer ")){
+        String bearerToken = req.getHeader("Authorization"); // если увидими в заголовка это слово
+        if(bearerToken != null && bearerToken.startsWith("Bearer_")){ // и в передаваемом наш токен
             return bearerToken.substring(7, bearerToken.length());
         }
         return null;
     }
 
+    // проверка токена
     public  boolean validateToken(String token){
         try{
+            // получаем климо, распарсив токен через серетное слово
             Jws<Claims> claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
 
-            if (claims.getBody().getExpiration().before(new Date())){
+            if (claims.getBody().getExpiration().before(new Date())){ // если не проходит по времени
+                System.out.println("Token не проходит по времени");
                 return false;
             }
+            System.out.println("Token проходит, validate Token");
             return  true;
         }catch (JwtException | IllegalArgumentException e){
             throw new JwtAuthenticationException("Jwt token is expired or invalid");
         }
     }
 
+    // на основании списка ролей пользователя, вернёт имена ролей
     private List<String> getRoleNames(List<RoleEntity> roleEntityList){
-        List<String> result = new ArrayList<>();
+        List<String> result = new ArrayList<>(); // массив сток
 
         roleEntityList.forEach(x -> {
-            result.add(x.getRoleName());
+            result.add(x.getRoleName()); // сохраняет роль
         });
 
         return result;

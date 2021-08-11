@@ -16,6 +16,7 @@ public final class JwtUserFactory {
     public JwtUserFactory() {
     }
 
+    // коснтруктор из обычного пользователя в нужного
     public static JwtUser create(UserEntity user){
         return new JwtUser(
                 user.getUserId(),
@@ -28,6 +29,7 @@ public final class JwtUserFactory {
         );
     }
 
+    // переводим роли пользователя из прошлого вида в вид списка из слов
     private static List<GrantedAuthority> mapToGrantedAuthorities(List<RoleEntity> role){
         return role.stream()
                 .map(x-> new SimpleGrantedAuthority(x.getRoleName())

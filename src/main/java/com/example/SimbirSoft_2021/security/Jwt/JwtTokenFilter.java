@@ -11,26 +11,33 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
+// фильтрует на наличие токена
 public class JwtTokenFilter extends GenericFilterBean {
 
+    // нужен для проверки токена
     private JwtTokenProvider jwtTokenProvider;
 
+    // конструктор
     public JwtTokenFilter(JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
+    // фильтрация
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+        // получаю токен через запрос
         String token = jwtTokenProvider.resolveToken((HttpServletRequest) servletRequest);
 
+        // если он валиден
         if ((token != null) && jwtTokenProvider.validateToken(token)){
+            // берём аунтефикацию из токена
             Authentication authentication = jwtTokenProvider.getAuthentication(token);
 
-            if (authentication != null){
+            if (authentication != null){ // то берем её из токена
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         }
-
+        // дальше на проверку
         filterChain.doFilter(servletRequest, servletResponse);
     }
 }

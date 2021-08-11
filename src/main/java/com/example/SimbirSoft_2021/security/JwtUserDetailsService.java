@@ -19,21 +19,23 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class JwtUserDetailsService implements UserDetailsService {
 
-    private final UserService userService;
+    private final UserService userService; // необходимый нам сервис, для поиска пользователя
 
+    // конструктор
     public JwtUserDetailsService(UserService userService) {
         this.userService = userService;
     }
 
+    // к нам в детали пользователя приходит email
     @SneakyThrows
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        UserEntity user = userService.findByEmail(email);
-        if (user==null){
+        UserEntity user = userService.findByEmail(email); // ищем его среди пользователей
+        if (user==null){ // если его нет, то ошибку
             throw new UsernameNotFoundException("User "+user.getEmail()+" Not Found Exception");
         }
 
-        JwtUser jwtUser = JwtUserFactory.create(user);
+        JwtUser jwtUser = JwtUserFactory.create(user); // возвращаем другого по форме пользователя
         return jwtUser;
     }
 }

@@ -30,7 +30,7 @@ public class UserEntity { // ----------------------------------------------- н�
     @Column(name = "password")
     private String password;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
+    @OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "userId")
     private List<RoleEntity> roleEntities;
 
     public UserEntity(){ // конструктор
