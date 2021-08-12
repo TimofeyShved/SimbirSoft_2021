@@ -27,9 +27,29 @@ public class TaskDto { // ----------------------------------------------- наш
     public TaskDto() { // конструктор
     }
 
-    public TaskDto(String taskName, String taskStatus, Long releaseId) {
+    public TaskDto(Long taskId) {
+        this.taskId = taskId;
+    }
+
+    public TaskDto(String taskName) {
+        this.taskName = taskName;
+    }
+
+    public TaskDto(String taskName, String taskStatus) {
         this.taskName = taskName;
         this.taskStatus = taskStatus;
+    }
+
+    public TaskDto(String taskName, String taskStatus, Long projectId) {
+        this.taskName = taskName;
+        this.taskStatus = taskStatus;
+        this.releaseId = releaseId;
+    }
+
+    public TaskDto(String taskName, String taskStatus, Long projectId, Long releaseId) {
+        this.taskName = taskName;
+        this.taskStatus = taskStatus;
+        this.projectId = projectId;
         this.releaseId = releaseId;
     }
     // ----------------------------------------------- гетеры и сетеры

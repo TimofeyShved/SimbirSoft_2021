@@ -13,4 +13,5 @@ public interface TaskServiceInterface {
     public boolean deleteReleaseInTask(Long id);
     public List<TaskDto> getAllByStatus(Long projectId, String status) throws TaskNotFoundException;
     public Long getCountByStatus(Long projectId, String status) throws TaskNotFoundException;
+    public List<TaskDto> getAllCustom(TaskDto cusomtaskDto) throws TaskNotFoundException;
 }

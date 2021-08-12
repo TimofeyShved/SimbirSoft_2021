@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
  * В данном классе можно конструтор, организовать 3
  * разными способами.
  * А так же он использует свой интерфейс:
+ * вытащить все задачи по условию (getAllCustom),
  * вытащить все задачи по статусу (getAllByStatus),
  * вытащить количество задач по статусу (getCountByStatus),
  * поискать задачу по реализации (findByReleaseId),
@@ -124,6 +125,41 @@ public class TaskService implements StandartServiceInterface<TaskDto>, TaskServi
 
         // перевод коллекции из одного вида в другой
         List<TaskDto> taskDtoList = taskEntityList.stream().map(x-> TaskMapper.INSTANCE.toDto(x)).collect(Collectors.toList());
+
+        return taskDtoList;
+    }
+
+    /**
+     * Это дополнительный метод, что-бы
+     * вытащить все задачи по статусу или названию проекта, из личного интерфейса
+     * использующий метод getAllCustom.
+     * Основная задача которой вытащить все задачи интересющие нас из бд.
+     * @param cusomtaskDto Это первый и единственный параметр метода registration, который обозначает данные задачи.
+     * @return List<TaskDto> Вернёт список задач.
+     * @throws TaskNotFoundException При ошибке если задач ещё не существует.
+     */
+    public List<TaskDto> getAllCustom(TaskDto cusomtaskDto) throws TaskNotFoundException {
+        List<TaskEntity> taskEntityList = taskCrud.findAll();
+
+        //  проверка на то что задачи вообще существуют
+        if (taskEntityList==null){
+            throw new TaskNotFoundException();
+        }
+
+        List<TaskDto> taskDtoList = new ArrayList<>();
+
+        //  вытаскиваем по одной задачи == запросу, и сохраняем в коллекцию
+        for (TaskEntity e:taskEntityList){
+            if ((e.getTaskName().equals(cusomtaskDto.getTaskName()))||(cusomtaskDto.getTaskName()==null)){ //  проверка
+                if ((e.getTaskStatus().equals(cusomtaskDto.getTaskStatus()))||(cusomtaskDto.getTaskStatus()==null)){ //  проверка
+                    if ((e.getProjectId() == cusomtaskDto.getProjectId())||(cusomtaskDto.getProjectId()==null)) { //  проверка
+                        if ((e.getReleaseId() == cusomtaskDto.getReleaseId()) || (cusomtaskDto.getReleaseId() == null)) { //  проверка
+                            taskDtoList.add(TaskMapper.INSTANCE.toDto(e));
+                        }
+                    }
+                }
+            }
+        }
 
         return taskDtoList;
     }
