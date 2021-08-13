@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 // 1 способ
 //@RequiredArgsConstructor
 @Tag(name = "Управление ролями")
-@RequestMapping("/control")
+@RequestMapping("/role")
 @RestController
 public class RoleController {
 
@@ -28,7 +28,7 @@ public class RoleController {
     }
 
     @Operation(summary = "Добавить роль")
-    @RequestMapping(value = "/role", method = RequestMethod.POST) // создать
+    @RequestMapping(value = "/postrole", method = RequestMethod.POST) // создать
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity registration(@Validated @RequestBody RoleDto roleDto) throws Exception {
         try {
@@ -39,7 +39,7 @@ public class RoleController {
     }
 
     @Operation(summary = "Получить список всех ролей")
-    @RequestMapping(value = "/rols", method = RequestMethod.GET) // взять
+    @RequestMapping(value = "/getrols", method = RequestMethod.GET) // взять
     @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getUsers(){
         try {
@@ -50,7 +50,7 @@ public class RoleController {
     }
 
     @Operation(summary = "Получить выбранную роль")
-    @RequestMapping(value = "/role/{roleId}", method = RequestMethod.GET) // взять
+    @RequestMapping(value = "/getRole/{roleId}", method = RequestMethod.GET) // взять
     @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getOne(@Validated @PathVariable Long roleId) throws Exception {
         try {
@@ -61,7 +61,7 @@ public class RoleController {
     }
 
     @Operation(summary = "Удалить выбранную роль")
-    @RequestMapping(value = "/role/{roleId}", method = RequestMethod.DELETE) // удалить
+    @RequestMapping(value = "/deleterole/{roleId}", method = RequestMethod.DELETE) // удалить
     @DeleteMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity deleteOne(@Validated @PathVariable Long roleId) throws Exception {
         try {
@@ -72,7 +72,7 @@ public class RoleController {
     }
 
     @Operation(summary = "Обновить данные выбранной роли")
-    @RequestMapping(value = "/role/{roleId}", method = RequestMethod.PUT) // обновить
+    @RequestMapping(value = "/putrole/{roleId}", method = RequestMethod.PUT) // обновить
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity updateOne(@PathVariable Long roleId, @Validated @RequestBody RoleDto roleDto) throws Exception {
         try {

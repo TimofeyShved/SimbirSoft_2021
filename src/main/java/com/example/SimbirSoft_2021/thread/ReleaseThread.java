@@ -56,7 +56,7 @@ public class ReleaseThread{
         this.arrayListReleaseDto.add(releaseDto);
     }
 
-    @Scheduled(fixedRate = 1000)
+    //@Scheduled(fixedRate = 1000)
     public void run() throws Exception {
         if (arrayListReleaseDto!=null) {
             List<ReleaseDto> newArrayReleaseDto = new ArrayList<>();

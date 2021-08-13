@@ -4,9 +4,11 @@ import com.example.SimbirSoft_2021.Dto.UserDto;
 import com.example.SimbirSoft_2021.entity.UserEntity;
 import com.example.SimbirSoft_2021.exception.*;
 import com.example.SimbirSoft_2021.mappers.UserMapper;
+import com.example.SimbirSoft_2021.model.UserModel;
 import com.example.SimbirSoft_2021.repository.UserCrud;
 import com.example.SimbirSoft_2021.service.interfaceService.StandartServiceInterface;
 import com.example.SimbirSoft_2021.service.interfaceService.UserServiceInterface;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -38,6 +40,7 @@ import java.util.stream.Collectors;
 // 1 способ
 //@RequiredArgsConstructor
 @Service
+@Slf4j
 public class UserService implements StandartServiceInterface<UserDto>, UserServiceInterface {
 
     // 2 способ
@@ -57,7 +60,7 @@ public class UserService implements StandartServiceInterface<UserDto>, UserServi
      * Это основной метод регистрации, из стандартного интерфейса
      * использующий метод registration.
      * Основная задача которой сохранить нового пользователя в бд.
-     * @param userDto Это первый и единственный параметр метода getOne, который обозначает данные пользователя.
+     * @param userDto Это первый и единственный параметр метода registration, который обозначает данные пользователя.
      * @return UserDto Вернёт пользователя.
      * @exception UserExistsException При ошибке если такая реализация существует.
      */
@@ -67,7 +70,7 @@ public class UserService implements StandartServiceInterface<UserDto>, UserServi
         UserEntity userEntity = UserMapper.INSTANCE.toEntity(userDto);
 
         //  проверка
-        if ((userCrud.findByFirstNameAndLastName(userEntity.getFirstName(), userEntity.getLastName())!=null)){ // проверить, что есть такая реализация существует
+        if ((userCrud.findByEmail(userEntity.getEmail())!=null)){ // проверить, что есть такая реализация существует
             throw new UserExistsException();
         }
 
@@ -86,7 +89,7 @@ public class UserService implements StandartServiceInterface<UserDto>, UserServi
      */
     @Transactional
     @Override
-    public List<UserDto> getAll() throws UserNotFoundException {
+    public List<UserModel> getAll() throws UserNotFoundException {
         List<UserEntity> userEntityList = userCrud.findAll();
 
         //  проверка на то что люди вообще существуют
@@ -96,8 +99,8 @@ public class UserService implements StandartServiceInterface<UserDto>, UserServi
 
         // перевод коллекции из одного вида в другой
         List<UserDto> userDtoList = userEntityList.stream().map(x-> UserMapper.INSTANCE.toDto(x)).collect(Collectors.toList());
-
-        return userDtoList;
+        List<UserModel> userModelList = userDtoList.stream().map(x->new UserModel(x)).collect(Collectors.toList());
+        return userModelList;
     }
 
     /**
@@ -110,7 +113,7 @@ public class UserService implements StandartServiceInterface<UserDto>, UserServi
      */
     @Transactional
     @Override
-    public UserDto getOne(Long id) throws UserNotFoundException {
+    public UserModel getOne(Long id) throws UserNotFoundException {
         UserEntity userEntity = userCrud.findByUserId(id);
 
         //  проверка на то что человек вообще существуют
@@ -118,7 +121,14 @@ public class UserService implements StandartServiceInterface<UserDto>, UserServi
             throw new UserNotFoundException();
         }
 
-        return UserMapper.INSTANCE.toDto(userEntity);
+        UserModel userModel = new UserModel(UserMapper.INSTANCE.toDto(userEntity));
+        return userModel;
+    }
+
+    @Override
+    public UserEntity findByEmail(String email) {
+        UserEntity userEntity = userCrud.findByEmail(email);
+        return userEntity;
     }
 
     /**
@@ -166,7 +176,7 @@ public class UserService implements StandartServiceInterface<UserDto>, UserServi
         UserEntity userEntity = userCrud.findByUserId(id);
 
         //  проверка
-        if ((userCrud.findByFirstNameAndLastName(userEntityNew.getFirstName(), userEntityNew.getLastName())!=null)){ // проверить, что есть такая реализация существует
+        if ((userCrud.findByEmail(userEntityNew.getEmail())!=null)){ // проверить, что есть такая реализация существует
             throw new UserExistsException();
         }
 
@@ -174,6 +184,8 @@ public class UserService implements StandartServiceInterface<UserDto>, UserServi
         userEntity.setFirstName(userEntityNew.getFirstName());
         userEntity.setLastName(userEntityNew.getLastName());
         userEntity.setPatronymic(userEntityNew.getPatronymic());
+        userEntity.setEmail(userEntityNew.getEmail());
+        userEntity.setPassword(userEntityNew.getPassword());
 
         // сохранение
         userCrud.save(userEntity);

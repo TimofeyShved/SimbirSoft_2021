@@ -19,5 +19,6 @@
     <include file="db/changelog/InsertDataBase/db.changelog-InsertUser.yaml" />
     <include file="db/changelog/InsertDataBase/db.changelog-InsertRole.yaml" />
 
+    <include file="db/changelog/UpdateDataBase/db.changelog-UpdateUser.sql" />
 
 </databaseChangeLog>

@@ -20,13 +20,21 @@ public class UserDto { // ----------------------------------------------- наш
     @Schema(description = "Отчество")
     private String patronymic;
 
+    @Schema(name = "email")
+    private String email;
+
+    @Schema(name = "password")
+    private String password;
+
     public UserDto(){ // конструктор
     }
 
-    public UserDto(String firstName, String lastName, String patronymic) {
+    public UserDto(String firstName, String lastName, String patronymic, String email, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.patronymic = patronymic;
+        this.email = email;
+        this.password = password;
     }
 
     // ----------------------------------------------- гетеры и сетеры
@@ -62,5 +70,21 @@ public class UserDto { // ----------------------------------------------- наш
 
     public void setPatronymic(String patronymic) {
         this.patronymic = patronymic;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

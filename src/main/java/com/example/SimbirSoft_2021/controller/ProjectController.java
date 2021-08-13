@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 // 1 способ
 //@RequiredArgsConstructor
 @Tag(name = "Управление проектами")
-@RequestMapping("/control")
+@RequestMapping("/project")
 @RestController
 public class ProjectController {
 
@@ -28,7 +28,7 @@ public class ProjectController {
     }
 
     @Operation(summary = "Добавить проект")
-    @RequestMapping(value = "/project", method = RequestMethod.POST) // создать
+    @RequestMapping(value = "/postproject", method = RequestMethod.POST) // создать
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity registration(@Validated @RequestBody ProjectDto projectDto) throws Exception {
         try {
@@ -39,7 +39,7 @@ public class ProjectController {
     }
 
     @Operation(summary = "Получить список проектов")
-    @RequestMapping(value = "/projects", method = RequestMethod.GET) // взять
+    @RequestMapping(value = "/getprojects", method = RequestMethod.GET) // взять
     @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getUsers(){
         try {
@@ -50,7 +50,7 @@ public class ProjectController {
     }
 
     @Operation(summary = "Получить выбранный проект")
-    @RequestMapping(value = "/project/{projectId}", method = RequestMethod.GET) // взять
+    @RequestMapping(value = "/getproject/{projectId}", method = RequestMethod.GET) // взять
     @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getOne(@Validated @PathVariable Long projectId) throws Exception {
         try {
@@ -61,7 +61,7 @@ public class ProjectController {
     }
 
     @Operation(summary = "Получить список проектов по статусу")
-    @RequestMapping(value = "/project/status", method = RequestMethod.GET) // взять
+    @RequestMapping(value = "/getproject/status", method = RequestMethod.GET) // взять
     @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getOneByStatus(@Validated @RequestBody String status) throws Exception {
         try {
@@ -73,7 +73,7 @@ public class ProjectController {
 
 
     @Operation(summary = "Получить количество проектов по статусу")
-    @RequestMapping(value = "/project/status/count", method = RequestMethod.GET) // взять
+    @RequestMapping(value = "/getproject/status/count", method = RequestMethod.GET) // взять
     @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getCountByStatus(@Validated @RequestBody String status) throws Exception {
         try {
@@ -84,7 +84,7 @@ public class ProjectController {
     }
 
     @Operation(summary = "Удалить выбранный проект")
-    @RequestMapping(value = "/project/{projectId}", method = RequestMethod.DELETE) // удалить
+    @RequestMapping(value = "/deleteproject/{projectId}", method = RequestMethod.DELETE) // удалить
     @DeleteMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity deleteOne(@Validated @PathVariable Long projectId) throws Exception {
         try {
@@ -95,7 +95,7 @@ public class ProjectController {
     }
 
     @Operation(summary = "Обновить данные выбранного проекта")
-    @RequestMapping(value = "/project/{projectId}", method = RequestMethod.PUT) // обновить
+    @RequestMapping(value = "/putproject/{projectId}", method = RequestMethod.PUT) // обновить
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity updateOne(@Validated @PathVariable Long projectId, @Validated @RequestBody ProjectDto projectDto) throws Exception {
         try {
