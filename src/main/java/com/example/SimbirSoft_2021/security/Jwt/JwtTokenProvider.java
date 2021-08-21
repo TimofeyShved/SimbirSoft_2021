@@ -46,7 +46,7 @@ public class JwtTokenProvider {
     // создание токена
     public String createToken(String username, List<RoleEntity> roleEntityList){
         Claims claims = Jwts.claims().setSubject(username); // создаём климо по имени
-        claims.put("role", getRoleNames(roleEntityList)); // а так же записываем в него роли
+        claims.put("roles", getRoleNames(roleEntityList)); // а так же записываем в него роли
 
         Date now = new Date(); // устанавливаем время
         Date vlidation = new Date(now.getTime()+validityInMilliseconds);
@@ -66,6 +66,7 @@ public class JwtTokenProvider {
 
     // вернёт имя
     public String getUsername (String token){
+        System.out.println("getUsername "+ Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject());
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject();
     }
 
@@ -73,6 +74,7 @@ public class JwtTokenProvider {
     public String resolveToken(HttpServletRequest req){
         String bearerToken = req.getHeader("Authorization"); // если увидими в заголовка это слово
         if(bearerToken != null && bearerToken.startsWith("Bearer_")){ // и в передаваемом наш токен
+            System.out.println("Token Authorization == true");
             return bearerToken.substring(7, bearerToken.length());
         }
         return null;
@@ -100,6 +102,7 @@ public class JwtTokenProvider {
         List<String> result = new ArrayList<>(); // массив сток
 
         roleEntityList.forEach(x -> {
+            System.out.println("getRoleNames: "+x.getRoleName());
             result.add(x.getRoleName()); // сохраняет роль
         });
 

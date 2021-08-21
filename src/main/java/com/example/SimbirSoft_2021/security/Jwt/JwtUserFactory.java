@@ -31,6 +31,9 @@ public final class JwtUserFactory {
 
     // переводим роли пользователя из прошлого вида в вид списка из слов
     private static List<GrantedAuthority> mapToGrantedAuthorities(List<RoleEntity> role){
+        for (RoleEntity e:role){
+            System.out.println("mapToGrantedAuthorities "+e.getRoleName());
+        }
         return role.stream()
                 .map(x-> new SimpleGrantedAuthority(x.getRoleName())
                 ).collect(Collectors.toList());
