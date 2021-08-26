@@ -393,6 +393,31 @@ class ProjectServiceTest {
 
     @Test
     void deleteReleaseInProjectTest() throws Exception{
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(new ProjectEntity("PROJECT_ONE", StatusEnum.DONE,1L)) // что возвращаю
+                .when(projectCrud)              // кому и
+                .findByReleaseId(1L);          // почему?
+        Mockito.doReturn(null) // что возвращаю
+                .when(projectCrud)              // кому и
+                .findByReleaseId(2L);          // почему?
+
+        Long id = 1L;
+        // отправляем знаения и получаем новую переменную
+        boolean booleanSerchInProject = projectService.deleteReleaseInProject(id);
+
+        // сверяем значения
+        Assert.assertTrue(booleanSerchInProject);
+
+        // проверка на то, что выполнились действия в бд
+        Mockito.verify(projectCrud, Mockito.times(1)).save(ArgumentMatchers.isNotNull());
+
+        id = 2L;
+        // отправляем знаения и получаем новую переменную
+        booleanSerchInProject = projectService.deleteReleaseInProject(id);
+
+        // сверяем значения
+        Assert.assertTrue(booleanSerchInProject);
     }
 
     @Test
