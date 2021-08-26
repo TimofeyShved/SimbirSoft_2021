@@ -4,10 +4,8 @@ import com.example.SimbirSoft_2021.Dto.ProjectDto;
 import com.example.SimbirSoft_2021.entity.ProjectEntity;
 import com.example.SimbirSoft_2021.entity.ReleaseEntity;
 import com.example.SimbirSoft_2021.entity.TaskEntity;
-import com.example.SimbirSoft_2021.exception.ProjectAndDateTimeExistsException;
-import com.example.SimbirSoft_2021.exception.ProjectExistsException;
-import com.example.SimbirSoft_2021.exception.ReleaseNotFoundException;
-import com.example.SimbirSoft_2021.exception.TaskAndDateTimeExistsException;
+import com.example.SimbirSoft_2021.enumertion.StatusEnum;
+import com.example.SimbirSoft_2021.exception.*;
 import com.example.SimbirSoft_2021.mappers.ProjectMapper;
 import com.example.SimbirSoft_2021.repository.ProjectCrud;
 import com.example.SimbirSoft_2021.repository.ReleaseCrud;
@@ -26,6 +24,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.swing.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -164,7 +165,40 @@ class ProjectServiceTest {
 
     @Test
     void getAllTest() throws Exception{
-        projectService.getAll();
+        List<ProjectEntity> projectEntityList = new ArrayList<>();
+        projectEntityList.add(new ProjectEntity("PROJECT_ONE", StatusEnum.DONE,1L));
+
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(projectEntityList) // что возвращаю
+                .when(projectCrud)              // кому и
+                .findAll();          // почему?
+
+        // отправляем знаения и получаем новую переменную
+        List<ProjectDto> projectDtoList = projectService.getAll();
+
+        // сверяем значения
+        Assert.assertNotNull(projectDtoList);
+        Assert.assertEquals(projectDtoList.get(0).getProjectName(), "PROJECT_ONE");
+        Assert.assertEquals(projectDtoList.get(0).getProjectStatus(), "DONE");
+        Assert.assertEquals(projectDtoList.get(0).getReleaseId(), new Long(1));
+    }
+
+    @Test
+    void getAllFalseTest() throws Exception{
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(null) // что возвращаю
+                .when(projectCrud)              // кому и
+                .findAll();          // почему?
+
+        try {
+            // отправляем знаения и получаем новую переменную
+            List<ProjectDto> projectDtoList = projectService.getAll();
+            Assert.fail("Expected ProjectNotFoundException");
+        } catch (ProjectNotFoundException thrown) {
+            Assert.assertNotNull("", thrown.getMessage());
+        }
     }
 
     @Test
