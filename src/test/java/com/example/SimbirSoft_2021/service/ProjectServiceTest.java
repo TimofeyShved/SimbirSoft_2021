@@ -281,7 +281,40 @@ class ProjectServiceTest {
 
     @Test
     void getCountByStatusTest() throws Exception{
+        List<ProjectEntity> projectEntityList = new ArrayList<>();
+        projectEntityList.add(new ProjectEntity("PROJECT_ONE", StatusEnum.DONE,1L));
 
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(projectEntityList) // что возвращаю
+                .when(projectCrud)              // кому и
+                .findAll();          // почему?
+
+        String status = "DONE";
+        // отправляем знаения и получаем новую переменную
+        Long countByStatus = projectService.getCountByStatus(status);
+
+        // сверяем значения
+        Assert.assertNotNull(countByStatus);
+        Assert.assertEquals(countByStatus, new Long(1));
+    }
+
+    @Test
+    void getCountByStatusFalseTest() throws Exception{
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(null) // что возвращаю
+                .when(projectCrud)              // кому и
+                .findAll();          // почему?
+
+        try {
+            String status = "DONE";
+            // отправляем знаения и получаем новую переменную
+            Long countByStatus = projectService.getCountByStatus(status);
+            Assert.fail("Expected ProjectNotFoundException");
+        } catch (ProjectNotFoundException thrown) {
+            Assert.assertNotNull("", thrown.getMessage());
+        }
     }
 
     @Test
