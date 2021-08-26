@@ -348,8 +348,47 @@ class ProjectServiceTest {
 
     @Test
     void deleteOneTest() throws Exception{
-        Long projectId = 1l;
-        projectService.deleteOne(projectId);
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(new ProjectEntity("PROJECT_ONE", StatusEnum.DONE,1L)) // что возвращаю
+                .when(projectCrud)              // кому и
+                .findByProjectId(1L);          // почему?
+        Mockito.doReturn(new ReleaseEntity()) // что возвращаю
+                .when(releaseCrud)              // кому и
+                .findByReleaseId(1L);          // почему?
+        Mockito.doReturn(true) // что возвращаю
+                .when(taskService)              // кому и
+                .deleteTaskByProjectId(1L);          // почему?
+
+        Long projectId = 1L;
+        // отправляем знаения и получаем новую переменную
+        Long returnProjectId = projectService.deleteOne(projectId);
+
+        // сверяем значения
+        Assert.assertNotNull(returnProjectId);
+        Assert.assertEquals(returnProjectId, new Long(1));
+
+        // проверка на то, что выполнились действия в бд
+        Mockito.verify(projectCrud, Mockito.times(1)).delete(ArgumentMatchers.isNotNull());
+        Mockito.verify(releaseCrud, Mockito.times(1)).delete(ArgumentMatchers.isNotNull());
+    }
+
+    @Test
+    void deleteOneFalseTest() throws Exception{
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(null) // что возвращаю
+                .when(projectCrud)              // кому и
+                .findByProjectId(1L);          // почему?
+
+        try {
+            Long projectId = 1L;
+            // отправляем знаения и получаем новую переменную
+            Long returnProjectId = projectService.deleteOne(projectId);
+            Assert.fail("Expected ProjectNotFoundException");
+        } catch (ProjectNotFoundException thrown) {
+            Assert.assertNotNull("", thrown.getMessage());
+        }
     }
 
     @Test
