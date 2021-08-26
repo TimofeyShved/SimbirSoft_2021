@@ -422,8 +422,143 @@ class ProjectServiceTest {
 
     @Test
     void updateOneTest() throws Exception{
-        ProjectDto projectDto = null;
-        Long projectId = 1l;
-        projectService.updateOne(projectId, projectDto);
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(new ProjectEntity("PROJECT_ONE", StatusEnum.DONE,1L)) // что возвращаю
+                .when(projectCrud)              // кому и
+                .findByProjectId(1L);          // почему?
+        Mockito.doReturn(new ReleaseEntity()) // что возвращаю
+                .when(releaseCrud)              // кому и
+                .findByReleaseId(1L);          // почему?
+        Mockito.doReturn(new ProjectEntity("PROJECT_ONE", StatusEnum.DONE,1L)) // что возвращаю
+                .when(projectCrud)              // кому и
+                .findByReleaseId(1L);          // почему?
+        Mockito.doReturn(null) // что возвращаю
+                .when(taskCrud)              // кому и
+                .findByReleaseId(1L);          // почему?
+        Mockito.doReturn(new ProjectEntity("PROJECT_ONE", StatusEnum.DONE,1L)) // что возвращаю
+                .when(projectCrud)              // кому и
+                .findByProjectName("PROJECT_ONE");          // почему?
+
+        ProjectDto projectDto_1 = new ProjectDto("PROJECT_ONE", "DONE",1L);
+        Long id = 1l;
+        // отправляем знаения и получаем новую переменную
+        ProjectDto projectDto_2 =projectService.updateOne(id, projectDto_1);
+
+        // сверяем значения
+        Assert.assertNotNull(projectDto_2);
+        Assert.assertEquals(projectDto_1.getProjectName(), projectDto_2.getProjectName());
+        Assert.assertEquals(projectDto_1.getProjectStatus(), projectDto_2.getProjectStatus());
+        Assert.assertEquals(projectDto_1.getReleaseId(), projectDto_2.getReleaseId());
+
+        // проверка на то, что выполнились действия в бд
+        Mockito.verify(projectCrud, Mockito.times(1)).save(ArgumentMatchers.isNotNull());
+    }
+
+    @Test
+    void updateOneFalseTest() throws Exception{
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(null) // что возвращаю
+                .when(projectCrud)              // кому и
+                .findByProjectId(1L);          // почему?
+
+        //----------------------------------1----------------------ProjectNotFoundException
+        try {
+            ProjectDto projectDto_1 = new ProjectDto("PROJECT_ONE", "DONE",1L);
+            Long id = 1l;
+            // отправляем знаения и получаем новую переменную
+            ProjectDto projectDto_2 =projectService.updateOne(id, projectDto_1);
+            Assert.fail("Expected ProjectNotFoundException");
+        } catch (ProjectNotFoundException thrown) {
+            Assert.assertNotNull("", thrown.getMessage());
+        }
+
+        //----------------------------------2----------------------ReleaseNotFoundException
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(new ProjectEntity("PROJECT_ONE", StatusEnum.DONE,1L)) // что возвращаю
+                .when(projectCrud)              // кому и
+                .findByProjectId(2L);          // почему?
+        Mockito.doReturn(null) // что возвращаю
+                .when(releaseCrud)              // кому и
+                .findByReleaseId(1L);          // почему?
+
+        try {
+            ProjectDto projectDto_1 = new ProjectDto("PROJECT_ONE", "DONE",1L);
+            Long id = 2L;
+            // отправляем знаения и получаем новую переменную
+            ProjectDto projectDto_2 =projectService.updateOne(id, projectDto_1);
+            Assert.fail("Expected ReleaseNotFoundException");
+        } catch (ReleaseNotFoundException thrown) {
+            Assert.assertNotNull("", thrown.getMessage());
+        }
+
+        //----------------------------------3----------------------ProjectAndDateTimeExistsException
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(new ReleaseEntity()) // что возвращаю
+                .when(releaseCrud)              // кому и
+                .findByReleaseId(2L);          // почему?
+        Mockito.doReturn(new ProjectEntity("PROJECT_TWO", StatusEnum.DONE,2L)) // что возвращаю
+                .when(projectCrud)              // кому и
+                .findByReleaseId(2L);          // почему?
+
+        try {
+            ProjectDto projectDto_1 = new ProjectDto("PROJECT_ONE", "DONE",2L);
+            Long id = 2L;
+            // отправляем знаения и получаем новую переменную
+            ProjectDto projectDto_2 =projectService.updateOne(id, projectDto_1);
+            Assert.fail("Expected ProjectAndDateTimeExistsException");
+        } catch (ProjectAndDateTimeExistsException thrown) {
+            Assert.assertNotNull("", thrown.getMessage());
+        }
+
+        //----------------------------------4----------------------TaskAndDateTimeExistsException
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(new ReleaseEntity()) // что возвращаю
+                .when(releaseCrud)              // кому и
+                .findByReleaseId(3L);          // почему?
+        Mockito.doReturn(new TaskEntity()) // что возвращаю
+                .when(taskCrud)              // кому и
+                .findByReleaseId(3L);          // почему?
+
+        try {
+            ProjectDto projectDto_1 = new ProjectDto("PROJECT_ONE", "DONE",3L);
+            Long id = 2L;
+            // отправляем знаения и получаем новую переменную
+            ProjectDto projectDto_2 =projectService.updateOne(id, projectDto_1);
+            Assert.fail("Expected ProjectAndDateTimeExistsException");
+        } catch (TaskAndDateTimeExistsException thrown) {
+            Assert.assertNotNull("", thrown.getMessage());
+        }
+
+        //----------------------------------5----------------------ProjectExistsException
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(new ReleaseEntity()) // что возвращаю
+                .when(releaseCrud)              // кому и
+                .findByReleaseId(4L);          // почему?
+        Mockito.doReturn(new ProjectEntity("PROJECT_TWO", StatusEnum.DONE,2L)) // что возвращаю
+                .when(projectCrud)              // кому и
+                .findByReleaseId(2L);          // почему?
+        Mockito.doReturn(null) // что возвращаю
+                .when(taskCrud)              // кому и
+                .findByReleaseId(4L);          // почему?
+        Mockito.doReturn(new ProjectEntity("PROJECT_FOUR", StatusEnum.DONE,4L)) // что возвращаю
+                .when(projectCrud)              // кому и
+                .findByProjectName("PROJECT_FOUR");          // почему?
+
+        try {
+            ProjectDto projectDto_1 = new ProjectDto("PROJECT_FOUR", "DONE",4L);
+            Long id = 2L;
+            // отправляем знаения и получаем новую переменную
+            ProjectDto projectDto_2 =projectService.updateOne(id, projectDto_1);
+            Assert.fail("Expected ProjectExistsException");
+        } catch (ProjectExistsException thrown) {
+            Assert.assertNotNull("", thrown.getMessage());
+        }
+
     }
 }
