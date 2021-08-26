@@ -240,14 +240,48 @@ class ProjectServiceTest {
 
     @Test
     void getAllByStatusTest() throws Exception{
+
+        List<ProjectEntity> projectEntityList = new ArrayList<>();
+        projectEntityList.add(new ProjectEntity("PROJECT_ONE", StatusEnum.DONE,1L));
+
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(projectEntityList) // что возвращаю
+                .when(projectCrud)              // кому и
+                .findAll();          // почему?
+
         String status = "DONE";
-        projectService.getAllByStatus(status);
+        // отправляем знаения и получаем новую переменную
+        List<ProjectDto> projectDtoList = projectService.getAllByStatus(status);
+
+        // сверяем значения
+        Assert.assertNotNull(projectDtoList);
+        Assert.assertEquals(projectDtoList.get(0).getProjectName(), "PROJECT_ONE");
+        Assert.assertEquals(projectDtoList.get(0).getProjectStatus(), "DONE");
+        Assert.assertEquals(projectDtoList.get(0).getReleaseId(), new Long(1));
+    }
+
+    @Test
+    void getAllByStatusFalseTest() throws Exception{
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(null) // что возвращаю
+                .when(projectCrud)              // кому и
+                .findAll();          // почему?
+
+        try {
+            String status = "DONE";
+            // отправляем знаения и получаем новую переменную
+            List<ProjectDto> projectDtoList = projectService.getAllByStatus(status);
+            Assert.fail("Expected ProjectNotFoundException");
+        } catch (ProjectNotFoundException thrown) {
+            Assert.assertNotNull("", thrown.getMessage());
+        }
     }
 
     @Test
     void getCountByStatusTest() throws Exception{
-        String status = "DONE";
-        projectService.getCountByStatus(status);
+
     }
 
     @Test
