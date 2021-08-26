@@ -319,6 +319,31 @@ class ProjectServiceTest {
 
     @Test
     void findByReleaseIdTest() throws Exception{
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(null) // что возвращаю
+                .when(projectCrud)              // кому и
+                .findByReleaseId(1L);          // почему?
+        Mockito.doReturn(new ProjectEntity("PROJECT_ONE", StatusEnum.DONE,1L)) // что возвращаю
+                .when(projectCrud)              // кому и
+                .findByReleaseId(2L);          // почему?
+
+        Long releaseId = 1L;
+        // отправляем знаения и получаем новую переменную
+        ProjectDto projectDto = projectService.findByReleaseId(releaseId);
+
+        // сверяем значения
+        Assert.assertNull(projectDto);
+
+        releaseId = 2L;
+        // отправляем знаения и получаем новую переменную
+        projectDto = projectService.findByReleaseId(releaseId);
+
+        // сверяем значения
+        Assert.assertNotNull(projectDto);
+        Assert.assertEquals(projectDto.getProjectName(), "PROJECT_ONE");
+        Assert.assertEquals(projectDto.getProjectStatus(), "DONE");
+        Assert.assertEquals(projectDto.getReleaseId(), new Long(1));
     }
 
     @Test
