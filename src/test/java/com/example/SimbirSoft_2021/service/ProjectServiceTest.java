@@ -203,8 +203,39 @@ class ProjectServiceTest {
 
     @Test
     void getOneTest() throws Exception{
-        Long projectId = 1l;
-        projectService.getOne(projectId);
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(new ProjectEntity("PROJECT_ONE", StatusEnum.DONE,1L)) // что возвращаю
+                .when(projectCrud)              // кому и
+                .findByProjectId(1L);          // почему?
+
+        Long projectId = 1L;
+        // отправляем знаения и получаем новую переменную
+        ProjectDto projectDto = projectService.getOne(projectId);
+
+        // сверяем значения
+        Assert.assertNotNull(projectDto);
+        Assert.assertEquals(projectDto.getProjectName(), "PROJECT_ONE");
+        Assert.assertEquals(projectDto.getProjectStatus(), "DONE");
+        Assert.assertEquals(projectDto.getReleaseId(), new Long(1));
+    }
+
+    @Test
+    void getOneFalseTest() throws Exception{
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(null) // что возвращаю
+                .when(projectCrud)              // кому и
+                .findByProjectId(1L);          // почему?
+
+        try {
+            Long projectId = 1L;
+            // отправляем знаения и получаем новую переменную
+            ProjectDto projectDto = projectService.getOne(projectId);
+            Assert.fail("Expected ProjectNotFoundException");
+        } catch (ProjectNotFoundException thrown) {
+            Assert.assertNotNull("", thrown.getMessage());
+        }
     }
 
     @Test
