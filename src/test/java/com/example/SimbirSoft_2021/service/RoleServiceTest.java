@@ -3,10 +3,8 @@ package com.example.SimbirSoft_2021.service;
 import com.example.SimbirSoft_2021.Dto.ProjectDto;
 import com.example.SimbirSoft_2021.Dto.RoleDto;
 import com.example.SimbirSoft_2021.entity.*;
-import com.example.SimbirSoft_2021.exception.ReleaseNotFoundException;
-import com.example.SimbirSoft_2021.exception.RoleExistsException;
-import com.example.SimbirSoft_2021.exception.TaskNotFoundException;
-import com.example.SimbirSoft_2021.exception.UserNotFoundException;
+import com.example.SimbirSoft_2021.enumertion.StatusEnum;
+import com.example.SimbirSoft_2021.exception.*;
 import com.example.SimbirSoft_2021.mappers.ProjectMapper;
 import com.example.SimbirSoft_2021.repository.RoleCrud;
 import com.example.SimbirSoft_2021.repository.TaskCrud;
@@ -20,6 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -120,7 +121,41 @@ class RoleServiceTest {
     }
 
     @Test
-    void getAll() throws Exception{
+    void getAllTest() throws Exception{
+        List<RoleEntity> roleEntityList = new ArrayList<>();
+        roleEntityList.add(new RoleEntity("implementer", 1L, 1L));
+
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(roleEntityList) // что возвращаю
+                .when(roleCrud)              // кому и
+                .findAll();          // почему?
+
+        // отправляем знаения и получаем новую переменную
+        List<RoleDto> roleDtoList = roleService.getAll();
+
+        // сверяем значения
+        Assert.assertNotNull(roleDtoList);
+        Assert.assertEquals(roleDtoList.get(0).getRoleName(), "implementer");
+        Assert.assertEquals(roleDtoList.get(0).getTaskId(), new Long(1));
+        Assert.assertEquals(roleDtoList.get(0).getUserId(), new Long(1));
+    }
+
+    @Test
+    void getAllFalseTest() throws Exception{
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(null) // что возвращаю
+                .when(roleCrud)              // кому и
+                .findAll();          // почему?
+
+        try {
+            // отправляем знаения и получаем новую переменную
+            List<RoleDto> roleDtoList = roleService.getAll();
+            Assert.fail("Expected RoleNotFoundException");
+        } catch (RoleNotFoundException thrown) {
+            Assert.assertNotNull("", thrown.getMessage());
+        }
     }
 
     @Test
