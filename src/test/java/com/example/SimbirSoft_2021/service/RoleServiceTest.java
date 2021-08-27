@@ -196,7 +196,41 @@ class RoleServiceTest {
     }
 
     @Test
-    void deleteOne() throws Exception{
+    void deleteOneTest() throws Exception{
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(new RoleEntity("implementer", 1L, 1L)) // что возвращаю
+                .when(roleCrud)              // кому и
+                .findByRoleId(1L);          // почему?
+
+        Long id = 1L;
+        // отправляем знаения и получаем новую переменную
+        Long returnRoleId = roleService.deleteOne(id);
+
+        // сверяем значения
+        Assert.assertNotNull(returnRoleId);
+        Assert.assertEquals(returnRoleId, new Long(1));
+
+        // проверка на то, что выполнились действия в бд
+        Mockito.verify(roleCrud, Mockito.times(1)).deleteById(ArgumentMatchers.isNotNull());
+    }
+
+    @Test
+    void deleteOneFalseTest() throws Exception{
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(null) // что возвращаю
+                .when(roleCrud)              // кому и
+                .findByRoleId(1L);          // почему?
+
+        try {
+            Long id = 1L;
+            // отправляем знаения и получаем новую переменную
+            Long returnRoleId = roleService.deleteOne(id);
+            Assert.fail("Expected RoleNotFoundException");
+        } catch (RoleNotFoundException thrown) {
+            Assert.assertNotNull("", thrown.getMessage());
+        }
     }
 
     @Test
