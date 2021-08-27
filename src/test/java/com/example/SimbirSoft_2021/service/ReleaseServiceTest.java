@@ -7,6 +7,7 @@ import com.example.SimbirSoft_2021.entity.ReleaseEntity;
 import com.example.SimbirSoft_2021.enumertion.StatusEnum;
 import com.example.SimbirSoft_2021.exception.ProjectNotFoundException;
 import com.example.SimbirSoft_2021.exception.ReleaseDateFormatException;
+import com.example.SimbirSoft_2021.exception.ReleaseExistsException;
 import com.example.SimbirSoft_2021.exception.ReleaseNotFoundException;
 import com.example.SimbirSoft_2021.mappers.ProjectMapper;
 import com.example.SimbirSoft_2021.repository.ReleaseCrud;
@@ -218,5 +219,112 @@ class ReleaseServiceTest {
 
     @Test
     void updateOneTest() throws Exception{
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(new ReleaseEntity()) // что возвращаю
+                .when(releaseCrud)              // кому и
+                .findByReleaseId(1L);          // почему?
+        Mockito.doReturn(new ReleaseEntity()) // что возвращаю
+                .when(releaseCrud)              // кому и
+                .findByDataStartAndDataEnd("2021-08-21 07:00:00", "2021-08-21 20:30:00");          // почему?
+
+        // создаём переменную, которую отправим в основной процесс
+        ReleaseDto releaseDto_1 = new ReleaseDto("2021-08-21 07:00:00", "2022-08-21 20:30:00");
+        Long id = 1L;
+        // отправляем знаения и получаем новую переменную
+        ReleaseDto releaseDto_2 = releaseService.updateOne(id, releaseDto_1);
+
+        // сверяем значения
+        Assert.assertNotNull(releaseDto_2);
+        Assert.assertEquals(releaseDto_1.getDataStart(), releaseDto_2.getDataStart());
+        Assert.assertEquals(releaseDto_1.getDataEnd(), releaseDto_2.getDataEnd());
+
+        // проверка на то, что выполнились действия в бд
+        Mockito.verify(releaseCrud, Mockito.times(1)).save(ArgumentMatchers.isNotNull());
+    }
+
+    @Test
+    void updateOneFalseTest() throws Exception{
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(null) // что возвращаю
+                .when(releaseCrud)              // кому и
+                .findByReleaseId(1L);          // почему?
+
+        //----------------------------------1----------------------ReleaseNotFoundException
+        try {
+            // создаём переменную, которую отправим в основной процесс
+            ReleaseDto releaseDto_1 = new ReleaseDto("2021-08-21 07:00:00", "2022-08-21 20:30:00");
+            Long id = 1L;
+            // отправляем знаения и получаем новую переменную
+            ReleaseDto releaseDto_2 = releaseService.updateOne(id, releaseDto_1);
+            Assert.fail("Expected ReleaseNotFoundException");
+        } catch (ReleaseNotFoundException thrown) {
+            Assert.assertNotNull("", thrown.getMessage());
+        }
+
+        //----------------------------------2----------------------ReleaseDateFormatException
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(new ReleaseEntity()) // что возвращаю
+                .when(releaseCrud)              // кому и
+                .findByReleaseId(2L);          // почему?
+
+        try {
+            // создаём переменную, которую отправим в основной процесс
+            ReleaseDto releaseDto_1 = new ReleaseDto("2022342342342343241--22343241 07:00:00", "2032423421--2234231 20:30:00");
+            Long id = 2L;
+            // отправляем знаения и получаем новую переменную
+            ReleaseDto releaseDto_2 = releaseService.updateOne(id, releaseDto_1);
+            Assert.fail("Expected ReleaseDateFormatException");
+        } catch (ReleaseDateFormatException thrown) {
+            Assert.assertNotNull("", thrown.getMessage());
+        }
+        try {
+            // создаём переменную, которую отправим в основной процесс
+            ReleaseDto releaseDto_1 = new ReleaseDto("20223234", "20324");
+            Long id = 2L;
+            // отправляем знаения и получаем новую переменную
+            ReleaseDto releaseDto_2 = releaseService.updateOne(id, releaseDto_1);
+            Assert.fail("Expected ReleaseDateFormatException");
+        } catch (ReleaseDateFormatException thrown) {
+            Assert.assertNotNull("", thrown.getMessage());
+        }
+        try {
+            // создаём переменную, которую отправим в основной процесс
+            ReleaseDto releaseDto_1 = new ReleaseDto("dfsdafdsfstweg", "ewfdsvreverasd");
+            Long id = 2L;
+            // отправляем знаения и получаем новую переменную
+            ReleaseDto releaseDto_2 = releaseService.updateOne(id, releaseDto_1);
+            Assert.fail("Expected ReleaseDateFormatException");
+        } catch (ReleaseDateFormatException thrown) {
+            Assert.assertNotNull("", thrown.getMessage());
+        }
+        try {
+            // создаём переменную, которую отправим в основной процесс
+            ReleaseDto releaseDto_1 = new ReleaseDto("-08-22 07:00:00", "-08-22 20:30:00");
+            Long id = 2L;
+            // отправляем знаения и получаем новую переменную
+            ReleaseDto releaseDto_2 = releaseService.updateOne(id, releaseDto_1);
+            Assert.fail("Expected ReleaseDateFormatException");
+        } catch (ReleaseDateFormatException thrown) {
+            Assert.assertNotNull("", thrown.getMessage());
+        }
+
+        //----------------------------------3----------------------ReleaseExistsException
+        Mockito.doReturn(new ReleaseEntity()) // что возвращаю
+                .when(releaseCrud)              // кому и
+                .findByDataStartAndDataEnd("2021-08-21 07:00:00", "2021-08-21 20:30:00");          // почему?
+
+        try {
+            // создаём переменную, которую отправим в основной процесс
+            ReleaseDto releaseDto_1 = new ReleaseDto("2021-08-21 07:00:00", "2021-08-21 20:30:00");
+            Long id = 2L;
+            // отправляем знаения и получаем новую переменную
+            ReleaseDto releaseDto_2 = releaseService.updateOne(id, releaseDto_1);
+            Assert.fail("Expected ReleaseExistsException");
+        } catch (ReleaseExistsException thrown) {
+            Assert.assertNotNull("", thrown.getMessage());
+        }
     }
 }
