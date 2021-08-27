@@ -370,6 +370,114 @@ class RoleServiceTest {
     }
 
     @Test
-    void updateOne() throws Exception{
+    void updateOneTest() throws Exception{
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(new RoleEntity(1L, "implementer", 1L, 1L)) // что возвращаю
+                .when(roleCrud)              // кому и
+                .findByRoleId(1L);          // почему?
+        Mockito.doReturn(new TaskEntity()) // что возвращаю
+                .when(taskCrud)              // кому и
+                .findByTaskId(1L);          // почему?
+        Mockito.doReturn(new UserEntity()) // что возвращаю
+                .when(userCrud)              // кому и
+                .findByUserId(1L);          // почему?
+        Mockito.doReturn(null) // что возвращаю
+                .when(roleCrud)              // кому и
+                .findByRoleNameAndTaskIdAndUserId("implementer", 1L, 1L);          // почему?
+
+        RoleDto roleDto_1 = new RoleDto(1L, "implementer", 1L, 1L);
+        Long id = 1L;
+        // отправляем знаения и получаем новую переменную
+        RoleDto roleDto_2 = roleService.updateOne(id, roleDto_1);
+
+        // сверяем значения
+        Assert.assertNotNull(roleDto_2);
+        Assert.assertEquals(roleDto_1.getRoleName(), roleDto_2.getRoleName());
+        Assert.assertEquals(roleDto_1.getTaskId(), roleDto_2.getTaskId());
+        Assert.assertEquals(roleDto_1.getUserId(), roleDto_2.getUserId());
+
+        // проверка на то, что выполнились действия в бд
+        Mockito.verify(roleCrud, Mockito.times(1)).save(ArgumentMatchers.isNotNull());
+    }
+
+    @Test
+    void updateOneFalseTest() throws Exception{
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(null) // что возвращаю
+                .when(roleCrud)              // кому и
+                .findByRoleId(1L);          // почему?
+
+        //----------------------------------1----------------------RoleNotFoundException
+        try {
+            RoleDto roleDto_1 = new RoleDto(1L, "implementer", 1L, 1L);
+            Long id = 1L;
+            // отправляем знаения и получаем новую переменную
+            RoleDto roleDto_2 = roleService.updateOne(id, roleDto_1);
+            Assert.fail("Expected RoleNotFoundException");
+        } catch (RoleNotFoundException thrown) {
+            Assert.assertNotNull("", thrown.getMessage());
+        }
+
+        //----------------------------------2----------------------TaskNotFoundException
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(new RoleEntity(1L, "implementer", 1L, 1L)) // что возвращаю
+                .when(roleCrud)              // кому и
+                .findByRoleId(1L);          // почему?
+        Mockito.doReturn(null) // что возвращаю
+                .when(taskCrud)              // кому и
+                .findByTaskId(1L);          // почему?
+
+        try {
+            RoleDto roleDto_1 = new RoleDto(1L, "implementer", 1L, 1L);
+            Long id = 1L;
+            // отправляем знаения и получаем новую переменную
+            RoleDto roleDto_2 = roleService.updateOne(id, roleDto_1);
+            Assert.fail("Expected TaskNotFoundException");
+        } catch (TaskNotFoundException thrown) {
+            Assert.assertNotNull("", thrown.getMessage());
+        }
+
+        //----------------------------------3----------------------UserNotFoundException
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(new TaskEntity()) // что возвращаю
+                .when(taskCrud)              // кому и
+                .findByTaskId(1L);          // почему?
+        Mockito.doReturn(null) // что возвращаю
+                .when(userCrud)              // кому и
+                .findByUserId(1L);          // почему?
+
+        try {
+            RoleDto roleDto_1 = new RoleDto(1L, "implementer", 1L, 1L);
+            Long id = 1L;
+            // отправляем знаения и получаем новую переменную
+            RoleDto roleDto_2 = roleService.updateOne(id, roleDto_1);
+            Assert.fail("Expected UserNotFoundException");
+        } catch (UserNotFoundException thrown) {
+            Assert.assertNotNull("", thrown.getMessage());
+        }
+
+        //----------------------------------4----------------------RoleExistsException
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(new UserEntity()) // что возвращаю
+                .when(userCrud)              // кому и
+                .findByUserId(1L);          // почему?
+        Mockito.doReturn(new RoleEntity()) // что возвращаю
+                .when(roleCrud)              // кому и
+                .findByRoleNameAndTaskIdAndUserId("implementer", 1L, 1L);          // почему?
+
+        try {
+            RoleDto roleDto_1 = new RoleDto(1L, "implementer", 1L, 1L);
+            Long id = 1L;
+            // отправляем знаения и получаем новую переменную
+            RoleDto roleDto_2 = roleService.updateOne(id, roleDto_1);
+            Assert.fail("Expected RoleExistsException");
+        } catch (RoleExistsException thrown) {
+            Assert.assertNotNull("", thrown.getMessage());
+        }
     }
 }
