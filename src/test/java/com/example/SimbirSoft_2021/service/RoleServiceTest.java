@@ -159,7 +159,40 @@ class RoleServiceTest {
     }
 
     @Test
-    void getOne() throws Exception{
+    void getOneTest() throws Exception{
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(new RoleEntity("implementer", 1L, 1L)) // что возвращаю
+                .when(roleCrud)              // кому и
+                .findByRoleId(1L);          // почему?
+
+        Long id = 1L;
+        // отправляем знаения и получаем новую переменную
+        RoleDto roleDto = roleService.getOne(id);
+
+        // сверяем значения
+        Assert.assertNotNull(roleDto);
+        Assert.assertEquals(roleDto.getRoleName(), "implementer");
+        Assert.assertEquals(roleDto.getTaskId(), new Long(1));
+        Assert.assertEquals(roleDto.getUserId(), new Long(1));
+    }
+
+    @Test
+    void getOneFalseTest() throws Exception{
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(null) // что возвращаю
+                .when(roleCrud)              // кому и
+                .findByRoleId(1L);          // почему?
+
+        try {
+            Long id = 1L;
+            // отправляем знаения и получаем новую переменную
+            RoleDto roleDto = roleService.getOne(id);
+            Assert.fail("Expected RoleNotFoundException");
+        } catch (RoleNotFoundException thrown) {
+            Assert.assertNotNull("", thrown.getMessage());
+        }
     }
 
     @Test
