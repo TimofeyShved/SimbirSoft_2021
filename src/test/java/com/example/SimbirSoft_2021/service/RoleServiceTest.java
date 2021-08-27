@@ -302,7 +302,71 @@ class RoleServiceTest {
     }
 
     @Test
-    void deleteByUserId() throws Exception{
+    void deleteByUserIdTest() throws Exception{
+        List<RoleEntity> roleEntityList = new ArrayList<>();
+        roleEntityList.add(new RoleEntity(1L, "implementer", 1L, 1L));
+
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(roleEntityList) // что возвращаю
+                .when(roleCrud)              // кому и
+                .findAll();          // почему?
+        Mockito.doReturn(new RoleEntity(1L,"implementer", 1L, 1L)) // что возвращаю
+                .when(roleCrud)              // кому и
+                .findByRoleId(roleEntityList.get(0).getRoleId());          // почему?
+
+        Long id = 1L;
+        // отправляем знаения и получаем новую переменную
+        List<RoleDto> roleDtoList = roleService.deleteByUserId(id);
+
+        // сверяем значения
+        Assert.assertNotNull(roleDtoList);
+        Assert.assertEquals(roleDtoList.get(0).getRoleName(), "implementer");
+        Assert.assertEquals(roleDtoList.get(0).getTaskId(), new Long(1));
+        Assert.assertEquals(roleDtoList.get(0).getUserId(), new Long(1));
+
+        // проверка на то, что выполнились действия в бд
+        Mockito.verify(roleCrud, Mockito.times(1)).deleteById(ArgumentMatchers.isNotNull());
+    }
+
+    @Test
+    void deleteByUserIdFalseTest() throws Exception{
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(null) // что возвращаю
+                .when(roleCrud)              // кому и
+                .findAll();          // почему?
+
+        //----------------------------------1----------------------RoleNotFoundException
+        try {
+            Long id = 1L;
+            // отправляем знаения и получаем новую переменную
+            List<RoleDto> roleDtoList = roleService.deleteByUserId(id);
+            Assert.fail("Expected RoleNotFoundException");
+        } catch (RoleNotFoundException thrown) {
+            Assert.assertNotNull("", thrown.getMessage());
+        }
+
+        //----------------------------------2----------------------RoleNotFoundException
+        List<RoleEntity> roleEntityList = new ArrayList<>();
+        roleEntityList.add(new RoleEntity(1L, "implementer", 1L, 1L));
+
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(roleEntityList) // что возвращаю
+                .when(roleCrud)              // кому и
+                .findAll();          // почему?
+        Mockito.doReturn(null) // что возвращаю
+                .when(roleCrud)              // кому и
+                .findByRoleId(roleEntityList.get(0).getRoleId());          // почему?
+        try {
+            Long id = 1L;
+            // отправляем знаения и получаем новую переменную
+            List<RoleDto> roleDtoList = roleService.deleteByUserId(id);
+            Assert.fail("Expected RoleNotFoundException");
+        } catch (RoleNotFoundException thrown) {
+            Assert.assertNotNull("", thrown.getMessage());
+        }
     }
 
     @Test
