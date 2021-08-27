@@ -138,6 +138,38 @@ class ReleaseServiceTest {
 
     @Test
     void getOneTest() throws Exception{
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(new ReleaseEntity("2021-08-21 07:00:00", "2021-08-21 20:30:00")) // что возвращаю
+                .when(releaseCrud)              // кому и
+                .findByReleaseId(1L);          // почему?
+
+        Long id = 1L;
+        // отправляем знаения и получаем новую переменную
+        ReleaseDto releaseDto = releaseService.getOne(id);
+
+        // сверяем значения
+        Assert.assertNotNull(releaseDto);
+        Assert.assertEquals(releaseDto.getDataStart(), "2021-08-21 07:00:00");
+        Assert.assertEquals(releaseDto.getDataEnd(), "2021-08-21 20:30:00");
+    }
+
+    @Test
+    void getOneFalseTest() throws Exception{
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(null) // что возвращаю
+                .when(releaseCrud)              // кому и
+                .findByReleaseId(1L);          // почему?
+
+        try {
+            Long id = 1L;
+            // отправляем знаения и получаем новую переменную
+            ReleaseDto releaseDto = releaseService.getOne(id);
+            Assert.fail("Expected ReleaseNotFoundException");
+        } catch (ReleaseNotFoundException thrown) {
+            Assert.assertNotNull("", thrown.getMessage());
+        }
     }
 
     @Test
