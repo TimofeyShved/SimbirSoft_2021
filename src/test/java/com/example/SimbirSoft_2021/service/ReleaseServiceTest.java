@@ -174,6 +174,46 @@ class ReleaseServiceTest {
 
     @Test
     void deleteOneTest() throws Exception{
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(new ReleaseEntity("2021-08-21 07:00:00", "2021-08-21 20:30:00")) // что возвращаю
+                .when(releaseCrud)              // кому и
+                .findByReleaseId(1L);          // почему?
+        Mockito.doReturn(true) // что возвращаю
+                .when(projectService)              // кому и
+                .deleteReleaseInProject(1L);          // почему?
+        Mockito.doReturn(true) // что возвращаю
+                .when(taskService)              // кому и
+                .deleteReleaseInTask(1L);          // почему?
+
+        Long id = 1L;
+        // отправляем знаения и получаем новую переменную
+        Long releaseId = releaseService.deleteOne(id);
+
+        // сверяем значения
+        Assert.assertNotNull(releaseId);
+        Assert.assertEquals(releaseId, new Long(1));
+
+        // проверка на то, что выполнились действия в бд
+        Mockito.verify(releaseCrud, Mockito.times(1)).deleteById(ArgumentMatchers.isNotNull());
+    }
+
+    @Test
+    void deleteOneFalseTest() throws Exception{
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(null) // что возвращаю
+                .when(releaseCrud)              // кому и
+                .findByReleaseId(1L);          // почему?
+
+        try {
+            Long id = 1L;
+            // отправляем знаения и получаем новую переменную
+            Long releaseId = releaseService.deleteOne(id);
+            Assert.fail("Expected ReleaseNotFoundException");
+        } catch (ReleaseNotFoundException thrown) {
+            Assert.assertNotNull("", thrown.getMessage());
+        }
     }
 
     @Test
