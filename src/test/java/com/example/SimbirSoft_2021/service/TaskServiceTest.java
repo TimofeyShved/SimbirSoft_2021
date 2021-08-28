@@ -5,10 +5,8 @@ import com.example.SimbirSoft_2021.Dto.TaskDto;
 import com.example.SimbirSoft_2021.entity.ProjectEntity;
 import com.example.SimbirSoft_2021.entity.ReleaseEntity;
 import com.example.SimbirSoft_2021.entity.TaskEntity;
-import com.example.SimbirSoft_2021.exception.ProjectAndDateTimeExistsException;
-import com.example.SimbirSoft_2021.exception.ReleaseNotFoundException;
-import com.example.SimbirSoft_2021.exception.TaskAndDateTimeExistsException;
-import com.example.SimbirSoft_2021.exception.TaskExistsException;
+import com.example.SimbirSoft_2021.enumertion.StatusEnum;
+import com.example.SimbirSoft_2021.exception.*;
 import com.example.SimbirSoft_2021.mappers.ProjectMapper;
 import com.example.SimbirSoft_2021.repository.ProjectCrud;
 import com.example.SimbirSoft_2021.repository.ReleaseCrud;
@@ -22,6 +20,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -150,7 +151,42 @@ class TaskServiceTest {
     }
 
     @Test
-    void getAll() {
+    void getAllTest() throws Exception{
+        List<TaskEntity> taskEntityList = new ArrayList<>();
+        taskEntityList.add(new TaskEntity("Maintenance", StatusEnum.BACKLOG, 1L, 1L));
+
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(taskEntityList) // что возвращаю
+                .when(taskCrud)              // кому и
+                .findAll();          // почему?
+
+        // отправляем знаения и получаем новую переменную
+        List<TaskDto> taskDtoList = taskService.getAll();
+
+        // сверяем значения
+        Assert.assertNotNull(taskDtoList);
+        Assert.assertEquals(taskDtoList.get(0).getTaskName(), "Maintenance");
+        Assert.assertEquals(taskDtoList.get(0).getTaskStatus(), "BACKLOG");
+        Assert.assertEquals(taskDtoList.get(0).getProjectId(), new Long(1));
+        Assert.assertEquals(taskDtoList.get(0).getReleaseId(), new Long(1));
+    }
+
+    @Test
+    void getAllFalseTest() throws Exception{
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(null) // что возвращаю
+                .when(taskCrud)              // кому и
+                .findAll();          // почему?
+
+        try {
+            // отправляем знаения и получаем новую переменную
+            List<TaskDto> taskDtoList = taskService.getAll();
+            Assert.fail("Expected TaskNotFoundException");
+        } catch (TaskNotFoundException thrown) {
+            Assert.assertNotNull("", thrown.getMessage());
+        }
     }
 
     @Test

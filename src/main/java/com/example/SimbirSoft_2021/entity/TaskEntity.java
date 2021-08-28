@@ -36,6 +36,21 @@ public class TaskEntity { // ----------------------------------------------- н�
     public TaskEntity() { // конструктор
     }
 
+    public TaskEntity(String taskName, StatusEnum taskStatus, Long projectId, Long releaseId) {
+        this.taskName = taskName;
+        this.taskStatus = taskStatus;
+        this.projectId = projectId;
+        this.releaseId = releaseId;
+    }
+
+    public TaskEntity(Long taskId, String taskName, StatusEnum taskStatus, Long projectId, Long releaseId) {
+        this.taskId = taskId;
+        this.taskName = taskName;
+        this.taskStatus = taskStatus;
+        this.projectId = projectId;
+        this.releaseId = releaseId;
+    }
+
     // ----------------------------------------------- гетеры и сетеры
 
 
