@@ -160,11 +160,63 @@ class UserServiceTest {
     }
 
     @Test
-    void findByEmail() {
+    void findByEmailTest() throws Exception{
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(new UserEntity(1L,"Angelina","Jolie", "Voight", "aaa@mail.ru", "123"))
+                .when(userCrud)              // кому и
+                .findByEmail("aaa@mail.ru");          // почему?
+
+        String email = "aaa@mail.ru";
+        // отправляем знаения и получаем новую переменную
+        UserEntity userEntity_1 = userService.findByEmail(email);
+
+        email = "bbb@mail.ru";
+        // отправляем знаения и получаем новую переменную
+        UserEntity userEntity_2 = userService.findByEmail(email);
+
+        // сверяем значения
+        Assert.assertNotNull(userEntity_1);
+        Assert.assertNull(userEntity_2);
     }
 
     @Test
-    void deleteOne() {
+    void deleteOneTest() throws Exception{
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(new UserEntity(1L,"Angelina","Jolie", "Voight", "aaa@mail.ru", "123"))
+                .when(userCrud)              // кому и
+                .findByUserId(1L);          // почему?
+
+        Long id = 1L;
+        // отправляем знаения и получаем новую переменную
+        Long returnUserId = userService.deleteOne(id);
+
+        // сверяем значения
+        Assert.assertNotNull(returnUserId);
+        Assert.assertEquals(returnUserId, new Long(1));
+
+        // проверка на то, что выполнились действия в бд
+        Mockito.verify(roleService, Mockito.times(1)).deleteByUserId(ArgumentMatchers.isNotNull());
+        Mockito.verify(userCrud, Mockito.times(1)).deleteById(ArgumentMatchers.isNotNull());
+    }
+
+    @Test
+    void deleteOneFalseTest() throws Exception{
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(null) // что возвращаю
+                .when(userCrud)              // кому и
+                .findByUserId(1L);          // почему?
+
+        try {
+            Long id = 1L;
+            // отправляем знаения и получаем новую переменную
+            Long returnUserId = userService.deleteOne(id);
+            Assert.fail("Expected UserNotFoundException");
+        } catch (UserNotFoundException thrown) {
+            Assert.assertNotNull("", thrown.getMessage());
+        }
     }
 
     @Test
