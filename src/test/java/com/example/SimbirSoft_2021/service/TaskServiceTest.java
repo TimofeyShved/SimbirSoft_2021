@@ -371,7 +371,43 @@ class TaskServiceTest {
     }
 
     @Test
-    void getCountByStatus() {
+    void getCountByStatusTest() throws Exception{
+        List<TaskEntity> taskEntityList = new ArrayList<>();
+        taskEntityList.add(new TaskEntity("Maintenance", StatusEnum.BACKLOG, 1L, 1L));
+
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(taskEntityList) // что возвращаю
+                .when(taskCrud)              // кому и
+                .findAll();          // почему?
+
+        Long id = 1L;
+        String status = "BACKLOG";
+        // отправляем знаения и получаем новую переменную
+        Long countByStatus  = taskService.getCountByStatus(id, status);
+
+        // сверяем значения
+        Assert.assertNotNull(countByStatus);
+        Assert.assertEquals(countByStatus, new Long(1));
+    }
+
+    @Test
+    void getCountByStatusFalseTest() throws Exception{
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(null) // что возвращаю
+                .when(taskCrud)              // кому и
+                .findAll();          // почему?
+
+        try {
+            Long id = 1L;
+            String status = "BACKLOG";
+            // отправляем знаения и получаем новую переменную
+            Long countByStatus  = taskService.getCountByStatus(id, status);
+            Assert.fail("Expected TaskNotFoundException");
+        } catch (TaskNotFoundException thrown) {
+            Assert.assertNotNull("", thrown.getMessage());
+        }
     }
 
     @Test
