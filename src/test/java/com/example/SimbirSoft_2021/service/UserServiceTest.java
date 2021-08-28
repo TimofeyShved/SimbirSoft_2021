@@ -220,6 +220,72 @@ class UserServiceTest {
     }
 
     @Test
-    void updateOne() {
+    void updateOneTest() throws Exception{
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(new UserEntity(1L,"Angelina","Jolie", "Voight", "aaa@mail.ru", "123"))
+                .when(userCrud)              // кому и
+                .findByUserId(1L);          // почему?
+        Mockito.doReturn(null) // что возвращаю
+                .when(userCrud)              // кому и
+                .findByEmail("aaa@mail.ru");          // почему?
+
+        Long id = 1L;
+        UserDto userDto_1 = new UserDto("Angelina","Jolie", "Voight", "aaa@mail.ru", "123");
+        // отправляем знаения и получаем новую переменную
+        UserDto userDto_2 = userService.updateOne(id, userDto_1);
+
+        // сверяем значения
+        Assert.assertNotNull(userDto_2);
+        Assert.assertEquals(userDto_1.getFirstName(), userDto_2.getFirstName());
+        Assert.assertEquals(userDto_1.getLastName(), userDto_2.getLastName());
+        Assert.assertEquals(userDto_1.getPatronymic(), userDto_2.getPatronymic());
+        Assert.assertEquals(userDto_1.getEmail(), userDto_2.getEmail());
+        Assert.assertEquals(userDto_1.getPassword(), userDto_2.getPassword());
+
+        // проверка на то, что выполнились действия в бд
+        Mockito.verify(userCrud, Mockito.times(1)).save(ArgumentMatchers.isNotNull());
+
+    }
+
+    @Test
+    void updateOneFalseTest() throws Exception {
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(null) // что возвращаю
+                .when(userCrud)              // кому и
+                .findByUserId(1L);          // почему?
+
+        //----------------------------------1----------------------UserNotFoundException
+        try {
+            Long id = 1L;
+            UserDto userDto_1 = new UserDto("Angelina","Jolie", "Voight", "aaa@mail.ru", "123");
+            // отправляем знаения и получаем новую переменную
+            UserDto userDto_2 = userService.updateOne(id, userDto_1);
+            Assert.fail("Expected UserNotFoundException");
+        } catch (UserNotFoundException thrown) {
+            Assert.assertNotNull("", thrown.getMessage());
+        }
+
+        //----------------------------------2----------------------UserExistsException
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(new UserEntity(1L,"Angelina","Jolie", "Voight", "aaa@mail.ru", "123")) // что возвращаю
+                .when(userCrud)              // кому и
+                .findByUserId(1L);          // почему?
+        Mockito.doReturn(new UserEntity(1L,"Angelina","Jolie", "Voight", "aaa@mail.ru", "123")) // что возвращаю
+                .when(userCrud)              // кому и
+                .findByEmail("aaa@mail.ru");          // почему?
+
+        try {
+            Long id = 1L;
+            UserDto userDto_1 = new UserDto("Angelina","Jolie", "Voight", "aaa@mail.ru", "123");
+            // отправляем знаения и получаем новую переменную
+            UserDto userDto_2 = userService.updateOne(id, userDto_1);
+            Assert.fail("Expected UserExistsException");
+        } catch (UserExistsException thrown) {
+            Assert.assertNotNull("", thrown.getMessage());
+        }
+
     }
 }

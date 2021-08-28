@@ -176,7 +176,8 @@ public class UserService implements StandartServiceInterface<UserDto>, UserServi
         UserEntity userEntity = userCrud.findByUserId(id);
 
         //  проверка
-        if ((userCrud.findByEmail(userEntityNew.getEmail())!=null)){ // проверить, что есть такая реализация существует
+        UserEntity userEntityTest = userCrud.findByEmail(userEntityNew.getEmail());
+        if ((userEntityTest!=null)&&(userEntityTest != userEntity)){ // проверить, что есть такая реализация существует
             throw new UserExistsException();
         }
 
