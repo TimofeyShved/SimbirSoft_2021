@@ -328,7 +328,46 @@ class TaskServiceTest {
     }
 
     @Test
-    void getAllByStatus() {
+    void getAllByStatusTest() throws Exception{
+        List<TaskEntity> taskEntityList = new ArrayList<>();
+        taskEntityList.add(new TaskEntity("Maintenance", StatusEnum.BACKLOG, 1L, 1L));
+
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(taskEntityList) // что возвращаю
+                .when(taskCrud)              // кому и
+                .findAll();          // почему?
+
+        Long id = 1L;
+        String status = "BACKLOG";
+        // отправляем знаения и получаем новую переменную
+        List<TaskDto> taskDtoList = taskService.getAllByStatus(id, status);
+
+        // сверяем значения
+        Assert.assertNotNull(taskDtoList);
+        Assert.assertEquals(taskDtoList.get(0).getTaskName(), "Maintenance");
+        Assert.assertEquals(taskDtoList.get(0).getTaskStatus(), "BACKLOG");
+        Assert.assertEquals(taskDtoList.get(0).getProjectId(), new Long(1));
+        Assert.assertEquals(taskDtoList.get(0).getReleaseId(), new Long(1));
+    }
+
+    @Test
+    void getAllByStatusFalseTest() throws Exception{
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(null) // что возвращаю
+                .when(taskCrud)              // кому и
+                .findAll();          // почему?
+
+        try {
+            Long id = 1L;
+            String status = "BACKLOG";
+            // отправляем знаения и получаем новую переменную
+            List<TaskDto> taskDtoList = taskService.getAllByStatus(id, status);
+            Assert.fail("Expected TaskNotFoundException");
+        } catch (TaskNotFoundException thrown) {
+            Assert.assertNotNull("", thrown.getMessage());
+        }
     }
 
     @Test
