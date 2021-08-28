@@ -122,7 +122,41 @@ class UserServiceTest {
     }
 
     @Test
-    void getOne() {
+    void getOneTest() throws Exception{
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(new UserEntity(1L,"Angelina","Jolie", "Voight", "aaa@mail.ru", "123"))
+                .when(userCrud)              // кому и
+                .findByUserId(1L);          // почему?
+
+        Long id = 1L;
+        // отправляем знаения и получаем новую переменную
+        UserModel userModel = userService.getOne(id);
+
+        // сверяем значения
+        Assert.assertNotNull(userModel);
+        Assert.assertEquals(userModel.getFirstName(), "Angelina");
+        Assert.assertEquals(userModel.getLastName(), "Jolie");
+        Assert.assertEquals(userModel.getPatronymic(), "Voight");
+        Assert.assertEquals(userModel.getEmail(), "aaa@mail.ru");
+    }
+
+    @Test
+    void getOneFalseTest() throws Exception{
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(null) // что возвращаю
+                .when(userCrud)              // кому и
+                .findAll();          // почему?
+
+        try {
+            Long id = 1L;
+            // отправляем знаения и получаем новую переменную
+            UserModel userModel = userService.getOne(id);
+            Assert.fail("Expected UserNotFoundException");
+        } catch (UserNotFoundException thrown) {
+            Assert.assertNotNull("", thrown.getMessage());
+        }
     }
 
     @Test
