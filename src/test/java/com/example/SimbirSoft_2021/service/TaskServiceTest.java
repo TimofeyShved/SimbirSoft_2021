@@ -290,7 +290,41 @@ class TaskServiceTest {
     }
 
     @Test
-    void getOne() {
+    void getOneTest() throws Exception{
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(new TaskEntity("Maintenance", StatusEnum.BACKLOG, 1L, 1L)) // что возвращаю
+                .when(taskCrud)              // кому и
+                .findByTaskId(1L);          // почему?
+
+        Long id = 1L;
+        // отправляем знаения и получаем новую переменную
+        TaskDto taskDto = taskService.getOne(id);
+
+        // сверяем значения
+        Assert.assertNotNull(taskDto);
+        Assert.assertEquals(taskDto.getTaskName(), "Maintenance");
+        Assert.assertEquals(taskDto.getTaskStatus(), "BACKLOG");
+        Assert.assertEquals(taskDto.getProjectId(), new Long(1));
+        Assert.assertEquals(taskDto.getReleaseId(), new Long(1));
+    }
+
+    @Test
+    void getOneFalseTest() throws Exception{
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(null) // что возвращаю
+                .when(taskCrud)              // кому и
+                .findByTaskId(1L);          // почему?
+
+        try {
+            Long id = 1L;
+            // отправляем знаения и получаем новую переменную
+            TaskDto taskDto = taskService.getOne(id);
+            Assert.fail("Expected TaskNotFoundException");
+        } catch (TaskNotFoundException thrown) {
+            Assert.assertNotNull("", thrown.getMessage());
+        }
     }
 
     @Test
