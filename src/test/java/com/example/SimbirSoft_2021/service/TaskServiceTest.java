@@ -411,7 +411,33 @@ class TaskServiceTest {
     }
 
     @Test
-    void findByReleaseId() {
+    void findByReleaseIdTest() throws Exception{
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(null) // что возвращаю
+                .when(taskCrud)              // кому и
+                .findByReleaseId(1L);          // почему?
+        Mockito.doReturn(new TaskEntity("Maintenance", StatusEnum.BACKLOG, 1L, 1L)) // что возвращаю
+                .when(taskCrud)              // кому и
+                .findByReleaseId(2L);          // почему?
+
+        Long releaseId = 1L;
+        // отправляем знаения и получаем новую переменную
+        TaskDto taskDto = taskService.findByReleaseId(releaseId);
+
+        // сверяем значения
+        Assert.assertNull(taskDto);
+
+        releaseId = 2L;
+        // отправляем знаения и получаем новую переменную
+        taskDto = taskService.findByReleaseId(releaseId);
+
+        // сверяем значения
+        Assert.assertNotNull(taskDto);
+        Assert.assertEquals(taskDto.getTaskName(), "Maintenance");
+        Assert.assertEquals(taskDto.getTaskStatus(), "BACKLOG");
+        Assert.assertEquals(taskDto.getProjectId(), new Long(1));
+        Assert.assertEquals(taskDto.getReleaseId(), new Long(1));
     }
 
     @Test
