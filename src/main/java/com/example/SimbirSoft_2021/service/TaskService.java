@@ -151,7 +151,7 @@ public class TaskService implements StandartServiceInterface<TaskDto>, TaskServi
         //  вытаскиваем по одной задачи == запросу, и сохраняем в коллекцию
         for (TaskEntity e:taskEntityList){
             if ((e.getTaskName().equals(cusomtaskDto.getTaskName()))||(cusomtaskDto.getTaskName()==null)){ //  проверка
-                if ((e.getTaskStatus().equals(cusomtaskDto.getTaskStatus()))||(cusomtaskDto.getTaskStatus()==null)){ //  проверка
+                if ((e.getTaskStatus().toString().equals(cusomtaskDto.getTaskStatus()))||(cusomtaskDto.getTaskStatus()==null)){ //  проверка
                     if ((e.getProjectId() == cusomtaskDto.getProjectId())||(cusomtaskDto.getProjectId()==null)) { //  проверка
                         if ((e.getReleaseId() == cusomtaskDto.getReleaseId()) || (cusomtaskDto.getReleaseId() == null)) { //  проверка
                             taskDtoList.add(TaskMapper.INSTANCE.toDto(e));

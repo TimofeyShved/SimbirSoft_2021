@@ -190,7 +190,103 @@ class TaskServiceTest {
     }
 
     @Test
-    void getAllCustom() {
+    void getAllCustomTest() throws Exception{
+        List<TaskEntity> taskEntityList = new ArrayList<>();
+        taskEntityList.add(new TaskEntity("Maintenance", StatusEnum.BACKLOG, 1L, 1L));
+
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(taskEntityList) // что возвращаю
+                .when(taskCrud)              // кому и
+                .findAll();          // почему?
+
+        //----------------------------------1----------------------
+        TaskDto cusomtaskDto_1 = new TaskDto("Maintenance");
+        // отправляем знаения и получаем новую переменную
+        List<TaskDto> taskDtoList_1 = taskService.getAllCustom(cusomtaskDto_1);
+
+        // сверяем значения
+        Assert.assertNotNull(taskDtoList_1);
+        Assert.assertEquals(taskDtoList_1.get(0).getTaskName(), "Maintenance");
+
+        //----------------------------------2----------------------
+        TaskDto cusomtaskDto_2 = new TaskDto("Maintenance", "BACKLOG");
+        // отправляем знаения и получаем новую переменную
+        List<TaskDto> taskDtoList_2 = taskService.getAllCustom(cusomtaskDto_2);
+
+        // сверяем значения
+        Assert.assertNotNull(taskDtoList_2);
+        Assert.assertEquals(taskDtoList_2.get(0).getTaskName(), "Maintenance");
+        Assert.assertEquals(taskDtoList_2.get(0).getTaskStatus(), "BACKLOG");
+
+        //----------------------------------3----------------------
+        TaskDto cusomtaskDto_3 = new TaskDto("Maintenance", "BACKLOG", 1L);
+        // отправляем знаения и получаем новую переменную
+        List<TaskDto> taskDtoList_3 = taskService.getAllCustom(cusomtaskDto_3);
+
+        // сверяем значения
+        Assert.assertNotNull(taskDtoList_3);
+        Assert.assertEquals(taskDtoList_3.get(0).getTaskName(), "Maintenance");
+        Assert.assertEquals(taskDtoList_3.get(0).getTaskStatus(), "BACKLOG");
+        Assert.assertEquals(taskDtoList_3.get(0).getProjectId(), new Long(1));
+
+        //----------------------------------4----------------------
+        TaskDto cusomtaskDto_4 = new TaskDto("Maintenance", "BACKLOG", 1L, 1L);
+        // отправляем знаения и получаем новую переменную
+        List<TaskDto> taskDtoList_4 = taskService.getAllCustom(cusomtaskDto_4);
+
+        // сверяем значения
+        Assert.assertNotNull(taskDtoList_4);
+        Assert.assertEquals(taskDtoList_4.get(0).getTaskName(), "Maintenance");
+        Assert.assertEquals(taskDtoList_4.get(0).getTaskStatus(), "BACKLOG");
+        Assert.assertEquals(taskDtoList_4.get(0).getProjectId(), new Long(1));
+        Assert.assertEquals(taskDtoList_4.get(0).getReleaseId(), new Long(1));
+    }
+
+    @Test
+    void getAllCustomFalseTest() throws Exception{
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(null) // что возвращаю
+                .when(taskCrud)              // кому и
+                .findAll();          // почему?
+
+        //----------------------------------1----------------------
+        try {
+            TaskDto cusomtaskDto_1 = new TaskDto("Maintenance");
+            // отправляем знаения и получаем новую переменную
+            List<TaskDto> taskDtoList_1 = taskService.getAllCustom(cusomtaskDto_1);
+            Assert.fail("Expected TaskNotFoundException");
+        } catch (TaskNotFoundException thrown) {
+            Assert.assertNotNull("", thrown.getMessage());
+        }
+        //----------------------------------2----------------------
+        try {
+            TaskDto cusomtaskDto_2 = new TaskDto("Maintenance", "BACKLOG");
+            // отправляем знаения и получаем новую переменную
+            List<TaskDto> taskDtoList_2 = taskService.getAllCustom(cusomtaskDto_2);
+            Assert.fail("Expected TaskNotFoundException");
+        } catch (TaskNotFoundException thrown) {
+            Assert.assertNotNull("", thrown.getMessage());
+        }
+        //----------------------------------3----------------------
+        try {
+            TaskDto cusomtaskDto_3 = new TaskDto("Maintenance", "BACKLOG", 1L);
+            // отправляем знаения и получаем новую переменную
+            List<TaskDto> taskDtoList_3 = taskService.getAllCustom(cusomtaskDto_3);
+            Assert.fail("Expected TaskNotFoundException");
+        } catch (TaskNotFoundException thrown) {
+            Assert.assertNotNull("", thrown.getMessage());
+        }
+        //----------------------------------4----------------------
+        try {
+            TaskDto cusomtaskDto_4 = new TaskDto("Maintenance", "BACKLOG", 1L, 1L);
+            // отправляем знаения и получаем новую переменную
+            List<TaskDto> taskDtoList_4 = taskService.getAllCustom(cusomtaskDto_4);
+            Assert.fail("Expected TaskNotFoundException");
+        } catch (TaskNotFoundException thrown) {
+            Assert.assertNotNull("", thrown.getMessage());
+        }
     }
 
     @Test
