@@ -3,9 +3,14 @@ package com.example.SimbirSoft_2021.service;
 import com.example.SimbirSoft_2021.Dto.TaskDto;
 import com.example.SimbirSoft_2021.Dto.UserDto;
 import com.example.SimbirSoft_2021.entity.ReleaseEntity;
+import com.example.SimbirSoft_2021.entity.TaskEntity;
 import com.example.SimbirSoft_2021.entity.UserEntity;
+import com.example.SimbirSoft_2021.enumertion.StatusEnum;
 import com.example.SimbirSoft_2021.exception.ReleaseNotFoundException;
+import com.example.SimbirSoft_2021.exception.TaskNotFoundException;
 import com.example.SimbirSoft_2021.exception.UserExistsException;
+import com.example.SimbirSoft_2021.exception.UserNotFoundException;
+import com.example.SimbirSoft_2021.model.UserModel;
 import com.example.SimbirSoft_2021.repository.UserCrud;
 import junit.framework.Assert;
 import org.junit.jupiter.api.Test;
@@ -16,6 +21,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -75,7 +83,42 @@ class UserServiceTest {
     }
 
     @Test
-    void getAll() {
+    void getAllTest() throws Exception{
+        List<UserEntity> userEntityList = new ArrayList<>();
+        userEntityList.add(new UserEntity(1L,"Angelina","Jolie", "Voight", "aaa@mail.ru", "123"));
+
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(userEntityList) // что возвращаю
+                .when(userCrud)              // кому и
+                .findAll();          // почему?
+
+        // отправляем знаения и получаем новую переменную
+        List<UserModel> userModelList = userService.getAll();
+
+        // сверяем значения
+        Assert.assertNotNull(userModelList);
+        Assert.assertEquals(userModelList.get(0).getFirstName(), "Angelina");
+        Assert.assertEquals(userModelList.get(0).getLastName(), "Jolie");
+        Assert.assertEquals(userModelList.get(0).getPatronymic(), "Voight");
+        Assert.assertEquals(userModelList.get(0).getEmail(), "aaa@mail.ru");
+    }
+
+    @Test
+    void getAllFalseTest() throws Exception{
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(null) // что возвращаю
+                .when(userCrud)              // кому и
+                .findAll();          // почему?
+
+        try {
+            // отправляем знаения и получаем новую переменную
+            List<UserModel> userModelList = userService.getAll();
+            Assert.fail("Expected UserNotFoundException");
+        } catch (UserNotFoundException thrown) {
+            Assert.assertNotNull("", thrown.getMessage());
+        }
     }
 
     @Test
