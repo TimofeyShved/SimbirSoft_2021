@@ -342,10 +342,11 @@ public class TaskService implements StandartServiceInterface<TaskDto>, TaskServi
      * Основная задача которой удалить реализацию связанную с задачей из бд.
      * @param id Это первый и единственный параметр метода deleteReleaseInTask, который обозначает номер реализация даты/времени в бд.
      * @return boolean Вернёт значение успеха выполения данного действия (логический).
+     * @throws TaskNotFoundException При ошибке если задач ещё не существует.
      */
     @Transactional
     @Override
-    public boolean deleteReleaseInTask(Long id) {
+    public boolean deleteReleaseInTask(Long id) throws TaskNotFoundException {
         TaskEntity taskEntity = taskCrud.findByReleaseId(id);
         if(taskEntity!=null){
             taskEntity.setReleaseId(null);

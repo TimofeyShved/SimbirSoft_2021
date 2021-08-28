@@ -483,11 +483,85 @@ class TaskServiceTest {
     }
 
     @Test
-    void deleteTaskByProjectId() {
+    void deleteTaskByProjectIdTest() throws Exception{
+        List<TaskEntity> taskEntityList = new ArrayList<>();
+        taskEntityList.add(new TaskEntity(1L, "Maintenance", StatusEnum.BACKLOG, 1L, 1L));
+
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(taskEntityList) // что возвращаю
+                .when(taskCrud)              // кому и
+                .findAll();          // почему?
+        Mockito.doReturn(new TaskEntity(1L,"Maintenance", StatusEnum.BACKLOG, 1L, 1L)) // что возвращаю
+                .when(taskCrud)              // кому и
+                .findByTaskId(1L);          // почему?
+        Mockito.doReturn(new ReleaseEntity()) // что возвращаю
+                .when(releaseCrud)              // кому и
+                .findByReleaseId(1L);          // почему?
+
+        Long id = 1L;
+        // отправляем знаения и получаем новую переменную
+        boolean booleanSerchInTask = taskService.deleteTaskByProjectId(id);
+
+        // сверяем значения
+        Assert.assertTrue(booleanSerchInTask);
+
+        // проверка на то, что выполнились действия в бд
+        Mockito.verify(taskCrud, Mockito.times(1)).delete(ArgumentMatchers.isNotNull());
+        Mockito.verify(roleService, Mockito.times(1)).deleteByTaskId(ArgumentMatchers.isNotNull());
+        Mockito.verify(releaseCrud, Mockito.times(1)).delete(ArgumentMatchers.isNotNull());
+
+        id = 2L;
+        // отправляем знаения и получаем новую переменную
+        booleanSerchInTask = taskService.deleteTaskByProjectId(id);
+
+        // сверяем значения
+        Assert.assertTrue(booleanSerchInTask);
     }
 
     @Test
-    void deleteReleaseInTask() {
+    void deleteTaskByProjectIdFalseTest() throws Exception{
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(null) // что возвращаю
+                .when(taskCrud)              // кому и
+                .findAll();          // почему?
+
+        //----------------------------------1----------------------TaskNotFoundException
+        try {
+            Long id = 1L;
+            // отправляем знаения и получаем новую переменную
+            boolean booleanSerchInTask = taskService.deleteTaskByProjectId(id);
+            Assert.fail("Expected TaskNotFoundException");
+        } catch (TaskNotFoundException thrown) {
+            Assert.assertNotNull("", thrown.getMessage());
+        }
+
+        //----------------------------------2----------------------
+        List<TaskEntity> taskEntityList = new ArrayList<>();
+        taskEntityList.add(new TaskEntity(1L, "Maintenance", StatusEnum.BACKLOG, 1L, 1L));
+
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(taskEntityList) // что возвращаю
+                .when(taskCrud)              // кому и
+                .findAll();          // почему?
+        Mockito.doReturn(null) // что возвращаю
+                .when(taskCrud)              // кому и
+                .findByTaskId(1L);          // почему?
+
+        try {
+            Long id = 1L;
+            // отправляем знаения и получаем новую переменную
+            boolean booleanSerchInTask = taskService.deleteTaskByProjectId(id);
+            Assert.fail("Expected TaskNotFoundException");
+        } catch (TaskNotFoundException thrown) {
+            Assert.assertNotNull("", thrown.getMessage());
+        }
+    }
+
+    @Test
+    void deleteReleaseInTaskTest() throws Exception{
     }
 
     @Test

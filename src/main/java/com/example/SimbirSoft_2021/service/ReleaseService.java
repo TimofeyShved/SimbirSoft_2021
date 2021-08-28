@@ -156,7 +156,7 @@ public class ReleaseService implements StandartServiceInterface<ReleaseDto>, Rel
      */
     @Transactional
     @Override
-    public Long deleteOne(Long id) throws ReleaseNotFoundException {
+    public Long deleteOne(Long id) throws ReleaseNotFoundException, TaskNotFoundException {
         if (id!=null){
             //  проверка на то что реализации вообще существуют
             if (releaseCrud.findByReleaseId(id)==null){
