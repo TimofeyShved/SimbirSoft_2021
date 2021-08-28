@@ -562,9 +562,159 @@ class TaskServiceTest {
 
     @Test
     void deleteReleaseInTaskTest() throws Exception{
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(new TaskEntity(1L,"Maintenance", StatusEnum.BACKLOG, 1L, 1L)) // что возвращаю
+                .when(taskCrud)              // кому и
+                .findByReleaseId(1L);          // почему?
+
+        Long id = 1L;
+        // отправляем знаения и получаем новую переменную
+        boolean booleanSerchInTask = taskService.deleteReleaseInTask(id);
+
+        // сверяем значения
+        Assert.assertTrue(booleanSerchInTask);
+
+        // проверка на то, что выполнились действия в бд
+        Mockito.verify(taskCrud, Mockito.times(1)).save(ArgumentMatchers.isNotNull());
     }
 
     @Test
-    void updateOne() {
+    void updateOneTest() throws Exception{
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(new TaskEntity(1L, "Maintenance", StatusEnum.BACKLOG, 1L, 1L)) // что возвращаю
+                .when(taskCrud)              // кому и
+                .findByTaskId(1L);          // почему?
+        Mockito.doReturn(new ReleaseEntity()) // что возвращаю
+                .when(releaseCrud)              // кому и
+                .findByReleaseId(1L);          // почему?
+        Mockito.doReturn(null) // что возвращаю
+                .when(taskCrud)              // кому и
+                .findByReleaseId(1L);          // почему?
+        Mockito.doReturn(null) // что возвращаю
+                .when(projectCrud)              // кому и
+                .findByReleaseId(1L);          // почему?
+        Mockito.doReturn(null) // что возвращаю
+                .when(taskCrud)              // кому и
+                .findByTaskNameAndProjectIdAndReleaseId("Maintenance", 1L, 1L);          // почему?
+
+        TaskDto taskDto_1 = new TaskDto("Maintenance", "BACKLOG", 1L, 1L);
+        Long id = 1l;
+        // отправляем знаения и получаем новую переменную
+        TaskDto taskDto_2 = taskService.updateOne(id, taskDto_1);
+
+        // сверяем значения
+        Assert.assertNotNull(taskDto_2);
+        Assert.assertEquals(taskDto_1.getTaskName(), taskDto_2.getTaskName());
+        Assert.assertEquals(taskDto_1.getTaskStatus(), taskDto_2.getTaskStatus());
+        Assert.assertEquals(taskDto_1.getProjectId(), taskDto_2.getProjectId());
+        Assert.assertEquals(taskDto_1.getReleaseId(), taskDto_2.getReleaseId());
+
+        // проверка на то, что выполнились действия в бд
+        Mockito.verify(taskCrud, Mockito.times(1)).save(ArgumentMatchers.isNotNull());
+    }
+
+    @Test
+    void updateOneFalseTest() throws Exception {
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(null) // что возвращаю
+                .when(taskCrud)              // кому и
+                .findByTaskId(1L);          // почему?
+
+        //----------------------------------1----------------------TaskNotFoundException
+        try {
+            TaskDto taskDto_1 = new TaskDto("Maintenance", "BACKLOG", 1L, 1L);
+            Long id = 1l;
+            // отправляем знаения и получаем новую переменную
+            TaskDto taskDto_2 = taskService.updateOne(id, taskDto_1);
+            Assert.fail("Expected TaskNotFoundException");
+        } catch (TaskNotFoundException thrown) {
+            Assert.assertNotNull("", thrown.getMessage());
+        }
+
+        //----------------------------------2----------------------ReleaseNotFoundException
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(new TaskEntity(1L, "Maintenance", StatusEnum.BACKLOG, 1L, 1L)) // что возвращаю
+                .when(taskCrud)              // кому и
+                .findByTaskId(1L);          // почему?
+        Mockito.doReturn(null) // что возвращаю
+                .when(releaseCrud)              // кому и
+                .findByReleaseId(1L);          // почему?
+
+        try {
+            TaskDto taskDto_1 = new TaskDto("Maintenance", "BACKLOG", 1L, 1L);
+            Long id = 1l;
+            // отправляем знаения и получаем новую переменную
+            TaskDto taskDto_2 = taskService.updateOne(id, taskDto_1);
+            Assert.fail("Expected ReleaseNotFoundException");
+        } catch (ReleaseNotFoundException thrown) {
+            Assert.assertNotNull("", thrown.getMessage());
+        }
+
+        //----------------------------------3----------------------TaskAndDateTimeExistsException
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(new ReleaseEntity()) // что возвращаю
+                .when(releaseCrud)              // кому и
+                .findByReleaseId(2L);          // почему?
+        Mockito.doReturn(new TaskEntity()) // что возвращаю
+                .when(taskCrud)              // кому и
+                .findByReleaseId(2L);          // почему?
+
+        try {
+            TaskDto taskDto_1 = new TaskDto("Maintenance", "BACKLOG", 1L, 2L);
+            Long id = 1l;
+            // отправляем знаения и получаем новую переменную
+            TaskDto taskDto_2 = taskService.updateOne(id, taskDto_1);
+            Assert.fail("Expected TaskAndDateTimeExistsException");
+        } catch (TaskAndDateTimeExistsException thrown) {
+            Assert.assertNotNull("", thrown.getMessage());
+        }
+
+        //----------------------------------4----------------------ProjectAndDateTimeExistsException
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(null) // что возвращаю
+                .when(taskCrud)              // кому и
+                .findByReleaseId(2L);          // почему?
+        Mockito.doReturn(new ProjectEntity()) // что возвращаю
+                .when(projectCrud)              // кому и
+                .findByReleaseId(2L);          // почему?
+
+        try {
+            TaskDto taskDto_1 = new TaskDto("Maintenance", "BACKLOG", 1L, 2L);
+            Long id = 1l;
+            // отправляем знаения и получаем новую переменную
+            TaskDto taskDto_2 = taskService.updateOne(id, taskDto_1);
+            Assert.fail("Expected ProjectAndDateTimeExistsException");
+        } catch (ProjectAndDateTimeExistsException thrown) {
+            Assert.assertNotNull("", thrown.getMessage());
+        }
+
+        //----------------------------------5----------------------TaskExistsException
+        // подготовка ответов на внутрении запросы
+        // заставить вернуть
+        Mockito.doReturn(new TaskEntity(1L, "Maintenance", StatusEnum.BACKLOG, 1L, 1L)) // что возвращаю
+                .when(taskCrud)              // кому и
+                .findByTaskId(1L);          // почему?
+        Mockito.doReturn(null) // что возвращаю
+                .when(projectCrud)              // кому и
+                .findByReleaseId(2L);          // почему?
+        Mockito.doReturn(new TaskEntity(2L, "Maintenance", StatusEnum.BACKLOG, 1L, 2L)) // что возвращаю
+                .when(taskCrud)              // кому и
+                .findByTaskNameAndProjectIdAndReleaseId("Maintenance", 1L, 2L);          // почему?
+
+        try {
+            TaskDto taskDto_1 = new TaskDto("Maintenance", "BACKLOG", 1L, 2L);
+            Long id = 1L;
+            // отправляем знаения и получаем новую переменную
+            TaskDto taskDto_2 = taskService.updateOne(id, taskDto_1);
+            Assert.fail("Expected TaskExistsException");
+        } catch (TaskExistsException thrown) {
+            Assert.assertNotNull("", thrown.getMessage());
+        }
     }
 }
