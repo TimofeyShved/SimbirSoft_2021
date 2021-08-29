@@ -41,7 +41,7 @@ public class ProjectController {
     @Operation(summary = "Получить список проектов")
     @RequestMapping(value = "/getprojects", method = RequestMethod.GET) // взять
     @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity getUsers(){
+    public ResponseEntity getProjects(){
         try {
             return ResponseEntity.ok(projectService.getAll());
         }catch (Exception e){

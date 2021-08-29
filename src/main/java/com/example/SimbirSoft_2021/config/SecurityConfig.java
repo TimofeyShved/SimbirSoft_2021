@@ -51,19 +51,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic().disable()
                 .csrf().disable()
                 // отключаем сессию
-                //.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                //.and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
                 // должны быть авторезованы
                 .authorizeRequests()
                 // разрешить всем
                 .antMatchers("/").permitAll()
                 .antMatchers("/control/login").permitAll()
                 // по ролям
-                .antMatchers(""+TASK).hasAnyRole( "author", "implementer")
-                .antMatchers(""+PROJECT).hasAnyRole("customer", "author", "implementer")
-                .antMatchers(""+ROLE).hasAnyRole("customer", "author")
-                .antMatchers(""+USER).hasAnyRole("customer", "author")
-                .antMatchers(""+DATATIMERELEASE).hasAnyRole( "customer", "author")
+                .antMatchers(""+TASK).hasAnyAuthority( "author", "implementer")
+                .antMatchers(""+PROJECT).hasAnyAuthority("customer", "author", "implementer")
+                .antMatchers(""+ROLE).hasAnyAuthority("customer", "author")
+                .antMatchers(""+USER).hasAnyAuthority("customer", "author")
+                .antMatchers(""+DATATIMERELEASE).hasAnyAuthority( "customer", "author")
                 // все остальные запросы должны быть авторезованы
                 .anyRequest().authenticated()
                 .and()

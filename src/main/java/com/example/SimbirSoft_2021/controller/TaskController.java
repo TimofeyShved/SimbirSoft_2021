@@ -49,16 +49,19 @@ public class TaskController {
         }
     }
 
+    /*
     @Operation(summary = "Получить список задач")
     @RequestMapping(value = "/gettasks", method = RequestMethod.GET) // взять
     @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity getUsers(@Validated @RequestBody TaskDto taskDto){
+    public ResponseEntity getUsersOfParams(@Validated @RequestBody TaskDto taskDto){
         try {
             return ResponseEntity.ok(taskService.getAllCustom(taskDto));
         }catch (Exception e){
             return  ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+     */
 
     @Operation(summary = "Получить выбранную задачу")
     @RequestMapping(value = "/gettask/{taskId}", method = RequestMethod.GET) // взять

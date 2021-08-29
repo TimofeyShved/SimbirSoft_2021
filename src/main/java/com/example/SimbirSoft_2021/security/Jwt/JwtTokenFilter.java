@@ -26,15 +26,18 @@ public class JwtTokenFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         // получаю токен через запрос
+        System.out.println("получаю токен через запрос");
         String token = jwtTokenProvider.resolveToken((HttpServletRequest) servletRequest);
 
         // если он валиден
         if ((token != null) && jwtTokenProvider.validateToken(token)){
+            System.out.println("если он валиден");
             // берём аунтефикацию из токена
             Authentication authentication = jwtTokenProvider.getAuthentication(token);
 
             if (authentication != null){ // то берем её из токена
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+                System.out.println(" берём аунтефикацию из токена");
             }
         }
         // дальше на проверку

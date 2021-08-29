@@ -33,6 +33,12 @@ public class ProjectEntity { // ----------------------------------------------- 
     public ProjectEntity(){ // конструктор
     }
 
+    public ProjectEntity(String projectName, StatusEnum projectStatus, Long releaseId) {
+        this.projectName = projectName;
+        this.projectStatus = projectStatus;
+        this.releaseId = releaseId;
+    }
+
     // ----------------------------------------------- гетеры и сетеры
 
 

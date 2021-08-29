@@ -28,6 +28,13 @@ public class RoleDto { // ----------------------------------------------- наш
         this.userId = userId;
     }
 
+    public RoleDto(Long roleId, String roleName, Long taskId, Long userId) {
+        this.roleId = roleId;
+        this.roleName = roleName;
+        this.taskId = taskId;
+        this.userId = userId;
+    }
+
     // ----------------------------------------------- гетеры и сетеры
 
     public Long getRoleId() {

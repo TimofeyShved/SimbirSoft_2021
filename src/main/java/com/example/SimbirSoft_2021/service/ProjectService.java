@@ -11,8 +11,13 @@ import com.example.SimbirSoft_2021.repository.TaskCrud;
 import com.example.SimbirSoft_2021.service.interfaceService.ProjectServiceInterface;
 import com.example.SimbirSoft_2021.service.interfaceService.StandartServiceInterface;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import javax.transaction.Transactional;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -65,6 +70,7 @@ public class ProjectService implements StandartServiceInterface<ProjectDto>, Pro
         this.taskCrud = taskCrud;
         this.taskService = taskService;
     }
+
 
     /**
      * Это основной метод регистрации, из стандартного интерфейса

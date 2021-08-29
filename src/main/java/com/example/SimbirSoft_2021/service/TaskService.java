@@ -151,7 +151,7 @@ public class TaskService implements StandartServiceInterface<TaskDto>, TaskServi
         //  вытаскиваем по одной задачи == запросу, и сохраняем в коллекцию
         for (TaskEntity e:taskEntityList){
             if ((e.getTaskName().equals(cusomtaskDto.getTaskName()))||(cusomtaskDto.getTaskName()==null)){ //  проверка
-                if ((e.getTaskStatus().equals(cusomtaskDto.getTaskStatus()))||(cusomtaskDto.getTaskStatus()==null)){ //  проверка
+                if ((e.getTaskStatus().toString().equals(cusomtaskDto.getTaskStatus()))||(cusomtaskDto.getTaskStatus()==null)){ //  проверка
                     if ((e.getProjectId() == cusomtaskDto.getProjectId())||(cusomtaskDto.getProjectId()==null)) { //  проверка
                         if ((e.getReleaseId() == cusomtaskDto.getReleaseId()) || (cusomtaskDto.getReleaseId() == null)) { //  проверка
                             taskDtoList.add(TaskMapper.INSTANCE.toDto(e));
@@ -342,10 +342,11 @@ public class TaskService implements StandartServiceInterface<TaskDto>, TaskServi
      * Основная задача которой удалить реализацию связанную с задачей из бд.
      * @param id Это первый и единственный параметр метода deleteReleaseInTask, который обозначает номер реализация даты/времени в бд.
      * @return boolean Вернёт значение успеха выполения данного действия (логический).
+     * @throws TaskNotFoundException При ошибке если задач ещё не существует.
      */
     @Transactional
     @Override
-    public boolean deleteReleaseInTask(Long id) {
+    public boolean deleteReleaseInTask(Long id) throws TaskNotFoundException {
         TaskEntity taskEntity = taskCrud.findByReleaseId(id);
         if(taskEntity!=null){
             taskEntity.setReleaseId(null);
